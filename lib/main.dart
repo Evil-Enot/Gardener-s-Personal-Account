@@ -1,12 +1,14 @@
-import 'package:flutter/cupertino.dart';
+import 'package:diploma/pages/auth_page.dart';
 import 'package:flutter/material.dart';
 
-void main() => runApp(DiplomaApp());
+void main() => runApp(const DiplomaApp());
 
 class DiplomaApp extends StatelessWidget {
+  const DiplomaApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       title: "Кабинет садовода",
       home: UrlPage(),
     );
@@ -14,80 +16,149 @@ class DiplomaApp extends StatelessWidget {
 }
 
 class UrlPage extends StatelessWidget {
+  const UrlPage({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
+        resizeToAvoidBottomInset: false,
         body: Center(
           child: Column(
             children: <Widget>[
-              Expanded(
-                flex: 4,
-                child: Container(
-                  alignment: Alignment.center,
-                  decoration: const BoxDecoration(
-                    color: Color(0xFFFFF9C0),
-                    borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(40.0),
-                      bottomRight: Radius.circular(40.0),
-                    ),
-                  ),
-                  child: SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.8,
-                    child: const Text(
-                      "Личный кабинет садовода",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          color: Color(0xFF373737),
-                          fontSize: 50,
-                          fontWeight: FontWeight.w400,
-                          fontFamily: 'Montserrat'),
-                    ),
-                  ),
-                ),
-              ),
-              Expanded(
-                flex: 2,
-                child: Container(
-                  alignment: Alignment.center,
-                  child: Container(
-                    width: MediaQuery.of(context).size.width * 0.8,
-                    decoration: const BoxDecoration(
-                      color: Color(0xFFFFF9C0),
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(30.0),
-                      ),
-                    ),
-                    child: const Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-                      child: TextField(
-                        keyboardType: TextInputType.text,
-                        maxLines: 1,
-                        textAlign: TextAlign.center,
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          hintText: 'Введите URL сервера',
-                          hintStyle: TextStyle(
-                              color: Color(0xFF373737),
-                              fontSize: 20,
-                              fontWeight: FontWeight.w400,
-                              fontFamily: 'Montserrat'),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              Expanded(
-                flex: 1,
-                child: Container(),
-              ),
-              Expanded(
-                flex: 3,
-                child: Container(),
-              ),
+              _buildTitle(context),
+              _buildURLInput(context),
+              _buildURLOverlay(context),
+              _buildSubmitButton(context),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTitle(BuildContext context) {
+    return Container(
+      alignment: Alignment.center,
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height * 0.4,
+      decoration: const BoxDecoration(
+        color: Color(0xFFFFF9C0),
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(40.0),
+          bottomRight: Radius.circular(40.0),
+        ),
+      ),
+      child: SizedBox(
+        width: MediaQuery.of(context).size.width * 0.8,
+        child: const Text(
+          "Личный кабинет садовода",
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: Color(0xFF373737),
+            fontSize: 50,
+            fontWeight: FontWeight.w400,
+            fontFamily: 'Montserrat',
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildURLInput(BuildContext context) {
+    return Container(
+      alignment: Alignment.center,
+      margin: const EdgeInsets.only(
+        top: 20,
+        bottom: 5,
+      ),
+      child: Container(
+        width: MediaQuery.of(context).size.width * 0.8,
+        decoration: const BoxDecoration(
+          color: Color(0xFFFFF9C0),
+          borderRadius: BorderRadius.all(
+            Radius.circular(30.0),
+          ),
+        ),
+        child: const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+          child: TextField(
+            keyboardType: TextInputType.text,
+            maxLines: 1,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Color(0xFF373737),
+              fontSize: 20,
+              fontWeight: FontWeight.w400,
+              fontFamily: 'Montserrat',
+            ),
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              hintText: 'Введите URL сервера',
+              hintStyle: TextStyle(
+                color: Color(0xFF373737),
+                fontSize: 20,
+                fontWeight: FontWeight.w400,
+                fontFamily: 'Montserrat',
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildURLOverlay(BuildContext context) {
+    return Container(
+      alignment: Alignment.center,
+      child: GestureDetector(
+        // onTap: _showOverlay(),
+        child: Container(
+          margin: const EdgeInsets.only(
+            bottom: 20,
+          ),
+          child: const Text(
+            "Что такое URL?",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Color(0xFF373737),
+              fontSize: 14,
+              fontWeight: FontWeight.w400,
+              fontFamily: 'Montserrat',
+              decoration: TextDecoration.underline,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSubmitButton(BuildContext context) {
+    return Container(
+      alignment: Alignment.center,
+      margin: EdgeInsets.only(
+        top: MediaQuery.of(context).size.height * 0.05,
+      ),
+      width: MediaQuery.of(context).size.width * 0.5,
+      decoration: const BoxDecoration(
+        color: Color(0xFFFFED4D),
+        borderRadius: BorderRadius.all(
+          Radius.circular(30.0),
+        ),
+      ),
+      child: TextButton(
+        onPressed: () {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => AuthPage()));
+        },
+        child: const Text(
+          "Продолжить",
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: Color(0xFF373737),
+            fontSize: 20,
+            fontWeight: FontWeight.w400,
+            fontFamily: 'Montserrat',
           ),
         ),
       ),
