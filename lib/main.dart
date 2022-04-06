@@ -1,7 +1,18 @@
+// import 'dart:convert' as convert;
+// import 'package:http/http.dart' as http;
+
 import 'package:diploma/pages/auth_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
-void main() => runApp(const DiplomaApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setEnabledSystemUIMode(
+    SystemUiMode.immersiveSticky,
+  );
+
+  runApp(const DiplomaApp());
+}
 
 class DiplomaApp extends StatelessWidget {
   const DiplomaApp({Key? key}) : super(key: key);
@@ -15,9 +26,14 @@ class DiplomaApp extends StatelessWidget {
   }
 }
 
-class UrlPage extends StatelessWidget {
+class UrlPage extends StatefulWidget {
   const UrlPage({Key? key}) : super(key: key);
 
+  @override
+  _UrlPageState createState() => _UrlPageState();
+}
+
+class _UrlPageState extends State<UrlPage> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -148,8 +164,7 @@ class UrlPage extends StatelessWidget {
       ),
       child: TextButton(
         onPressed: () {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => AuthPage()));
+          _checkURL();
         },
         child: const Text(
           "Продолжить",
@@ -163,5 +178,21 @@ class UrlPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  _checkURL() async {
+    // var url =
+    //     Uri.https('www.googleapis.com', '/books/v1/volumes', {'q': '{http}'});
+    // var response = await http.get(url);
+    // if (response.statusCode == 200) {
+    //   var jsonResponse =
+    //       convert.jsonDecode(response.body) as Map<String, dynamic>;
+    //   var itemCount = jsonResponse['totalItems'];
+    //   print('Number of books about http: $itemCount.');
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => const AuthPage()));
+    // } else {
+    //   print('Request failed with status: ${response.statusCode}.');
+    // }
   }
 }

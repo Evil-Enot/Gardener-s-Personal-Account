@@ -1,3 +1,6 @@
+// import 'dart:convert' as convert;
+// import 'package:http/http.dart' as http;
+
 import 'package:diploma/pages/main_page.dart';
 import 'package:flutter/material.dart';
 
@@ -184,7 +187,7 @@ class _AuthPageState extends State<AuthPage> {
       child: TextButton(
         onPressed: () {
           Navigator.push(
-              context, MaterialPageRoute(builder: (context) => MainPage()));
+              context, MaterialPageRoute(builder: (context) => const MainPage()));
         },
         child: const Text(
           "Продолжить",
