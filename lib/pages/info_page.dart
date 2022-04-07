@@ -1,4 +1,3 @@
-import 'package:diploma/pages/main_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -50,8 +49,7 @@ class _InfoPageState extends State<InfoPage> {
             color: Colors.black,
             iconSize: MediaQuery.of(context).size.width * 0.05,
             onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const MainPage()));
+              Navigator.pop(context);
             },
           ),
           Container(
@@ -281,7 +279,7 @@ class _InfoPageState extends State<InfoPage> {
                   decoration: BoxDecoration(
                     color: Color(0xFFFFED4D),
                     border:
-                    Border.all(width: 2, color: const Color(0xFF000000)),
+                        Border.all(width: 2, color: const Color(0xFF000000)),
                     borderRadius: BorderRadius.all(
                       Radius.circular(30.0),
                     ),
@@ -314,7 +312,7 @@ class _InfoPageState extends State<InfoPage> {
                   decoration: BoxDecoration(
                     color: Color(0xFFFFED4D),
                     border:
-                    Border.all(width: 2, color: const Color(0xFF000000)),
+                        Border.all(width: 2, color: const Color(0xFF000000)),
                     borderRadius: BorderRadius.all(
                       Radius.circular(30.0),
                     ),
