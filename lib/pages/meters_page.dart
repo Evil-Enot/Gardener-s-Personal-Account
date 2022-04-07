@@ -1,5 +1,6 @@
 import 'package:diploma/pages/bills_page.dart';
 import 'package:diploma/pages/main_page.dart';
+import 'package:diploma/theme/custom_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -36,13 +37,7 @@ class _MetersPageState extends State<MetersPage> {
       alignment: Alignment.center,
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height * 0.1,
-      decoration: const BoxDecoration(
-        color: Color(0xFFFFF9C0),
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(40.0),
-          bottomRight: Radius.circular(40.0),
-        ),
-      ),
+      decoration: CustomTheme.headerDecoration,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -65,14 +60,9 @@ class _MetersPageState extends State<MetersPage> {
               left: MediaQuery.of(context).size.width * 0.2,
               right: MediaQuery.of(context).size.width * 0.2,
             ),
-            child: const Text(
+            child: Text(
               'Счетчики',
-              style: TextStyle(
-                color: Color(0xFF373737),
-                fontSize: 22,
-                fontWeight: FontWeight.w700,
-                fontFamily: 'Montserrat',
-              ),
+              style: CustomTheme.textStyle22_700,
             ),
           ),
           IconButton(
@@ -98,12 +88,7 @@ class _MetersPageState extends State<MetersPage> {
             children: [
               Text(
                 'Показания счетчика воды',
-                style: TextStyle(
-                  color: Color(0xFF373737),
-                  fontSize: 22,
-                  fontWeight: FontWeight.w700,
-                  fontFamily: 'Montserrat',
-                ),
+                style: CustomTheme.textStyle22_700,
               ),
               Align(
                 alignment: Alignment.topLeft,
@@ -113,12 +98,7 @@ class _MetersPageState extends State<MetersPage> {
                   ),
                   child: Text(
                     'Дата последней подачи показаний: 30.02.2021 ',
-                    style: TextStyle(
-                      color: Color(0xFF373737),
-                      fontSize: 20,
-                      fontWeight: FontWeight.w400,
-                      fontFamily: 'Montserrat',
-                    ),
+                    style: CustomTheme.textStyle20_400,
                   ),
                 ),
               ),
@@ -130,12 +110,7 @@ class _MetersPageState extends State<MetersPage> {
                   ),
                   child: Text(
                     'Показания: 158.000',
-                    style: TextStyle(
-                      color: Color(0xFF373737),
-                      fontSize: 20,
-                      fontWeight: FontWeight.w400,
-                      fontFamily: 'Montserrat',
-                    ),
+                    style: CustomTheme.textStyle20_400,
                   ),
                 ),
               ),
@@ -152,12 +127,7 @@ class _MetersPageState extends State<MetersPage> {
             children: [
               Text(
                 'Введите новые показания',
-                style: TextStyle(
-                  color: Color(0xFF373737),
-                  fontSize: 22,
-                  fontWeight: FontWeight.w700,
-                  fontFamily: 'Montserrat',
-                ),
+                style: CustomTheme.textStyle22_700,
               ),
               Row(
                 children: [
@@ -168,34 +138,19 @@ class _MetersPageState extends State<MetersPage> {
                     ),
                     width: MediaQuery.of(context).size.width * 0.6,
                     height: MediaQuery.of(context).size.height * 0.05,
-                    decoration: const BoxDecoration(
-                      color: Color(0xFFFFF9C0),
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(30.0),
+                    decoration: CustomTheme.inputFieldsDecoration,
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: MediaQuery.of(context).size.width * 0.01,
+                        vertical: MediaQuery.of(context).size.height * 0.01,
                       ),
-                    ),
-                    child: const Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 8, vertical: 16),
                       child: TextField(
                         keyboardType: TextInputType.number,
                         maxLines: 1,
                         textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Color(0xFF373737),
-                          fontSize: 20,
-                          fontWeight: FontWeight.w400,
-                          fontFamily: 'Montserrat',
-                        ),
+                        style: CustomTheme.textStyle20_400,
                         decoration: InputDecoration(
                           border: InputBorder.none,
-                          // hintText: '',
-                          // hintStyle: TextStyle(
-                          //   color: Color(0xFF373737),
-                          //   fontSize: 20,
-                          //   fontWeight: FontWeight.w400,
-                          //   fontFamily: 'Montserrat',
-                          // ),
                         ),
                       ),
                     ),
@@ -209,25 +164,11 @@ class _MetersPageState extends State<MetersPage> {
                       height: MediaQuery.of(context).size.height * 0.05,
                       width: MediaQuery.of(context).size.width * 0.3,
                       child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          primary: Color(0xFFFFED4D),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30.0),
-                            side: BorderSide(
-                              color: Colors.black,
-                              width: 2.0,
-                            ),
-                          ),
-                        ),
+                        style: CustomTheme.elevatedButtonStyle,
                         onPressed: () {},
                         child: Text(
                           'Отправить',
-                          style: TextStyle(
-                            color: Color(0xFF373737),
-                            fontSize: 20,
-                            fontWeight: FontWeight.w400,
-                            fontFamily: 'Montserrat',
-                          ),
+                          style: CustomTheme.textStyle20_400,
                         ),
                       ),
                     ),
@@ -247,12 +188,7 @@ class _MetersPageState extends State<MetersPage> {
             children: [
               Text(
                 'Показания счетчика электроэнергии',
-                style: TextStyle(
-                  color: Color(0xFF373737),
-                  fontSize: 22,
-                  fontWeight: FontWeight.w700,
-                  fontFamily: 'Montserrat',
-                ),
+                style: CustomTheme.textStyle22_700,
               ),
               Align(
                 alignment: Alignment.topLeft,
@@ -262,12 +198,7 @@ class _MetersPageState extends State<MetersPage> {
                   ),
                   child: Text(
                     'Дата последней подачи показаний: 31.02.2021',
-                    style: TextStyle(
-                      color: Color(0xFF373737),
-                      fontSize: 20,
-                      fontWeight: FontWeight.w400,
-                      fontFamily: 'Montserrat',
-                    ),
+                    style: CustomTheme.textStyle20_400,
                   ),
                 ),
               ),
@@ -279,12 +210,7 @@ class _MetersPageState extends State<MetersPage> {
                   ),
                   child: Text(
                     'Показания: 268.000',
-                    style: TextStyle(
-                      color: Color(0xFF373737),
-                      fontSize: 20,
-                      fontWeight: FontWeight.w400,
-                      fontFamily: 'Montserrat',
-                    ),
+                    style: CustomTheme.textStyle20_400,
                   ),
                 ),
               ),
@@ -301,12 +227,7 @@ class _MetersPageState extends State<MetersPage> {
             children: [
               Text(
                 'Введите новые показания',
-                style: TextStyle(
-                  color: Color(0xFF373737),
-                  fontSize: 22,
-                  fontWeight: FontWeight.w700,
-                  fontFamily: 'Montserrat',
-                ),
+                style: CustomTheme.textStyle22_700,
               ),
               Row(
                 children: [
@@ -317,34 +238,19 @@ class _MetersPageState extends State<MetersPage> {
                     ),
                     width: MediaQuery.of(context).size.width * 0.6,
                     height: MediaQuery.of(context).size.height * 0.05,
-                    decoration: const BoxDecoration(
-                      color: Color(0xFFFFF9C0),
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(30.0),
+                    decoration: CustomTheme.inputFieldsDecoration,
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: MediaQuery.of(context).size.width * 0.01,
+                        vertical: MediaQuery.of(context).size.height * 0.01,
                       ),
-                    ),
-                    child: const Padding(
-                      padding:
-                      EdgeInsets.symmetric(horizontal: 8, vertical: 16),
                       child: TextField(
                         keyboardType: TextInputType.number,
                         maxLines: 1,
                         textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Color(0xFF373737),
-                          fontSize: 20,
-                          fontWeight: FontWeight.w400,
-                          fontFamily: 'Montserrat',
-                        ),
+                        style: CustomTheme.textStyle20_400,
                         decoration: InputDecoration(
                           border: InputBorder.none,
-                          // hintText: '',
-                          // hintStyle: TextStyle(
-                          //   color: Color(0xFF373737),
-                          //   fontSize: 20,
-                          //   fontWeight: FontWeight.w400,
-                          //   fontFamily: 'Montserrat',
-                          // ),
                         ),
                       ),
                     ),
@@ -358,25 +264,11 @@ class _MetersPageState extends State<MetersPage> {
                       height: MediaQuery.of(context).size.height * 0.05,
                       width: MediaQuery.of(context).size.width * 0.3,
                       child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          primary: Color(0xFFFFED4D),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30.0),
-                            side: BorderSide(
-                              color: Colors.black,
-                              width: 2.0,
-                            ),
-                          ),
-                        ),
+                        style: CustomTheme.elevatedButtonStyle,
                         onPressed: () {},
                         child: Text(
                           'Отправить',
-                          style: TextStyle(
-                            color: Color(0xFF373737),
-                            fontSize: 20,
-                            fontWeight: FontWeight.w400,
-                            fontFamily: 'Montserrat',
-                          ),
+                          style: CustomTheme.textStyle20_400,
                         ),
                       ),
                     ),
@@ -403,13 +295,7 @@ class _MetersPageState extends State<MetersPage> {
         alignment: FractionalOffset.bottomCenter,
         child: Container(
           alignment: Alignment.center,
-          decoration: const BoxDecoration(
-            color: Color(0xFFFFF9C0),
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(40.0),
-              topRight: Radius.circular(40.0),
-            ),
-          ),
+          decoration: CustomTheme.footerDecoration,
           height: MediaQuery.of(context).size.height * 0.1,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -422,16 +308,8 @@ class _MetersPageState extends State<MetersPage> {
                     bottom: MediaQuery.of(context).size.height * 0.009,
                   ),
                   width: MediaQuery.of(context).size.width * 0.3,
-                  decoration: BoxDecoration(
-                    color: Color(0xFFFFED4D),
-                    border:
-                        Border.all(width: 2, color: const Color(0xFF000000)),
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(30.0),
-                    ),
-                  ),
+                  decoration: CustomTheme.menuButtonDecoration,
                   child: InkWell(
-                    splashColor: Color(0xFFFFED4D), // splash color
                     onTap: () {
                       Navigator.push(
                         context,
@@ -448,7 +326,7 @@ class _MetersPageState extends State<MetersPage> {
                           color: Colors.black,
                           width: MediaQuery.of(context).size.width * 0.1,
                         ),
-                        Text("Счета"), // text
+                        const Text("Счета"), // text
                       ],
                     ),
                   ),
@@ -462,16 +340,8 @@ class _MetersPageState extends State<MetersPage> {
                     bottom: MediaQuery.of(context).size.height * 0.009,
                   ),
                   width: MediaQuery.of(context).size.width * 0.3,
-                  decoration: BoxDecoration(
-                    color: Color(0xFFFFED4D),
-                    border:
-                        Border.all(width: 2, color: const Color(0xFF000000)),
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(30.0),
-                    ),
-                  ),
+                  decoration: CustomTheme.menuButtonDecoration,
                   child: InkWell(
-                    splashColor: Color(0xFFFFED4D),
                     onTap: () {},
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -481,7 +351,7 @@ class _MetersPageState extends State<MetersPage> {
                           color: Colors.black,
                           width: MediaQuery.of(context).size.width * 0.1,
                         ),
-                        Text("Счетчики"), // text
+                        const Text("Счетчики"), // text
                       ],
                     ),
                   ),

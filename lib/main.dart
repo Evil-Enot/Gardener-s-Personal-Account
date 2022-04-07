@@ -2,6 +2,7 @@
 // import 'package:http/http.dart' as http;
 
 import 'package:diploma/pages/auth_page.dart';
+import 'package:diploma/theme/custom_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -58,24 +59,13 @@ class _UrlPageState extends State<UrlPage> {
       alignment: Alignment.center,
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height * 0.4,
-      decoration: const BoxDecoration(
-        color: Color(0xFFFFF9C0),
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(40.0),
-          bottomRight: Radius.circular(40.0),
-        ),
-      ),
+      decoration: CustomTheme.headerDecoration,
       child: SizedBox(
         width: MediaQuery.of(context).size.width * 0.8,
-        child: const Text(
+        child: Text(
           "Личный кабинет садовода",
           textAlign: TextAlign.center,
-          style: TextStyle(
-            color: Color(0xFF373737),
-            fontSize: 50,
-            fontWeight: FontWeight.w400,
-            fontFamily: 'Montserrat',
-          ),
+          style: CustomTheme.textStyle50_400,
         ),
       ),
     );
@@ -84,39 +74,27 @@ class _UrlPageState extends State<UrlPage> {
   Widget _buildURLInput(BuildContext context) {
     return Container(
       alignment: Alignment.center,
-      margin: const EdgeInsets.only(
-        top: 20,
-        bottom: 5,
+      margin: EdgeInsets.only(
+        top: MediaQuery.of(context).size.height * 0.02,
+        bottom: MediaQuery.of(context).size.height * 0.01,
       ),
       child: Container(
         width: MediaQuery.of(context).size.width * 0.8,
-        decoration: const BoxDecoration(
-          color: Color(0xFFFFF9C0),
-          borderRadius: BorderRadius.all(
-            Radius.circular(30.0),
+        decoration: CustomTheme.inputFieldsDecoration,
+        child: Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: MediaQuery.of(context).size.width * 0.01,
+            vertical: MediaQuery.of(context).size.height * 0.01,
           ),
-        ),
-        child: const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
           child: TextField(
             keyboardType: TextInputType.text,
             maxLines: 1,
             textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Color(0xFF373737),
-              fontSize: 20,
-              fontWeight: FontWeight.w400,
-              fontFamily: 'Montserrat',
-            ),
+            style: CustomTheme.textStyle20_400,
             decoration: InputDecoration(
               border: InputBorder.none,
               hintText: 'Введите URL сервера',
-              hintStyle: TextStyle(
-                color: Color(0xFF373737),
-                fontSize: 20,
-                fontWeight: FontWeight.w400,
-                fontFamily: 'Montserrat',
-              ),
+              hintStyle: CustomTheme.textStyle20_400,
             ),
           ),
         ),
@@ -130,19 +108,13 @@ class _UrlPageState extends State<UrlPage> {
       child: GestureDetector(
         // onTap: _showOverlay(),
         child: Container(
-          margin: const EdgeInsets.only(
-            bottom: 20,
+          margin: EdgeInsets.only(
+            bottom: MediaQuery.of(context).size.height * 0.01,
           ),
-          child: const Text(
+          child: Text(
             "Что такое URL?",
             textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Color(0xFF373737),
-              fontSize: 14,
-              fontWeight: FontWeight.w400,
-              fontFamily: 'Montserrat',
-              decoration: TextDecoration.underline,
-            ),
+            style: CustomTheme.textStyle14_400U,
           ),
         ),
       ),
@@ -156,25 +128,15 @@ class _UrlPageState extends State<UrlPage> {
         top: MediaQuery.of(context).size.height * 0.05,
       ),
       width: MediaQuery.of(context).size.width * 0.5,
-      decoration: const BoxDecoration(
-        color: Color(0xFFFFED4D),
-        borderRadius: BorderRadius.all(
-          Radius.circular(30.0),
-        ),
-      ),
+      decoration: CustomTheme.buttonsDecoration,
       child: TextButton(
         onPressed: () {
           _checkURL();
         },
-        child: const Text(
+        child: Text(
           "Продолжить",
           textAlign: TextAlign.center,
-          style: TextStyle(
-            color: Color(0xFF373737),
-            fontSize: 20,
-            fontWeight: FontWeight.w400,
-            fontFamily: 'Montserrat',
-          ),
+          style: CustomTheme.textStyle20_400,
         ),
       ),
     );

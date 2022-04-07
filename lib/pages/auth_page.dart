@@ -2,6 +2,7 @@
 // import 'package:http/http.dart' as http;
 
 import 'package:diploma/pages/main_page.dart';
+import 'package:diploma/theme/custom_theme.dart';
 import 'package:flutter/material.dart';
 
 class AuthPage extends StatefulWidget {
@@ -37,24 +38,13 @@ class _AuthPageState extends State<AuthPage> {
       alignment: Alignment.center,
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height * 0.4,
-      decoration: const BoxDecoration(
-        color: Color(0xFFFFF9C0),
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(40.0),
-          bottomRight: Radius.circular(40.0),
-        ),
-      ),
+      decoration: CustomTheme.headerDecoration,
       child: SizedBox(
         width: MediaQuery.of(context).size.width * 0.8,
-        child: const Text(
+        child: Text(
           "Личный кабинет садовода",
           textAlign: TextAlign.center,
-          style: TextStyle(
-            color: Color(0xFF373737),
-            fontSize: 50,
-            fontWeight: FontWeight.w400,
-            fontFamily: 'Montserrat',
-          ),
+          style: CustomTheme.textStyle50_400,
         ),
       ),
     );
@@ -63,39 +53,27 @@ class _AuthPageState extends State<AuthPage> {
   Widget _buildNumberInput(BuildContext context) {
     return Container(
       alignment: Alignment.center,
-      margin: const EdgeInsets.only(
-        top: 20,
-        bottom: 5,
+      margin: EdgeInsets.only(
+        top: MediaQuery.of(context).size.height * 0.02,
+        bottom: MediaQuery.of(context).size.height * 0.01,
       ),
       child: Container(
         width: MediaQuery.of(context).size.width * 0.8,
-        decoration: const BoxDecoration(
-          color: Color(0xFFFFF9C0),
-          borderRadius: BorderRadius.all(
-            Radius.circular(30.0),
+        decoration: CustomTheme.inputFieldsDecoration,
+        child: Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: MediaQuery.of(context).size.width * 0.01,
+            vertical: MediaQuery.of(context).size.height * 0.01,
           ),
-        ),
-        child: const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
           child: TextField(
             keyboardType: TextInputType.phone,
             maxLines: 1,
             textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Color(0xFF373737),
-              fontSize: 20,
-              fontWeight: FontWeight.w400,
-              fontFamily: 'Montserrat',
-            ),
+            style: CustomTheme.textStyle20_400,
             decoration: InputDecoration(
               border: InputBorder.none,
               hintText: 'Введите номер телефона',
-              hintStyle: TextStyle(
-                color: Color(0xFF373737),
-                fontSize: 20,
-                fontWeight: FontWeight.w400,
-                fontFamily: 'Montserrat',
-              ),
+              hintStyle: CustomTheme.textStyle20_400,
             ),
           ),
         ),
@@ -106,39 +84,27 @@ class _AuthPageState extends State<AuthPage> {
   Widget _buildCodeInput(BuildContext context) {
     return Container(
       alignment: Alignment.center,
-      margin: const EdgeInsets.only(
-        top: 20,
-        bottom: 5,
+      margin: EdgeInsets.only(
+        top: MediaQuery.of(context).size.height * 0.01,
+        bottom: MediaQuery.of(context).size.height * 0.01,
       ),
       child: Container(
         width: MediaQuery.of(context).size.width * 0.8,
-        decoration: const BoxDecoration(
-          color: Color(0xFFFFF9C0),
-          borderRadius: BorderRadius.all(
-            Radius.circular(30.0),
+        decoration: CustomTheme.inputFieldsDecoration,
+        child: Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: MediaQuery.of(context).size.width * 0.01,
+            vertical: MediaQuery.of(context).size.height * 0.01,
           ),
-        ),
-        child: const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
           child: TextField(
             keyboardType: TextInputType.text,
             maxLines: 1,
             textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Color(0xFF373737),
-              fontSize: 20,
-              fontWeight: FontWeight.w400,
-              fontFamily: 'Montserrat',
-            ),
+            style: CustomTheme.textStyle20_400,
             decoration: InputDecoration(
               border: InputBorder.none,
               hintText: 'Код из смс',
-              hintStyle: TextStyle(
-                color: Color(0xFF373737),
-                fontSize: 20,
-                fontWeight: FontWeight.w400,
-                fontFamily: 'Montserrat',
-              ),
+              hintStyle: CustomTheme.textStyle20_400,
             ),
           ),
         ),
@@ -152,29 +118,17 @@ class _AuthPageState extends State<AuthPage> {
       child: GestureDetector(
         // onTap: _showOverlay(),
         child: Container(
-          margin: const EdgeInsets.only(
-            bottom: 20,
+          margin: EdgeInsets.only(
+            bottom: MediaQuery.of(context).size.height * 0.01,
           ),
           child: RichText(
             text: TextSpan(
               text: 'Не пришел код? ',
-              style: TextStyle(
-                color: Color(0xFF373737),
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
-                fontFamily: 'Montserrat',
-                decoration: TextDecoration.underline,
-              ),
+              style: CustomTheme.textStyle14_400U,
               children: [
                 TextSpan(
                   text: 'Отправить еще раз',
-                  style: TextStyle(
-                    color: Color(0xFF373737),
-                    fontSize: 14,
-                    fontWeight: FontWeight.w700,
-                    fontFamily: 'Montserrat',
-                    decoration: TextDecoration.underline,
-                  ),
+                  style: CustomTheme.textStyle14_700U,
                 )
               ],
             ),
@@ -191,26 +145,16 @@ class _AuthPageState extends State<AuthPage> {
         top: MediaQuery.of(context).size.height * 0.05,
       ),
       width: MediaQuery.of(context).size.width * 0.5,
-      decoration: const BoxDecoration(
-        color: Color(0xFFFFED4D),
-        borderRadius: BorderRadius.all(
-          Radius.circular(30.0),
-        ),
-      ),
+      decoration: CustomTheme.buttonsDecoration,
       child: TextButton(
         onPressed: () {
           Navigator.push(context,
               MaterialPageRoute(builder: (context) => const MainPage()));
         },
-        child: const Text(
+        child: Text(
           "Продолжить",
           textAlign: TextAlign.center,
-          style: TextStyle(
-            color: Color(0xFF373737),
-            fontSize: 20,
-            fontWeight: FontWeight.w400,
-            fontFamily: 'Montserrat',
-          ),
+          style: CustomTheme.textStyle20_400,
         ),
       ),
     );

@@ -1,5 +1,6 @@
 import 'package:diploma/pages/main_page.dart';
 import 'package:diploma/pages/meters_page.dart';
+import 'package:diploma/theme/custom_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -36,13 +37,7 @@ class _BillsPageState extends State<BillsPage> {
       alignment: Alignment.center,
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height * 0.1,
-      decoration: const BoxDecoration(
-        color: Color(0xFFFFF9C0),
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(40.0),
-          bottomRight: Radius.circular(40.0),
-        ),
-      ),
+      decoration: CustomTheme.headerDecoration,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -65,14 +60,9 @@ class _BillsPageState extends State<BillsPage> {
               left: MediaQuery.of(context).size.width * 0.2,
               right: MediaQuery.of(context).size.width * 0.2,
             ),
-            child: const Text(
+            child: Text(
               'Счета',
-              style: TextStyle(
-                color: Color(0xFF373737),
-                fontSize: 22,
-                fontWeight: FontWeight.w700,
-                fontFamily: 'Montserrat',
-              ),
+              style: CustomTheme.textStyle22_700,
             ),
           ),
           IconButton(
@@ -105,13 +95,8 @@ class _BillsPageState extends State<BillsPage> {
                   child: RichText(
                     text: TextSpan(
                       text: 'Текущий долг: ',
-                      style: TextStyle(
-                        color: Color(0xFF373737),
-                        fontSize: 18,
-                        fontWeight: FontWeight.w400,
-                        fontFamily: 'Montserrat',
-                      ),
-                      children: [
+                      style: CustomTheme.textStyle20_400,
+                      children: const [
                         TextSpan(
                           text: '-102598',
                           style: TextStyle(
@@ -134,12 +119,7 @@ class _BillsPageState extends State<BillsPage> {
                   ),
                   child: Text(
                     'Дата последней подачи показаний: 30.02.2021 ',
-                    style: TextStyle(
-                      color: Color(0xFF373737),
-                      fontSize: 20,
-                      fontWeight: FontWeight.w400,
-                      fontFamily: 'Montserrat',
-                    ),
+                    style: CustomTheme.textStyle20_400,
                   ),
                 ),
               ),
@@ -160,25 +140,11 @@ class _BillsPageState extends State<BillsPage> {
                     height: MediaQuery.of(context).size.height * 0.08,
                     width: MediaQuery.of(context).size.width * 0.3,
                     child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        primary: Color(0xFFFFED4D),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30.0),
-                          side: BorderSide(
-                            color: Colors.black,
-                            width: 2.0,
-                          ),
-                        ),
-                      ),
+                      style: CustomTheme.elevatedButtonStyle,
                       onPressed: () {},
                       child: Text(
                         'Оплатить',
-                        style: TextStyle(
-                          color: Color(0xFF373737),
-                          fontSize: 24,
-                          fontWeight: FontWeight.w400,
-                          fontFamily: 'Montserrat',
-                        ),
+                        style: CustomTheme.textStyle24_400,
                       ),
                     ),
                   ),
@@ -197,13 +163,7 @@ class _BillsPageState extends State<BillsPage> {
         alignment: FractionalOffset.bottomCenter,
         child: Container(
           alignment: Alignment.center,
-          decoration: const BoxDecoration(
-            color: Color(0xFFFFF9C0),
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(40.0),
-              topRight: Radius.circular(40.0),
-            ),
-          ),
+          decoration: CustomTheme.footerDecoration,
           height: MediaQuery.of(context).size.height * 0.1,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -216,17 +176,9 @@ class _BillsPageState extends State<BillsPage> {
                     bottom: MediaQuery.of(context).size.height * 0.009,
                   ),
                   width: MediaQuery.of(context).size.width * 0.3,
-                  decoration: BoxDecoration(
-                    color: Color(0xFFFFED4D),
-                    border:
-                        Border.all(width: 2, color: const Color(0xFF000000)),
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(30.0),
-                    ),
-                  ),
+                  decoration: CustomTheme.menuButtonDecoration,
                   child: InkWell(
-                    splashColor: Color(0xFFFFED4D), // splash color
-                    onTap: () {}, // button pressed
+                    onTap: () {},
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
@@ -235,7 +187,7 @@ class _BillsPageState extends State<BillsPage> {
                           color: Colors.black,
                           width: MediaQuery.of(context).size.width * 0.1,
                         ),
-                        Text("Счета"), // text
+                        const Text("Счета"),
                       ],
                     ),
                   ),
@@ -249,16 +201,8 @@ class _BillsPageState extends State<BillsPage> {
                     bottom: MediaQuery.of(context).size.height * 0.009,
                   ),
                   width: MediaQuery.of(context).size.width * 0.3,
-                  decoration: BoxDecoration(
-                    color: Color(0xFFFFED4D),
-                    border:
-                        Border.all(width: 2, color: const Color(0xFF000000)),
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(30.0),
-                    ),
-                  ),
+                  decoration: CustomTheme.menuButtonDecoration,
                   child: InkWell(
-                    splashColor: Color(0xFFFFED4D),
                     onTap: () {
                       Navigator.push(
                         context,
@@ -275,7 +219,7 @@ class _BillsPageState extends State<BillsPage> {
                           color: Colors.black,
                           width: MediaQuery.of(context).size.width * 0.1,
                         ),
-                        Text("Счетчики"), // text
+                        const Text("Счетчики"),
                       ],
                     ),
                   ),
