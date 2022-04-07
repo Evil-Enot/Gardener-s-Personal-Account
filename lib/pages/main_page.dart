@@ -107,13 +107,21 @@ class _MainPageState extends State<MainPage> {
                   fontFamily: 'Montserrat',
                 ),
               ),
-              Text(
-                'Солянкин Илья Андреевич',
-                style: TextStyle(
-                  color: Color(0xFF373737),
-                  fontSize: 20,
-                  fontWeight: FontWeight.w400,
-                  fontFamily: 'Montserrat',
+              Align(
+                alignment: Alignment.topLeft,
+                child: Container(
+                  padding: EdgeInsets.only(
+                    left: MediaQuery.of(context).size.width * 0.05,
+                  ),
+                  child: Text(
+                    'Солянкин Илья Андреевич',
+                    style: TextStyle(
+                      color: Color(0xFF373737),
+                      fontSize: 20,
+                      fontWeight: FontWeight.w400,
+                      fontFamily: 'Montserrat',
+                    ),
+                  ),
                 ),
               ),
               Divider(
@@ -136,22 +144,38 @@ class _MainPageState extends State<MainPage> {
                   fontFamily: 'Montserrat',
                 ),
               ),
-              Text(
-                'Тел: 89149505442',
-                style: TextStyle(
-                  color: Color(0xFF373737),
-                  fontSize: 20,
-                  fontWeight: FontWeight.w400,
-                  fontFamily: 'Montserrat',
+              Align(
+                alignment: Alignment.topLeft,
+                child: Container(
+                  padding: EdgeInsets.only(
+                    left: MediaQuery.of(context).size.width * 0.05,
+                  ),
+                  child: Text(
+                    'Тел: 89149505442',
+                    style: TextStyle(
+                      color: Color(0xFF373737),
+                      fontSize: 20,
+                      fontWeight: FontWeight.w400,
+                      fontFamily: 'Montserrat',
+                    ),
+                  ),
                 ),
               ),
-              Text(
-                'E-mail: evil.enot.00@gmail.com',
-                style: TextStyle(
-                  color: Color(0xFF373737),
-                  fontSize: 20,
-                  fontWeight: FontWeight.w400,
-                  fontFamily: 'Montserrat',
+              Align(
+                alignment: Alignment.topLeft,
+                child: Container(
+                  padding: EdgeInsets.only(
+                    left: MediaQuery.of(context).size.width * 0.05,
+                  ),
+                  child: Text(
+                    'E-mail: evil.enot.00@gmail.com',
+                    style: TextStyle(
+                      color: Color(0xFF373737),
+                      fontSize: 20,
+                      fontWeight: FontWeight.w400,
+                      fontFamily: 'Montserrat',
+                    ),
+                  ),
                 ),
               ),
               Divider(
@@ -174,31 +198,55 @@ class _MainPageState extends State<MainPage> {
                   fontFamily: 'Montserrat',
                 ),
               ),
-              Text(
-                'Адрес: Россия, Иркутская обл, с. Пивовариха, ул. Рябиновая, д. 9а',
-                style: TextStyle(
-                  color: Color(0xFF373737),
-                  fontSize: 20,
-                  fontWeight: FontWeight.w400,
-                  fontFamily: 'Montserrat',
+              Align(
+                alignment: Alignment.topLeft,
+                child: Container(
+                  padding: EdgeInsets.only(
+                    left: MediaQuery.of(context).size.width * 0.05,
+                  ),
+                  child: Text(
+                    'Адрес: Россия, Иркутская обл, с. Пивовариха, ул. Рябиновая, д. 9а',
+                    style: TextStyle(
+                      color: Color(0xFF373737),
+                      fontSize: 20,
+                      fontWeight: FontWeight.w400,
+                      fontFamily: 'Montserrat',
+                    ),
+                  ),
                 ),
               ),
-              Text(
-                'Площадь участка: 1000 м. кв.',
-                style: TextStyle(
-                  color: Color(0xFF373737),
-                  fontSize: 20,
-                  fontWeight: FontWeight.w400,
-                  fontFamily: 'Montserrat',
+              Align(
+                alignment: Alignment.topLeft,
+                child: Container(
+                  padding: EdgeInsets.only(
+                    left: MediaQuery.of(context).size.width * 0.05,
+                  ),
+                  child: Text(
+                    'Площадь участка: 1000 м. кв.',
+                    style: TextStyle(
+                      color: Color(0xFF373737),
+                      fontSize: 20,
+                      fontWeight: FontWeight.w400,
+                      fontFamily: 'Montserrat',
+                    ),
+                  ),
                 ),
               ),
-              Text(
-                'Кадастровый номер: \nинформация отсутствует',
-                style: TextStyle(
-                  color: Color(0xFF373737),
-                  fontSize: 20,
-                  fontWeight: FontWeight.w400,
-                  fontFamily: 'Montserrat',
+              Align(
+                alignment: Alignment.topLeft,
+                child: Container(
+                  padding: EdgeInsets.only(
+                    left: MediaQuery.of(context).size.width * 0.05,
+                  ),
+                  child: Text(
+                    'Кадастровый номер: \nинформация отсутствует',
+                    style: TextStyle(
+                      color: Color(0xFF373737),
+                      fontSize: 20,
+                      fontWeight: FontWeight.w400,
+                      fontFamily: 'Montserrat',
+                    ),
+                  ),
                 ),
               ),
               Divider(
@@ -221,30 +269,51 @@ class _MainPageState extends State<MainPage> {
                   fontFamily: 'Montserrat',
                 ),
               ),
-              RichText(
-                text: TextSpan(
-                  text: 'Текущий долг: ',
-                  style: TextStyle(
-                    color: Color(0xFF373737),
-                    fontSize: 20,
-                    fontWeight: FontWeight.w400,
-                    fontFamily: 'Montserrat',
+              Align(
+                alignment: Alignment.topLeft,
+                child: Container(
+                  padding: EdgeInsets.only(
+                    left: MediaQuery.of(context).size.width * 0.05,
                   ),
-                  children: [
-                    TextSpan(
-                      text: '-102598',
-                      style: TextStyle(color: Colors.red),
-                    )
-                  ],
+                  child: RichText(
+                    text: TextSpan(
+                      text: 'Текущий долг: ',
+                      style: TextStyle(
+                        color: Color(0xFF373737),
+                        fontSize: 18,
+                        fontWeight: FontWeight.w400,
+                        fontFamily: 'Montserrat',
+                      ),
+                      children: [
+                        TextSpan(
+                          text: '-102598',
+                          style: TextStyle(
+                            color: Colors.red,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w400,
+                            fontFamily: 'Montserrat',
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
                 ),
               ),
-              Text(
-                'Дата последней подачи показаний: 30.02.2021 ',
-                style: TextStyle(
-                  color: Color(0xFF373737),
-                  fontSize: 20,
-                  fontWeight: FontWeight.w400,
-                  fontFamily: 'Montserrat',
+              Align(
+                alignment: Alignment.topLeft,
+                child: Container(
+                  padding: EdgeInsets.only(
+                    left: MediaQuery.of(context).size.width * 0.05,
+                  ),
+                  child: Text(
+                    'Дата последней подачи показаний: 30.02.2021 ',
+                    style: TextStyle(
+                      color: Color(0xFF373737),
+                      fontSize: 20,
+                      fontWeight: FontWeight.w400,
+                      fontFamily: 'Montserrat',
+                    ),
+                  ),
                 ),
               ),
               Divider(

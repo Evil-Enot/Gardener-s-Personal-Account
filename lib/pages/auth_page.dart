@@ -155,15 +155,28 @@ class _AuthPageState extends State<AuthPage> {
           margin: const EdgeInsets.only(
             bottom: 20,
           ),
-          child: const Text(
-            "Не пришел код? Отправить еще раз",
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Color(0xFF373737),
-              fontSize: 14,
-              fontWeight: FontWeight.w400,
-              fontFamily: 'Montserrat',
-              decoration: TextDecoration.underline,
+          child: RichText(
+            text: TextSpan(
+              text: 'Не пришел код? ',
+              style: TextStyle(
+                color: Color(0xFF373737),
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
+                fontFamily: 'Montserrat',
+                decoration: TextDecoration.underline,
+              ),
+              children: [
+                TextSpan(
+                  text: 'Отправить еще раз',
+                  style: TextStyle(
+                    color: Color(0xFF373737),
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                    fontFamily: 'Montserrat',
+                    decoration: TextDecoration.underline,
+                  ),
+                )
+              ],
             ),
           ),
         ),
@@ -186,8 +199,8 @@ class _AuthPageState extends State<AuthPage> {
       ),
       child: TextButton(
         onPressed: () {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => const MainPage()));
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const MainPage()));
         },
         child: const Text(
           "Продолжить",
