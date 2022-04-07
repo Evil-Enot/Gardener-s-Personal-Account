@@ -3,6 +3,7 @@
 
 import 'package:diploma/pages/bills_page.dart';
 import 'package:diploma/pages/info_page.dart';
+import 'package:diploma/pages/meters_page.dart';
 import 'package:diploma/pages/settings_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -36,8 +37,14 @@ class _MainPageState extends State<MainPage> {
   Widget _buildToolbar(BuildContext context) {
     return Container(
       alignment: Alignment.center,
-      width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height * 0.1,
+      width: MediaQuery
+          .of(context)
+          .size
+          .width,
+      height: MediaQuery
+          .of(context)
+          .size
+          .height * 0.1,
       decoration: const BoxDecoration(
         color: Color(0xFFFFF9C0),
         borderRadius: BorderRadius.only(
@@ -51,7 +58,10 @@ class _MainPageState extends State<MainPage> {
           IconButton(
             icon: SvgPicture.asset("assets/images/info.svg"),
             color: Colors.black,
-            iconSize: MediaQuery.of(context).size.width * 0.05,
+            iconSize: MediaQuery
+                .of(context)
+                .size
+                .width * 0.05,
             onPressed: () {
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => const InfoPage()));
@@ -60,8 +70,14 @@ class _MainPageState extends State<MainPage> {
           Container(
             alignment: Alignment.center,
             margin: EdgeInsets.only(
-              left: MediaQuery.of(context).size.width * 0.2,
-              right: MediaQuery.of(context).size.width * 0.2,
+              left: MediaQuery
+                  .of(context)
+                  .size
+                  .width * 0.2,
+              right: MediaQuery
+                  .of(context)
+                  .size
+                  .width * 0.2,
             ),
             child: const Text(
               'Профиль',
@@ -76,7 +92,10 @@ class _MainPageState extends State<MainPage> {
           IconButton(
             icon: SvgPicture.asset("assets/images/settings.svg"),
             color: Colors.black,
-            iconSize: MediaQuery.of(context).size.width * 0.05,
+            iconSize: MediaQuery
+                .of(context)
+                .size
+                .width * 0.05,
             onPressed: () {
               Navigator.push(
                 context,
@@ -95,7 +114,10 @@ class _MainPageState extends State<MainPage> {
     return Container(
       alignment: Alignment.center,
       margin: EdgeInsets.only(
-        top: MediaQuery.of(context).size.height * 0.01,
+        top: MediaQuery
+            .of(context)
+            .size
+            .height * 0.01,
       ),
       child: Column(
         children: [
@@ -114,7 +136,10 @@ class _MainPageState extends State<MainPage> {
                 alignment: Alignment.topLeft,
                 child: Container(
                   padding: EdgeInsets.only(
-                    left: MediaQuery.of(context).size.width * 0.05,
+                    left: MediaQuery
+                        .of(context)
+                        .size
+                        .width * 0.05,
                   ),
                   child: Text(
                     'Солянкин Илья Андреевич',
@@ -130,8 +155,14 @@ class _MainPageState extends State<MainPage> {
               Divider(
                 height: 20,
                 thickness: 2,
-                indent: MediaQuery.of(context).size.width * 0.05,
-                endIndent: MediaQuery.of(context).size.width * 0.05,
+                indent: MediaQuery
+                    .of(context)
+                    .size
+                    .width * 0.05,
+                endIndent: MediaQuery
+                    .of(context)
+                    .size
+                    .width * 0.05,
                 color: Colors.black,
               ),
             ],
@@ -151,7 +182,10 @@ class _MainPageState extends State<MainPage> {
                 alignment: Alignment.topLeft,
                 child: Container(
                   padding: EdgeInsets.only(
-                    left: MediaQuery.of(context).size.width * 0.05,
+                    left: MediaQuery
+                        .of(context)
+                        .size
+                        .width * 0.05,
                   ),
                   child: Text(
                     'Тел: 89149505442',
@@ -168,7 +202,10 @@ class _MainPageState extends State<MainPage> {
                 alignment: Alignment.topLeft,
                 child: Container(
                   padding: EdgeInsets.only(
-                    left: MediaQuery.of(context).size.width * 0.05,
+                    left: MediaQuery
+                        .of(context)
+                        .size
+                        .width * 0.05,
                   ),
                   child: Text(
                     'E-mail: evil.enot.00@gmail.com',
@@ -184,8 +221,14 @@ class _MainPageState extends State<MainPage> {
               Divider(
                 height: 20,
                 thickness: 2,
-                indent: MediaQuery.of(context).size.width * 0.05,
-                endIndent: MediaQuery.of(context).size.width * 0.05,
+                indent: MediaQuery
+                    .of(context)
+                    .size
+                    .width * 0.05,
+                endIndent: MediaQuery
+                    .of(context)
+                    .size
+                    .width * 0.05,
                 color: Colors.black,
               ),
             ],
@@ -205,7 +248,10 @@ class _MainPageState extends State<MainPage> {
                 alignment: Alignment.topLeft,
                 child: Container(
                   padding: EdgeInsets.only(
-                    left: MediaQuery.of(context).size.width * 0.05,
+                    left: MediaQuery
+                        .of(context)
+                        .size
+                        .width * 0.05,
                   ),
                   child: Text(
                     'Адрес: Россия, Иркутская обл, с. Пивовариха, ул. Рябиновая, д. 9а',
@@ -222,7 +268,10 @@ class _MainPageState extends State<MainPage> {
                 alignment: Alignment.topLeft,
                 child: Container(
                   padding: EdgeInsets.only(
-                    left: MediaQuery.of(context).size.width * 0.05,
+                    left: MediaQuery
+                        .of(context)
+                        .size
+                        .width * 0.05,
                   ),
                   child: Text(
                     'Площадь участка: 1000 м. кв.',
@@ -239,7 +288,10 @@ class _MainPageState extends State<MainPage> {
                 alignment: Alignment.topLeft,
                 child: Container(
                   padding: EdgeInsets.only(
-                    left: MediaQuery.of(context).size.width * 0.05,
+                    left: MediaQuery
+                        .of(context)
+                        .size
+                        .width * 0.05,
                   ),
                   child: Text(
                     'Кадастровый номер: \nинформация отсутствует',
@@ -255,8 +307,14 @@ class _MainPageState extends State<MainPage> {
               Divider(
                 height: 20,
                 thickness: 2,
-                indent: MediaQuery.of(context).size.width * 0.05,
-                endIndent: MediaQuery.of(context).size.width * 0.05,
+                indent: MediaQuery
+                    .of(context)
+                    .size
+                    .width * 0.05,
+                endIndent: MediaQuery
+                    .of(context)
+                    .size
+                    .width * 0.05,
                 color: Colors.black,
               ),
             ],
@@ -276,7 +334,10 @@ class _MainPageState extends State<MainPage> {
                 alignment: Alignment.topLeft,
                 child: Container(
                   padding: EdgeInsets.only(
-                    left: MediaQuery.of(context).size.width * 0.05,
+                    left: MediaQuery
+                        .of(context)
+                        .size
+                        .width * 0.05,
                   ),
                   child: RichText(
                     text: TextSpan(
@@ -306,7 +367,10 @@ class _MainPageState extends State<MainPage> {
                 alignment: Alignment.topLeft,
                 child: Container(
                   padding: EdgeInsets.only(
-                    left: MediaQuery.of(context).size.width * 0.05,
+                    left: MediaQuery
+                        .of(context)
+                        .size
+                        .width * 0.05,
                   ),
                   child: Text(
                     'Дата последней подачи показаний: 30.02.2021 ',
@@ -322,8 +386,14 @@ class _MainPageState extends State<MainPage> {
               Divider(
                 height: 20,
                 thickness: 2,
-                indent: MediaQuery.of(context).size.width * 0.05,
-                endIndent: MediaQuery.of(context).size.width * 0.05,
+                indent: MediaQuery
+                    .of(context)
+                    .size
+                    .width * 0.05,
+                endIndent: MediaQuery
+                    .of(context)
+                    .size
+                    .width * 0.05,
                 color: Colors.black,
               ),
             ],
@@ -346,22 +416,37 @@ class _MainPageState extends State<MainPage> {
               topRight: Radius.circular(40.0),
             ),
           ),
-          height: MediaQuery.of(context).size.height * 0.1,
+          height: MediaQuery
+              .of(context)
+              .size
+              .height * 0.1,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               SizedBox.fromSize(
                 child: Container(
                   margin: EdgeInsets.only(
-                    top: MediaQuery.of(context).size.height * 0.009,
-                    left: MediaQuery.of(context).size.width * 0.12,
-                    bottom: MediaQuery.of(context).size.height * 0.009,
+                    top: MediaQuery
+                        .of(context)
+                        .size
+                        .height * 0.009,
+                    left: MediaQuery
+                        .of(context)
+                        .size
+                        .width * 0.12,
+                    bottom: MediaQuery
+                        .of(context)
+                        .size
+                        .height * 0.009,
                   ),
-                  width: MediaQuery.of(context).size.width * 0.3,
+                  width: MediaQuery
+                      .of(context)
+                      .size
+                      .width * 0.3,
                   decoration: BoxDecoration(
                     color: Color(0xFFFFED4D),
                     border:
-                        Border.all(width: 2, color: const Color(0xFF000000)),
+                    Border.all(width: 2, color: const Color(0xFF000000)),
                     borderRadius: BorderRadius.all(
                       Radius.circular(30.0),
                     ),
@@ -382,7 +467,10 @@ class _MainPageState extends State<MainPage> {
                         SvgPicture.asset(
                           "assets/images/ruble.svg",
                           color: Colors.black,
-                          width: MediaQuery.of(context).size.width * 0.1,
+                          width: MediaQuery
+                              .of(context)
+                              .size
+                              .width * 0.1,
                         ),
                         Text("Счета"), // text
                       ],
@@ -393,29 +481,51 @@ class _MainPageState extends State<MainPage> {
               SizedBox.fromSize(
                 child: Container(
                   margin: EdgeInsets.only(
-                    top: MediaQuery.of(context).size.height * 0.009,
-                    right: MediaQuery.of(context).size.width * 0.12,
-                    bottom: MediaQuery.of(context).size.height * 0.009,
+                    top: MediaQuery
+                        .of(context)
+                        .size
+                        .height * 0.009,
+                    right: MediaQuery
+                        .of(context)
+                        .size
+                        .width * 0.12,
+                    bottom: MediaQuery
+                        .of(context)
+                        .size
+                        .height * 0.009,
                   ),
-                  width: MediaQuery.of(context).size.width * 0.3,
+                  width: MediaQuery
+                      .of(context)
+                      .size
+                      .width * 0.3,
                   decoration: BoxDecoration(
                     color: Color(0xFFFFED4D),
                     border:
-                        Border.all(width: 2, color: const Color(0xFF000000)),
+                    Border.all(width: 2, color: const Color(0xFF000000)),
                     borderRadius: BorderRadius.all(
                       Radius.circular(30.0),
                     ),
                   ),
                   child: InkWell(
                     splashColor: Color(0xFFFFED4D),
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const MetersPage(),
+                        ),
+                      );
+                    },
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         SvgPicture.asset(
                           "assets/images/counter.svg",
                           color: Colors.black,
-                          width: MediaQuery.of(context).size.width * 0.1,
+                          width: MediaQuery
+                              .of(context)
+                              .size
+                              .width * 0.1,
                         ),
                         Text("Счетчики"), // text
                       ],

@@ -1,4 +1,6 @@
 import 'package:diploma/pages/bills_page.dart';
+import 'package:diploma/pages/main_page.dart';
+import 'package:diploma/pages/meters_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -52,7 +54,12 @@ class _SettingsPageState extends State<SettingsPage> {
             color: Colors.black,
             iconSize: MediaQuery.of(context).size.width * 0.05,
             onPressed: () {
-              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const MainPage(),
+                ),
+              );
             },
           ),
           Container(
@@ -212,7 +219,14 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                   child: InkWell(
                     splashColor: Color(0xFFFFED4D),
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const MetersPage(),
+                        ),
+                      );
+                    },
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
