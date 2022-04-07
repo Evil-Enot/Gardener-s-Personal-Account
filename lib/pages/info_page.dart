@@ -1,6 +1,7 @@
 import 'package:diploma/pages/bills_page.dart';
 import 'package:diploma/pages/main_page.dart';
 import 'package:diploma/pages/meters_page.dart';
+import 'package:diploma/theme/custom_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -37,13 +38,7 @@ class _InfoPageState extends State<InfoPage> {
       alignment: Alignment.center,
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height * 0.1,
-      decoration: const BoxDecoration(
-        color: Color(0xFFFFF9C0),
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(40.0),
-          bottomRight: Radius.circular(40.0),
-        ),
-      ),
+      decoration: CustomTheme.headerDecoration,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -66,14 +61,9 @@ class _InfoPageState extends State<InfoPage> {
               left: MediaQuery.of(context).size.width * 0.2,
               right: MediaQuery.of(context).size.width * 0.2,
             ),
-            child: const Text(
+            child: Text(
               'Информация',
-              style: TextStyle(
-                color: Color(0xFF373737),
-                fontSize: 22,
-                fontWeight: FontWeight.w700,
-                fontFamily: 'Montserrat',
-              ),
+              style: CustomTheme.textStyle22_700,
             ),
           ),
           IconButton(
@@ -99,12 +89,7 @@ class _InfoPageState extends State<InfoPage> {
             children: [
               Text(
                 'Наименование',
-                style: TextStyle(
-                  color: Color(0xFF373737),
-                  fontSize: 22,
-                  fontWeight: FontWeight.w700,
-                  fontFamily: 'Montserrat',
-                ),
+                style: CustomTheme.textStyle22_700,
               ),
               Align(
                 alignment: Alignment.topLeft,
@@ -114,12 +99,7 @@ class _InfoPageState extends State<InfoPage> {
                   ),
                   child: Text(
                     'СНТ “Солнышко',
-                    style: TextStyle(
-                      color: Color(0xFF373737),
-                      fontSize: 20,
-                      fontWeight: FontWeight.w400,
-                      fontFamily: 'Montserrat',
-                    ),
+                    style: CustomTheme.textStyle20_400,
                   ),
                 ),
               ),
@@ -131,12 +111,7 @@ class _InfoPageState extends State<InfoPage> {
                   ),
                   child: Text(
                     'Адрес: Рязанская обл, р-н Рыбновский, с Константиново, "Солнышко" садовое некоммерческое товарищество',
-                    style: TextStyle(
-                      color: Color(0xFF373737),
-                      fontSize: 20,
-                      fontWeight: FontWeight.w400,
-                      fontFamily: 'Montserrat',
-                    ),
+                    style: CustomTheme.textStyle20_400,
                   ),
                 ),
               ),
@@ -153,12 +128,7 @@ class _InfoPageState extends State<InfoPage> {
             children: [
               Text(
                 'Данные',
-                style: TextStyle(
-                  color: Color(0xFF373737),
-                  fontSize: 22,
-                  fontWeight: FontWeight.w700,
-                  fontFamily: 'Montserrat',
-                ),
+                style: CustomTheme.textStyle22_700,
               ),
               Align(
                 alignment: Alignment.topLeft,
@@ -168,12 +138,7 @@ class _InfoPageState extends State<InfoPage> {
                   ),
                   child: Text(
                     'ИНН: 7799225834',
-                    style: TextStyle(
-                      color: Color(0xFF373737),
-                      fontSize: 20,
-                      fontWeight: FontWeight.w400,
-                      fontFamily: 'Montserrat',
-                    ),
+                    style: CustomTheme.textStyle20_400,
                   ),
                 ),
               ),
@@ -185,12 +150,7 @@ class _InfoPageState extends State<InfoPage> {
                   ),
                   child: Text(
                     'КПП: 779901001',
-                    style: TextStyle(
-                      color: Color(0xFF373737),
-                      fontSize: 20,
-                      fontWeight: FontWeight.w400,
-                      fontFamily: 'Montserrat',
-                    ),
+                    style: CustomTheme.textStyle20_400,
                   ),
                 ),
               ),
@@ -202,12 +162,7 @@ class _InfoPageState extends State<InfoPage> {
                   ),
                   child: Text(
                     'ОГРН: 1187799225833',
-                    style: TextStyle(
-                      color: Color(0xFF373737),
-                      fontSize: 20,
-                      fontWeight: FontWeight.w400,
-                      fontFamily: 'Montserrat',
-                    ),
+                    style: CustomTheme.textStyle20_400,
                   ),
                 ),
               ),
@@ -219,12 +174,7 @@ class _InfoPageState extends State<InfoPage> {
                   ),
                   child: Text(
                     'Банк: 049256341 ПАО ТОКБАНК',
-                    style: TextStyle(
-                      color: Color(0xFF373737),
-                      fontSize: 20,
-                      fontWeight: FontWeight.w400,
-                      fontFamily: 'Montserrat',
-                    ),
+                    style: CustomTheme.textStyle20_400,
                   ),
                 ),
               ),
@@ -236,12 +186,7 @@ class _InfoPageState extends State<InfoPage> {
                   ),
                   child: Text(
                     'Номер счета: 40702810099997074998 ',
-                    style: TextStyle(
-                      color: Color(0xFF373737),
-                      fontSize: 20,
-                      fontWeight: FontWeight.w400,
-                      fontFamily: 'Montserrat',
-                    ),
+                    style: CustomTheme.textStyle20_400,
                   ),
                 ),
               ),
@@ -265,13 +210,7 @@ class _InfoPageState extends State<InfoPage> {
         alignment: FractionalOffset.bottomCenter,
         child: Container(
           alignment: Alignment.center,
-          decoration: const BoxDecoration(
-            color: Color(0xFFFFF9C0),
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(40.0),
-              topRight: Radius.circular(40.0),
-            ),
-          ),
+          decoration: CustomTheme.footerDecoration,
           height: MediaQuery.of(context).size.height * 0.1,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -284,16 +223,8 @@ class _InfoPageState extends State<InfoPage> {
                     bottom: MediaQuery.of(context).size.height * 0.009,
                   ),
                   width: MediaQuery.of(context).size.width * 0.3,
-                  decoration: BoxDecoration(
-                    color: Color(0xFFFFED4D),
-                    border:
-                        Border.all(width: 2, color: const Color(0xFF000000)),
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(30.0),
-                    ),
-                  ),
+                  decoration: CustomTheme.menuButtonDecoration,
                   child: InkWell(
-                    splashColor: Color(0xFFFFED4D), // splash color
                     onTap: () {
                       Navigator.push(
                         context,
@@ -310,7 +241,7 @@ class _InfoPageState extends State<InfoPage> {
                           color: Colors.black,
                           width: MediaQuery.of(context).size.width * 0.1,
                         ),
-                        Text("Счета"), // text
+                        const Text("Счета"), // text
                       ],
                     ),
                   ),
@@ -324,16 +255,8 @@ class _InfoPageState extends State<InfoPage> {
                     bottom: MediaQuery.of(context).size.height * 0.009,
                   ),
                   width: MediaQuery.of(context).size.width * 0.3,
-                  decoration: BoxDecoration(
-                    color: Color(0xFFFFED4D),
-                    border:
-                        Border.all(width: 2, color: const Color(0xFF000000)),
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(30.0),
-                    ),
-                  ),
+                  decoration: CustomTheme.menuButtonDecoration,
                   child: InkWell(
-                    splashColor: Color(0xFFFFED4D),
                     onTap: () {
                       Navigator.push(
                         context,
@@ -350,7 +273,7 @@ class _InfoPageState extends State<InfoPage> {
                           color: Colors.black,
                           width: MediaQuery.of(context).size.width * 0.1,
                         ),
-                        Text("Счетчики"), // text
+                        const Text("Счетчики"), // text
                       ],
                     ),
                   ),
