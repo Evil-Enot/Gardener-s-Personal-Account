@@ -69,6 +69,7 @@ flutter:
      - assets/images/settings.svg
      - assets/images/ruble.svg
      - assets/images/counter.svg
+     - assets/images/home.svg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
