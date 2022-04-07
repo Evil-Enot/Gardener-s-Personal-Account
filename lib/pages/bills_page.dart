@@ -1,17 +1,14 @@
-import 'package:diploma/pages/bills_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class SettingsPage extends StatefulWidget {
-  const SettingsPage({Key? key}) : super(key: key);
+class BillsPage extends StatefulWidget {
+  const BillsPage({Key? key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _SettingsPageState();
+  State<StatefulWidget> createState() => _BillsPageState();
 }
 
-class _SettingsPageState extends State<SettingsPage> {
-  bool value = false;
-
+class _BillsPageState extends State<BillsPage> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -20,8 +17,8 @@ class _SettingsPageState extends State<SettingsPage> {
         body: Center(
           child: Column(
             children: <Widget>[
-              _buildToolbarSettings(context),
-              _buildSettingsContent(context),
+              _buildToolbarBills(context),
+              _buildMainBillsContent(context),
               _buildMenu(context),
             ],
           ),
@@ -32,7 +29,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
   //FIX
   //TODO()
-  Widget _buildToolbarSettings(BuildContext context) {
+  Widget _buildToolbarBills(BuildContext context) {
     return Container(
       alignment: Alignment.center,
       width: MediaQuery.of(context).size.width,
@@ -62,7 +59,7 @@ class _SettingsPageState extends State<SettingsPage> {
               right: MediaQuery.of(context).size.width * 0.2,
             ),
             child: const Text(
-              'Настройки',
+              'Счета',
               style: TextStyle(
                 color: Color(0xFF373737),
                 fontSize: 22,
@@ -82,7 +79,7 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  Widget _buildSettingsContent(BuildContext context) {
+  Widget _buildMainBillsContent(BuildContext context) {
     return Container(
       alignment: Alignment.center,
       margin: EdgeInsets.only(
@@ -97,29 +94,45 @@ class _SettingsPageState extends State<SettingsPage> {
                 child: Container(
                   padding: EdgeInsets.only(
                     left: MediaQuery.of(context).size.width * 0.05,
-                    right: MediaQuery.of(context).size.width * 0.05,
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Включить уведомления',
-                        style: TextStyle(
-                          color: Color(0xFF373737),
-                          fontSize: 20,
-                          fontWeight: FontWeight.w400,
-                          fontFamily: 'Montserrat',
-                        ),
+                  child: RichText(
+                    text: TextSpan(
+                      text: 'Текущий долг: ',
+                      style: TextStyle(
+                        color: Color(0xFF373737),
+                        fontSize: 18,
+                        fontWeight: FontWeight.w400,
+                        fontFamily: 'Montserrat',
                       ),
-                      Switch(
-                        value: value,
-                        onChanged: (bool value) {
-                          setState(() => this.value = value);
-                        },
-                        activeTrackColor: Color(0xFFFFF9C0),
-                        activeColor: Color(0xFFFFED4D),
-                      ),
-                    ],
+                      children: [
+                        TextSpan(
+                          text: '-102598',
+                          style: TextStyle(
+                            color: Colors.red,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w400,
+                            fontFamily: 'Montserrat',
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              Align(
+                alignment: Alignment.topLeft,
+                child: Container(
+                  padding: EdgeInsets.only(
+                    left: MediaQuery.of(context).size.width * 0.05,
+                  ),
+                  child: Text(
+                    'Дата последней подачи показаний: 30.02.2021 ',
+                    style: TextStyle(
+                      color: Color(0xFF373737),
+                      fontSize: 20,
+                      fontWeight: FontWeight.w400,
+                      fontFamily: 'Montserrat',
+                    ),
                   ),
                 ),
               ),
@@ -130,6 +143,40 @@ class _SettingsPageState extends State<SettingsPage> {
                 endIndent: MediaQuery.of(context).size.width * 0.05,
                 color: Colors.black,
               ),
+              Align(
+                alignment: Alignment.center,
+                child: Container(
+                  margin: EdgeInsets.only(
+                    top: MediaQuery.of(context).size.height * 0.01,
+                  ),
+                  child: SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.08,
+                    width: MediaQuery.of(context).size.width * 0.3,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        primary: Color(0xFFFFED4D),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30.0),
+                          side: BorderSide(
+                            color: Colors.black,
+                            width: 2.0,
+                          ),
+                        ),
+                      ),
+                      onPressed: () {},
+                      child: Text(
+                        'Оплатить',
+                        style: TextStyle(
+                          color: Color(0xFF373737),
+                          fontSize: 24,
+                          fontWeight: FontWeight.w400,
+                          fontFamily: 'Montserrat',
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              )
             ],
           ),
         ],
@@ -172,14 +219,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                   child: InkWell(
                     splashColor: Color(0xFFFFED4D), // splash color
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const BillsPage(),
-                        ),
-                      );
-                    }, // button pressed
+                    onTap: () {}, // button pressed
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[

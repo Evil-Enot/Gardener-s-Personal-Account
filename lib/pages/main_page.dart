@@ -1,6 +1,7 @@
 // import 'dart:convert' as convert;
 // import 'package:http/http.dart' as http;
 
+import 'package:diploma/pages/bills_page.dart';
 import 'package:diploma/pages/info_page.dart';
 import 'package:diploma/pages/settings_page.dart';
 import 'package:flutter/material.dart';
@@ -78,9 +79,11 @@ class _MainPageState extends State<MainPage> {
             iconSize: MediaQuery.of(context).size.width * 0.05,
             onPressed: () {
               Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const SettingsPage()));
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const SettingsPage(),
+                ),
+              );
             },
           ),
         ],
@@ -365,7 +368,14 @@ class _MainPageState extends State<MainPage> {
                   ),
                   child: InkWell(
                     splashColor: Color(0xFFFFED4D), // splash color
-                    onTap: () {}, // button pressed
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const BillsPage(),
+                        ),
+                      );
+                    }, // button pressed
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[

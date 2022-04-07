@@ -1,3 +1,4 @@
+import 'package:diploma/pages/bills_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -286,7 +287,14 @@ class _InfoPageState extends State<InfoPage> {
                   ),
                   child: InkWell(
                     splashColor: Color(0xFFFFED4D), // splash color
-                    onTap: () {}, // button pressed
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const BillsPage(),
+                        ),
+                      );
+                    }, // button pressed
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
