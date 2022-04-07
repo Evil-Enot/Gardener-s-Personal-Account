@@ -1,17 +1,16 @@
 import 'package:diploma/pages/bills_page.dart';
 import 'package:diploma/pages/main_page.dart';
-import 'package:diploma/pages/meters_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class InfoPage extends StatefulWidget {
-  const InfoPage({Key? key}) : super(key: key);
+class MetersPage extends StatefulWidget {
+  const MetersPage({Key? key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _InfoPageState();
+  State<StatefulWidget> createState() => _MetersPageState();
 }
 
-class _InfoPageState extends State<InfoPage> {
+class _MetersPageState extends State<MetersPage> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -20,8 +19,8 @@ class _InfoPageState extends State<InfoPage> {
         body: Center(
           child: Column(
             children: <Widget>[
-              _buildToolbarInfo(context),
-              _buildInfoContent(context),
+              _buildToolbarMeters(context),
+              _buildMainMetersContent(context),
               _buildMenu(context),
             ],
           ),
@@ -31,8 +30,8 @@ class _InfoPageState extends State<InfoPage> {
   }
 
   //FIX
-  //TODO()
-  Widget _buildToolbarInfo(BuildContext context) {
+//TODO()
+  Widget _buildToolbarMeters(BuildContext context) {
     return Container(
       alignment: Alignment.center,
       width: MediaQuery.of(context).size.width,
@@ -67,7 +66,7 @@ class _InfoPageState extends State<InfoPage> {
               right: MediaQuery.of(context).size.width * 0.2,
             ),
             child: const Text(
-              'Информация',
+              'Счетчики',
               style: TextStyle(
                 color: Color(0xFF373737),
                 fontSize: 22,
@@ -87,7 +86,7 @@ class _InfoPageState extends State<InfoPage> {
     );
   }
 
-  Widget _buildInfoContent(BuildContext context) {
+  Widget _buildMainMetersContent(BuildContext context) {
     return Container(
       alignment: Alignment.center,
       margin: EdgeInsets.only(
@@ -98,7 +97,7 @@ class _InfoPageState extends State<InfoPage> {
           Column(
             children: [
               Text(
-                'Наименование',
+                'Показания счетчика воды',
                 style: TextStyle(
                   color: Color(0xFF373737),
                   fontSize: 22,
@@ -113,7 +112,7 @@ class _InfoPageState extends State<InfoPage> {
                     left: MediaQuery.of(context).size.width * 0.05,
                   ),
                   child: Text(
-                    'СНТ “Солнышко',
+                    'Дата последней подачи показаний: 30.02.2021 ',
                     style: TextStyle(
                       color: Color(0xFF373737),
                       fontSize: 20,
@@ -130,7 +129,7 @@ class _InfoPageState extends State<InfoPage> {
                     left: MediaQuery.of(context).size.width * 0.05,
                   ),
                   child: Text(
-                    'Адрес: Рязанская обл, р-н Рыбновский, с Константиново, "Солнышко" садовое некоммерческое товарищество',
+                    'Показания: 158.000',
                     style: TextStyle(
                       color: Color(0xFF373737),
                       fontSize: 20,
@@ -152,7 +151,102 @@ class _InfoPageState extends State<InfoPage> {
           Column(
             children: [
               Text(
-                'Данные',
+                'Введите новые показания',
+                style: TextStyle(
+                  color: Color(0xFF373737),
+                  fontSize: 22,
+                  fontWeight: FontWeight.w700,
+                  fontFamily: 'Montserrat',
+                ),
+              ),
+              Row(
+                children: [
+                  Container(
+                    margin: EdgeInsets.only(
+                      top: MediaQuery.of(context).size.height * 0.01,
+                      left: MediaQuery.of(context).size.width * 0.05,
+                    ),
+                    width: MediaQuery.of(context).size.width * 0.6,
+                    height: MediaQuery.of(context).size.height * 0.05,
+                    decoration: const BoxDecoration(
+                      color: Color(0xFFFFF9C0),
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(30.0),
+                      ),
+                    ),
+                    child: const Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+                      child: TextField(
+                        keyboardType: TextInputType.number,
+                        maxLines: 1,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Color(0xFF373737),
+                          fontSize: 20,
+                          fontWeight: FontWeight.w400,
+                          fontFamily: 'Montserrat',
+                        ),
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          // hintText: '',
+                          // hintStyle: TextStyle(
+                          //   color: Color(0xFF373737),
+                          //   fontSize: 20,
+                          //   fontWeight: FontWeight.w400,
+                          //   fontFamily: 'Montserrat',
+                          // ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(
+                      left: MediaQuery.of(context).size.width * 0.01,
+                      top: MediaQuery.of(context).size.height * 0.01,
+                    ),
+                    child: SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.05,
+                      width: MediaQuery.of(context).size.width * 0.3,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          primary: Color(0xFFFFED4D),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30.0),
+                            side: BorderSide(
+                              color: Colors.black,
+                              width: 2.0,
+                            ),
+                          ),
+                        ),
+                        onPressed: () {},
+                        child: Text(
+                          'Отправить',
+                          style: TextStyle(
+                            color: Color(0xFF373737),
+                            fontSize: 20,
+                            fontWeight: FontWeight.w400,
+                            fontFamily: 'Montserrat',
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Divider(
+                height: 20,
+                thickness: 2,
+                indent: MediaQuery.of(context).size.width * 0.05,
+                endIndent: MediaQuery.of(context).size.width * 0.05,
+                color: Colors.black,
+              ),
+            ],
+          ),
+          Column(
+            children: [
+              Text(
+                'Показания счетчика электроэнергии',
                 style: TextStyle(
                   color: Color(0xFF373737),
                   fontSize: 22,
@@ -167,7 +261,7 @@ class _InfoPageState extends State<InfoPage> {
                     left: MediaQuery.of(context).size.width * 0.05,
                   ),
                   child: Text(
-                    'ИНН: 7799225834',
+                    'Дата последней подачи показаний: 31.02.2021',
                     style: TextStyle(
                       color: Color(0xFF373737),
                       fontSize: 20,
@@ -184,7 +278,7 @@ class _InfoPageState extends State<InfoPage> {
                     left: MediaQuery.of(context).size.width * 0.05,
                   ),
                   child: Text(
-                    'КПП: 779901001',
+                    'Показания: 268.000',
                     style: TextStyle(
                       color: Color(0xFF373737),
                       fontSize: 20,
@@ -194,56 +288,100 @@ class _InfoPageState extends State<InfoPage> {
                   ),
                 ),
               ),
-              Align(
-                alignment: Alignment.topLeft,
-                child: Container(
-                  padding: EdgeInsets.only(
-                    left: MediaQuery.of(context).size.width * 0.05,
-                  ),
-                  child: Text(
-                    'ОГРН: 1187799225833',
-                    style: TextStyle(
-                      color: Color(0xFF373737),
-                      fontSize: 20,
-                      fontWeight: FontWeight.w400,
-                      fontFamily: 'Montserrat',
-                    ),
-                  ),
+              Divider(
+                height: 20,
+                thickness: 2,
+                indent: MediaQuery.of(context).size.width * 0.05,
+                endIndent: MediaQuery.of(context).size.width * 0.05,
+                color: Colors.black,
+              ),
+            ],
+          ),
+          Column(
+            children: [
+              Text(
+                'Введите новые показания',
+                style: TextStyle(
+                  color: Color(0xFF373737),
+                  fontSize: 22,
+                  fontWeight: FontWeight.w700,
+                  fontFamily: 'Montserrat',
                 ),
               ),
-              Align(
-                alignment: Alignment.topLeft,
-                child: Container(
-                  padding: EdgeInsets.only(
-                    left: MediaQuery.of(context).size.width * 0.05,
-                  ),
-                  child: Text(
-                    'Банк: 049256341 ПАО ТОКБАНК',
-                    style: TextStyle(
-                      color: Color(0xFF373737),
-                      fontSize: 20,
-                      fontWeight: FontWeight.w400,
-                      fontFamily: 'Montserrat',
+              Row(
+                children: [
+                  Container(
+                    margin: EdgeInsets.only(
+                      top: MediaQuery.of(context).size.height * 0.01,
+                      left: MediaQuery.of(context).size.width * 0.05,
+                    ),
+                    width: MediaQuery.of(context).size.width * 0.6,
+                    height: MediaQuery.of(context).size.height * 0.05,
+                    decoration: const BoxDecoration(
+                      color: Color(0xFFFFF9C0),
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(30.0),
+                      ),
+                    ),
+                    child: const Padding(
+                      padding:
+                      EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+                      child: TextField(
+                        keyboardType: TextInputType.number,
+                        maxLines: 1,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Color(0xFF373737),
+                          fontSize: 20,
+                          fontWeight: FontWeight.w400,
+                          fontFamily: 'Montserrat',
+                        ),
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          // hintText: '',
+                          // hintStyle: TextStyle(
+                          //   color: Color(0xFF373737),
+                          //   fontSize: 20,
+                          //   fontWeight: FontWeight.w400,
+                          //   fontFamily: 'Montserrat',
+                          // ),
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              ),
-              Align(
-                alignment: Alignment.topLeft,
-                child: Container(
-                  padding: EdgeInsets.only(
-                    left: MediaQuery.of(context).size.width * 0.05,
-                  ),
-                  child: Text(
-                    'Номер счета: 40702810099997074998 ',
-                    style: TextStyle(
-                      color: Color(0xFF373737),
-                      fontSize: 20,
-                      fontWeight: FontWeight.w400,
-                      fontFamily: 'Montserrat',
+                  Container(
+                    margin: EdgeInsets.only(
+                      left: MediaQuery.of(context).size.width * 0.01,
+                      top: MediaQuery.of(context).size.height * 0.01,
+                    ),
+                    child: SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.05,
+                      width: MediaQuery.of(context).size.width * 0.3,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          primary: Color(0xFFFFED4D),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30.0),
+                            side: BorderSide(
+                              color: Colors.black,
+                              width: 2.0,
+                            ),
+                          ),
+                        ),
+                        onPressed: () {},
+                        child: Text(
+                          'Отправить',
+                          style: TextStyle(
+                            color: Color(0xFF373737),
+                            fontSize: 20,
+                            fontWeight: FontWeight.w400,
+                            fontFamily: 'Montserrat',
+                          ),
+                        ),
+                      ),
                     ),
                   ),
-                ),
+                ],
               ),
               Divider(
                 height: 20,
@@ -334,14 +472,7 @@ class _InfoPageState extends State<InfoPage> {
                   ),
                   child: InkWell(
                     splashColor: Color(0xFFFFED4D),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const MetersPage(),
-                        ),
-                      );
-                    },
+                    onTap: () {},
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
