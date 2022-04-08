@@ -1,10 +1,8 @@
-// import 'dart:convert' as convert;
-// import 'package:http/http.dart' as http;
-
 import 'package:diploma/pages/auth_page.dart';
 import 'package:diploma/theme/custom_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:http/http.dart' as http;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -35,6 +33,9 @@ class UrlPage extends StatefulWidget {
 }
 
 class _UrlPageState extends State<UrlPage> {
+  String _url = "";
+  bool _isEmpty = false;
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -96,6 +97,10 @@ class _UrlPageState extends State<UrlPage> {
               hintText: 'Введите URL сервера',
               hintStyle: CustomTheme.textStyle20_400,
             ),
+            onSubmitted: (text) {
+              _url = text;
+              print(text);
+            },
           ),
         ),
       ),
@@ -143,18 +148,22 @@ class _UrlPageState extends State<UrlPage> {
   }
 
   _checkURL() async {
-    // var url =
-    //     Uri.https('www.googleapis.com', '/books/v1/volumes', {'q': '{http}'});
-    // var response = await http.get(url);
-    // if (response.statusCode == 200) {
-    //   var jsonResponse =
-    //       convert.jsonDecode(response.body) as Map<String, dynamic>;
-    //   var itemCount = jsonResponse['totalItems'];
-    //   print('Number of books about http: $itemCount.');
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => const AuthPage()));
-    // } else {
-    //   print('Request failed with status: ${response.statusCode}.');
-    // }
+    Map<String, String> requestHeaders = {
+      // 'Content-type': 'application/json',
+      // 'Accept': 'application/json',
+      'Authorization': 'Basic 0JLQtdGC0LrQuNC90LA6'
+    };
+    if (_url.isNotEmpty) {
+      var response = await http.get(Uri.parse(_url + "/hs/diploma/check/url"),
+          headers: requestHeaders);
+      if (response.statusCode == 200) {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => const AuthPage()));
+      } else {
+        print('Request failed with status: ${response.statusCode}.');
+      }
+    } else {
+      _isEmpty = true;
+    }
   }
 }
