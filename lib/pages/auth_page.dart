@@ -1,9 +1,8 @@
-// import 'dart:convert' as convert;
-// import 'package:http/http.dart' as http;
-
-import 'package:diploma/pages/main_page.dart';
+import 'package:diploma/pages/code_page.dart';
 import 'package:diploma/theme/custom_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthPage extends StatefulWidget {
   const AuthPage({Key? key}) : super(key: key);
@@ -13,6 +12,11 @@ class AuthPage extends StatefulWidget {
 }
 
 class _AuthPageState extends State<AuthPage> {
+  FocusNode nodeOne = FocusNode();
+  FocusNode nodeTwo = FocusNode();
+  String _bio = "";
+  String _number = "";
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -20,11 +24,15 @@ class _AuthPageState extends State<AuthPage> {
         resizeToAvoidBottomInset: false,
         body: Center(
           child: Column(
-            children: <Widget>[
+            children: [
               _buildTitle(context),
-              _buildNumberInput(context),
-              _buildCodeInput(context),
-              _buildCodeOverlay(context),
+              ListView(
+                shrinkWrap: true,
+                children: <Widget>[
+                  _buildBioInput(context),
+                  _buildNumberInput(context),
+                ],
+              ),
               _buildSubmitButton(context),
             ],
           ),
@@ -50,7 +58,8 @@ class _AuthPageState extends State<AuthPage> {
     );
   }
 
-  Widget _buildNumberInput(BuildContext context) {
+  Widget _buildBioInput(BuildContext context) {
+
     return Container(
       alignment: Alignment.center,
       margin: EdgeInsets.only(
@@ -66,22 +75,29 @@ class _AuthPageState extends State<AuthPage> {
             vertical: MediaQuery.of(context).size.height * 0.01,
           ),
           child: TextField(
-            keyboardType: TextInputType.phone,
+            keyboardType: TextInputType.text,
+            focusNode: nodeOne,
+            textCapitalization: TextCapitalization.words,
             maxLines: 1,
             textAlign: TextAlign.center,
             style: CustomTheme.textStyle20_400,
             decoration: InputDecoration(
               border: InputBorder.none,
-              hintText: 'Введите номер телефона',
+              hintText: 'Введите ФИО',
               hintStyle: CustomTheme.textStyle20_400,
             ),
+            onSubmitted: (text) {
+              print(text);
+              _bio = text;
+              FocusScope.of(context).requestFocus(nodeTwo);
+            },
           ),
         ),
       ),
     );
   }
 
-  Widget _buildCodeInput(BuildContext context) {
+  Widget _buildNumberInput(BuildContext context) {
     return Container(
       alignment: Alignment.center,
       margin: EdgeInsets.only(
@@ -97,41 +113,21 @@ class _AuthPageState extends State<AuthPage> {
             vertical: MediaQuery.of(context).size.height * 0.01,
           ),
           child: TextField(
-            keyboardType: TextInputType.text,
+            keyboardType: TextInputType.phone,
+            focusNode: nodeTwo,
             maxLines: 1,
             textAlign: TextAlign.center,
             style: CustomTheme.textStyle20_400,
             decoration: InputDecoration(
               border: InputBorder.none,
-              hintText: 'Код из смс',
+              hintText: 'Введите номер телефона',
               hintStyle: CustomTheme.textStyle20_400,
             ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildCodeOverlay(BuildContext context) {
-    return Container(
-      alignment: Alignment.center,
-      child: GestureDetector(
-        // onTap: _showOverlay(),
-        child: Container(
-          margin: EdgeInsets.only(
-            bottom: MediaQuery.of(context).size.height * 0.01,
-          ),
-          child: RichText(
-            text: TextSpan(
-              text: 'Не пришел код? ',
-              style: CustomTheme.textStyle14_400U,
-              children: [
-                TextSpan(
-                  text: 'Отправить еще раз',
-                  style: CustomTheme.textStyle14_700U,
-                )
-              ],
-            ),
+            onSubmitted: (text) {
+              print(text);
+              _number = text;
+            },
+            scrollPadding: EdgeInsets.only(bottom: 40),
           ),
         ),
       ),
@@ -148,8 +144,7 @@ class _AuthPageState extends State<AuthPage> {
       decoration: CustomTheme.buttonsDecoration,
       child: TextButton(
         onPressed: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => const MainPage()));
+          _checkAuth();
         },
         child: Text(
           "Продолжить",
@@ -158,5 +153,31 @@ class _AuthPageState extends State<AuthPage> {
         ),
       ),
     );
+  }
+
+  _checkAuth() async {
+    final prefs = await SharedPreferences.getInstance();
+    final url = prefs.getString('url');
+    print(url);
+    Map<String, String> requestHeaders = {
+      // 'Content-type': 'application/json',
+      // 'Accept': 'application/json',
+      'Authorization': 'Basic 0JLQtdGC0LrQuNC90LA6'
+    };
+    if (_bio.isNotEmpty && _number.isNotEmpty) {
+      var response = await http.get(
+          Uri.parse(url! +
+              "/hs/diploma/check/number/info?bio=" +
+              _bio +
+              "&number=" +
+              _number),
+          headers: requestHeaders);
+      if (response.statusCode == 200) {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => const CodePage()));
+      } else {
+        print('Request failed with status: ${response.statusCode}.');
+      }
+    }
   }
 }
