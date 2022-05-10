@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:diploma/pages/code_page.dart';
 import 'package:diploma/theme/custom_theme.dart';
 import 'package:flutter/material.dart';
@@ -59,7 +61,6 @@ class _AuthPageState extends State<AuthPage> {
   }
 
   Widget _buildBioInput(BuildContext context) {
-
     return Container(
       alignment: Alignment.center,
       margin: EdgeInsets.only(
@@ -158,20 +159,20 @@ class _AuthPageState extends State<AuthPage> {
   _checkAuth() async {
     final prefs = await SharedPreferences.getInstance();
     final url = prefs.getString('url');
-    print(url);
     Map<String, String> requestHeaders = {
-      // 'Content-type': 'application/json',
-      // 'Accept': 'application/json',
       'Authorization': 'Basic 0JLQtdGC0LrQuNC90LA6'
     };
     if (_bio.isNotEmpty && _number.isNotEmpty) {
-      var response = await http.get(
-          Uri.parse(url! +
-              "/hs/diploma/check/number/info?bio=" +
-              _bio +
-              "&number=" +
-              _number),
-          headers: requestHeaders);
+      var response = await http.post(
+        Uri.parse(url! + "/hs/diploma/check/number"),
+        headers: requestHeaders,
+        body: jsonEncode(
+          <String, String>{
+            'bio': _bio,
+            'number': _number,
+          },
+        ),
+      );
       if (response.statusCode == 200) {
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => const CodePage()));
