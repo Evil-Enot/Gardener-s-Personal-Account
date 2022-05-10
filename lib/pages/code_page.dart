@@ -1,53 +1,26 @@
-import 'package:diploma/pages/auth_page.dart';
+import 'package:diploma/pages/main_page.dart';
 import 'package:diploma/theme/custom_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setEnabledSystemUIMode(
-    SystemUiMode.immersiveSticky,
-  );
-
-  runApp(const DiplomaApp());
-}
-
-class DiplomaApp extends StatelessWidget {
-  const DiplomaApp({Key? key}) : super(key: key);
+class CodePage extends StatefulWidget {
+  const CodePage({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      title: "Кабинет садовода",
-      home: UrlPage(),
-    );
-  }
+  State<StatefulWidget> createState() => _CodePageState();
 }
 
-class UrlPage extends StatefulWidget {
-  const UrlPage({Key? key}) : super(key: key);
-
-  @override
-  _UrlPageState createState() => _UrlPageState();
-}
-
-class _UrlPageState extends State<UrlPage> {
-  String _url = "";
-  bool _isEmpty = false;
-
+class _CodePageState extends State<CodePage> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        // resizeToAvoidBottomInset: false,
-        body: SingleChildScrollView(
+        resizeToAvoidBottomInset: false,
+        body: Center(
           child: Column(
             children: <Widget>[
               _buildTitle(context),
-              _buildURLInput(context),
-              _buildURLOverlay(context),
+              _buildCodeInput(context),
+              _buildCodeOverlay(context),
               _buildSubmitButton(context),
             ],
           ),
@@ -73,11 +46,11 @@ class _UrlPageState extends State<UrlPage> {
     );
   }
 
-  Widget _buildURLInput(BuildContext context) {
+  Widget _buildCodeInput(BuildContext context) {
     return Container(
       alignment: Alignment.center,
       margin: EdgeInsets.only(
-        top: MediaQuery.of(context).size.height * 0.02,
+        top: MediaQuery.of(context).size.height * 0.01,
         bottom: MediaQuery.of(context).size.height * 0.01,
       ),
       child: Container(
@@ -95,20 +68,16 @@ class _UrlPageState extends State<UrlPage> {
             style: CustomTheme.textStyle20_400,
             decoration: InputDecoration(
               border: InputBorder.none,
-              hintText: 'Введите URL сервера',
+              hintText: 'Код из смс',
               hintStyle: CustomTheme.textStyle20_400,
             ),
-            scrollPadding: EdgeInsets.only(bottom:40),
-            onSubmitted: (text) {
-              _url = text;
-            },
           ),
         ),
       ),
     );
   }
 
-  Widget _buildURLOverlay(BuildContext context) {
+  Widget _buildCodeOverlay(BuildContext context) {
     return Container(
       alignment: Alignment.center,
       child: GestureDetector(
@@ -117,10 +86,17 @@ class _UrlPageState extends State<UrlPage> {
           margin: EdgeInsets.only(
             bottom: MediaQuery.of(context).size.height * 0.01,
           ),
-          child: Text(
-            "Что такое URL?",
-            textAlign: TextAlign.center,
-            style: CustomTheme.textStyle14_400U,
+          child: RichText(
+            text: TextSpan(
+              text: 'Не пришел код? ',
+              style: CustomTheme.textStyle14_400U,
+              children: [
+                TextSpan(
+                  text: 'Отправить еще раз',
+                  style: CustomTheme.textStyle14_700U,
+                )
+              ],
+            ),
           ),
         ),
       ),
@@ -137,7 +113,7 @@ class _UrlPageState extends State<UrlPage> {
       decoration: CustomTheme.buttonsDecoration,
       child: TextButton(
         onPressed: () {
-          _checkURL();
+          _checkAuth();
         },
         child: Text(
           "Продолжить",
@@ -148,26 +124,24 @@ class _UrlPageState extends State<UrlPage> {
     );
   }
 
-  _checkURL() async {
-    final prefs = await SharedPreferences.getInstance();
-
-    Map<String, String> requestHeaders = {
-      // 'Content-type': 'application/json',
-      // 'Accept': 'application/json',
-      'Authorization': 'Basic 0JLQtdGC0LrQuNC90LA6'
-    };
-    if (_url.isNotEmpty) {
-      var response = await http.get(Uri.parse(_url + "/hs/diploma/check/url"),
-          headers: requestHeaders);
-      if (response.statusCode == 200) {
-        prefs.setString('url', _url);
+  _checkAuth() async {
+    // final prefs = await SharedPreferences.getInstance();
+    // final url = prefs.getString('url');
+    // print(url);
+    // Map<String, String> requestHeaders = {
+    //   // 'Content-type': 'application/json',
+    //   // 'Accept': 'application/json',
+    //   'Authorization': 'Basic 0JLQtdGC0LrQuNC90LA6'
+    // };
+    // if (_bio.isNotEmpty && _number.isNotEmpty) {
+    //   var response = await http.get(Uri.parse(url! + "/hs/diploma/check/number/info?bio="+_bio+"&number="+_number),
+    //       headers: requestHeaders);
+    //   if (response.statusCode == 200) {
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => const AuthPage()));
-      } else {
-        print('Request failed with status: ${response.statusCode}.');
-      }
-    } else {
-      _isEmpty = true;
-    }
+            context, MaterialPageRoute(builder: (context) => const MainPage()));
+    //   } else {
+    //     print('Request failed with status: ${response.statusCode}.');
+    //   }
+    // }
   }
 }

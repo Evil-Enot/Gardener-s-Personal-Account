@@ -103,7 +103,7 @@ class _MainPageState extends State<MainPage> {
                     left: MediaQuery.of(context).size.width * 0.05,
                   ),
                   child: Text(
-                    'Солянкин Илья Андреевич',
+                    'Валеев Артур Рудольфович',
                     style: CustomTheme.textStyle20_400,
                   ),
                 ),
@@ -130,7 +130,7 @@ class _MainPageState extends State<MainPage> {
                     left: MediaQuery.of(context).size.width * 0.05,
                   ),
                   child: Text(
-                    'Тел: 89149505442',
+                    'Тел: 8(223) 456-96-14',
                     style: CustomTheme.textStyle20_400,
                   ),
                 ),
@@ -142,7 +142,7 @@ class _MainPageState extends State<MainPage> {
                     left: MediaQuery.of(context).size.width * 0.05,
                   ),
                   child: Text(
-                    'E-mail: evil.enot.00@gmail.com',
+                    'E-mail: ravine_deep@smail.ru',
                     style: CustomTheme.textStyle20_400,
                   ),
                 ),
@@ -169,7 +169,7 @@ class _MainPageState extends State<MainPage> {
                     left: MediaQuery.of(context).size.width * 0.05,
                   ),
                   child: Text(
-                    'Адрес: Россия, Иркутская обл, с. Пивовариха, ул. Рябиновая, д. 9а',
+                    'Адрес: Лесная, 11',
                     style: CustomTheme.textStyle20_400,
                   ),
                 ),
@@ -181,7 +181,7 @@ class _MainPageState extends State<MainPage> {
                     left: MediaQuery.of(context).size.width * 0.05,
                   ),
                   child: Text(
-                    'Площадь участка: 1000 м. кв.',
+                    'Площадь участка: 400,00 м. кв.',
                     style: CustomTheme.textStyle20_400,
                   ),
                 ),
@@ -225,9 +225,9 @@ class _MainPageState extends State<MainPage> {
                       style: CustomTheme.textStyle20_400,
                       children: const [
                         TextSpan(
-                          text: '-102598',
+                          text: '11.87',
                           style: TextStyle(
-                            color: Colors.red,
+                            color: Colors.green,
                             fontSize: 18,
                             fontWeight: FontWeight.w400,
                             fontFamily: 'Montserrat',

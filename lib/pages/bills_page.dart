@@ -98,9 +98,9 @@ class _BillsPageState extends State<BillsPage> {
                       style: CustomTheme.textStyle20_400,
                       children: const [
                         TextSpan(
-                          text: '-102598',
+                          text: '11.87',
                           style: TextStyle(
-                            color: Colors.red,
+                            color: Colors.green,
                             fontSize: 18,
                             fontWeight: FontWeight.w400,
                             fontFamily: 'Montserrat',
