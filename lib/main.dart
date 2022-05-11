@@ -35,7 +35,6 @@ class UrlPage extends StatefulWidget {
 
 class _UrlPageState extends State<UrlPage> {
   String _url = "";
-  bool _isEmpty = false;
 
   @override
   Widget build(BuildContext context) {
@@ -98,9 +97,9 @@ class _UrlPageState extends State<UrlPage> {
               hintText: 'Введите URL сервера',
               hintStyle: CustomTheme.textStyle20_400,
             ),
-            scrollPadding: EdgeInsets.only(bottom:40),
+            scrollPadding: EdgeInsets.only(bottom: 40),
             onSubmitted: (text) {
-              _url = text;
+              _url = text.trim();
             },
           ),
         ),
@@ -166,8 +165,6 @@ class _UrlPageState extends State<UrlPage> {
       } else {
         print('Request failed with status: ${response.statusCode}.');
       }
-    } else {
-      _isEmpty = true;
     }
   }
 }

@@ -89,7 +89,7 @@ class _AuthPageState extends State<AuthPage> {
             ),
             onSubmitted: (text) {
               print(text);
-              _bio = text;
+              _bio = text.trim();
               FocusScope.of(context).requestFocus(nodeTwo);
             },
           ),
@@ -126,7 +126,7 @@ class _AuthPageState extends State<AuthPage> {
             ),
             onSubmitted: (text) {
               print(text);
-              _number = text;
+              _number = text.trim();
             },
             scrollPadding: EdgeInsets.only(bottom: 40),
           ),

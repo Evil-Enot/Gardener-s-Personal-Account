@@ -1,9 +1,14 @@
+import 'dart:convert';
+
+import 'package:diploma/models/gardening_info_response.dart';
 import 'package:diploma/pages/bills_page.dart';
 import 'package:diploma/pages/main_page.dart';
 import 'package:diploma/pages/meters_page.dart';
 import 'package:diploma/theme/custom_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class InfoPage extends StatefulWidget {
   const InfoPage({Key? key}) : super(key: key);
@@ -13,18 +18,36 @@ class InfoPage extends StatefulWidget {
 }
 
 class _InfoPageState extends State<InfoPage> {
+  late Future<GardeningInfo> gardeningInfo;
+
+  @override
+  void initState() {
+    super.initState();
+    gardeningInfo = fetchGardeningInfo();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
         resizeToAvoidBottomInset: false,
         body: Center(
-          child: Column(
-            children: <Widget>[
-              _buildToolbarInfo(context),
-              _buildInfoContent(context),
-              _buildMenu(context),
-            ],
+          child: FutureBuilder<GardeningInfo>(
+            future: gardeningInfo,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return Column(
+                  children: <Widget>[
+                    _buildToolbarInfo(context),
+                    _buildInfoContent(context, snapshot),
+                    _buildMenu(context),
+                  ],
+                );
+              } else if (snapshot.hasError) {
+                return Text('${snapshot.error}');
+              }
+              return const CircularProgressIndicator();
+            },
           ),
         ),
       ),
@@ -77,7 +100,8 @@ class _InfoPageState extends State<InfoPage> {
     );
   }
 
-  Widget _buildInfoContent(BuildContext context) {
+  Widget _buildInfoContent(
+      BuildContext context, AsyncSnapshot<GardeningInfo> snapshot) {
     return Container(
       alignment: Alignment.center,
       margin: EdgeInsets.only(
@@ -98,7 +122,7 @@ class _InfoPageState extends State<InfoPage> {
                     left: MediaQuery.of(context).size.width * 0.05,
                   ),
                   child: Text(
-                    'СНТ “Солнышко',
+                    snapshot.data!.info.name,
                     style: CustomTheme.textStyle20_400,
                   ),
                 ),
@@ -110,7 +134,7 @@ class _InfoPageState extends State<InfoPage> {
                     left: MediaQuery.of(context).size.width * 0.05,
                   ),
                   child: Text(
-                    'Адрес: Рязанская обл, р-н Рыбновский, с Константиново, "Солнышко" садовое некоммерческое товарищество',
+                    snapshot.data!.info.address,
                     style: CustomTheme.textStyle20_400,
                   ),
                 ),
@@ -137,7 +161,7 @@ class _InfoPageState extends State<InfoPage> {
                     left: MediaQuery.of(context).size.width * 0.05,
                   ),
                   child: Text(
-                    'ИНН: 7799225834',
+                    'ИНН: ' + snapshot.data!.info.inn,
                     style: CustomTheme.textStyle20_400,
                   ),
                 ),
@@ -149,7 +173,7 @@ class _InfoPageState extends State<InfoPage> {
                     left: MediaQuery.of(context).size.width * 0.05,
                   ),
                   child: Text(
-                    'КПП: 779901001',
+                    'КПП: ' + snapshot.data!.info.kpp,
                     style: CustomTheme.textStyle20_400,
                   ),
                 ),
@@ -161,7 +185,7 @@ class _InfoPageState extends State<InfoPage> {
                     left: MediaQuery.of(context).size.width * 0.05,
                   ),
                   child: Text(
-                    'ОГРН: 1187799225833',
+                    'ОГРН: ' + snapshot.data!.info.ogrn,
                     style: CustomTheme.textStyle20_400,
                   ),
                 ),
@@ -173,7 +197,7 @@ class _InfoPageState extends State<InfoPage> {
                     left: MediaQuery.of(context).size.width * 0.05,
                   ),
                   child: Text(
-                    'Банк: 049256341 ПАО ТОКБАНК',
+                    'Банк: ' + snapshot.data!.info.bank,
                     style: CustomTheme.textStyle20_400,
                   ),
                 ),
@@ -185,7 +209,7 @@ class _InfoPageState extends State<InfoPage> {
                     left: MediaQuery.of(context).size.width * 0.05,
                   ),
                   child: Text(
-                    'Номер счета: 40702810099997074998 ',
+                    'Номер счета: ' + snapshot.data!.info.bill,
                     style: CustomTheme.textStyle20_400,
                   ),
                 ),
@@ -284,5 +308,24 @@ class _InfoPageState extends State<InfoPage> {
         ),
       ),
     );
+  }
+
+  Future<GardeningInfo> fetchGardeningInfo() async {
+    final prefs = await SharedPreferences.getInstance();
+    final url = prefs.getString('url');
+    Map<String, String> requestHeaders = {
+      'Authorization': 'Basic 0JLQtdGC0LrQuNC90LA6'
+    };
+
+    final response = await http.get(
+        Uri.parse(url! + "/hs/diploma/get/gardening"),
+        headers: requestHeaders);
+
+    if (response.statusCode == 200) {
+      return GardeningInfo.fromJson(jsonDecode(response.body));
+    } else {
+      print('Request failed with status: ${response.statusCode}.');
+      throw Exception('Failed to load album');
+    }
   }
 }
