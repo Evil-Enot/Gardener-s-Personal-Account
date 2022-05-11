@@ -1,8 +1,13 @@
+import 'dart:convert';
+
+import 'package:diploma/models/bills_info_response.dart';
 import 'package:diploma/pages/main_page.dart';
 import 'package:diploma/pages/meters_page.dart';
 import 'package:diploma/theme/custom_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class BillsPage extends StatefulWidget {
   const BillsPage({Key? key}) : super(key: key);
@@ -12,18 +17,35 @@ class BillsPage extends StatefulWidget {
 }
 
 class _BillsPageState extends State<BillsPage> {
+  late Future<BillsInfo> billsInfo;
+
+  @override
+  void initState() {
+    super.initState();
+    billsInfo = fetchBillsInfo();
+  }
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
         resizeToAvoidBottomInset: false,
         body: Center(
-          child: Column(
-            children: <Widget>[
-              _buildToolbarBills(context),
-              _buildMainBillsContent(context),
-              _buildMenu(context),
-            ],
+          child: FutureBuilder<BillsInfo>(
+            future: billsInfo,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return Column(
+                  children: <Widget>[
+                    _buildToolbarBills(context),
+                    _buildMainBillsContent(context, snapshot),
+                    _buildMenu(context),
+                  ],
+                );
+              } else if (snapshot.hasError) {
+                return Text('${snapshot.error}');
+              }
+              return const CircularProgressIndicator();
+            },
           ),
         ),
       ),
@@ -76,7 +98,7 @@ class _BillsPageState extends State<BillsPage> {
     );
   }
 
-  Widget _buildMainBillsContent(BuildContext context) {
+  Widget _buildMainBillsContent(BuildContext context, AsyncSnapshot<BillsInfo> snapshot) {
     return Container(
       alignment: Alignment.center,
       margin: EdgeInsets.only(
@@ -96,16 +118,42 @@ class _BillsPageState extends State<BillsPage> {
                     text: TextSpan(
                       text: 'Текущий долг: ',
                       style: CustomTheme.textStyle20_400,
-                      children: const [
+                      children: snapshot.data!.info.billduty > 0
+                          ? [
                         TextSpan(
-                          text: '11.87',
-                          style: TextStyle(
-                            color: Colors.green,
+                          text: snapshot.data!.info.billduty.toString(),
+                          style: const TextStyle(
+                            color: Colors.red,
                             fontSize: 18,
                             fontWeight: FontWeight.w400,
                             fontFamily: 'Montserrat',
                           ),
                         )
+                      ]
+                          : snapshot.data!.info.billoverpayment > 0
+                          ? [
+                        TextSpan(
+                          text: snapshot.data!.info.billoverpayment
+                              .toString(),
+                          style: const TextStyle(
+                            color: Colors.green,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w400,
+                            fontFamily: 'Montserrat',
+                          ),
+                        ),
+                      ]
+                          : [
+                        const TextSpan(
+                          text:
+                          'Ошибка на сервере, обраитесь к администратору',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w400,
+                            fontFamily: 'Montserrat',
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -118,7 +166,21 @@ class _BillsPageState extends State<BillsPage> {
                     left: MediaQuery.of(context).size.width * 0.05,
                   ),
                   child: Text(
-                    'Дата последней подачи показаний: 30.02.2021 ',
+                    'Дата последней подачи показаний по водоснабжению: ' +
+                        snapshot.data!.info.lastbillelwater,
+                    style: CustomTheme.textStyle20_400,
+                  ),
+                ),
+              ),
+              Align(
+                alignment: Alignment.topLeft,
+                child: Container(
+                  padding: EdgeInsets.only(
+                    left: MediaQuery.of(context).size.width * 0.05,
+                  ),
+                  child: Text(
+                    'Дата последней подачи показаний по электричеству: ' +
+                        snapshot.data!.info.lastbillelectro,
                     style: CustomTheme.textStyle20_400,
                   ),
                 ),
@@ -230,5 +292,31 @@ class _BillsPageState extends State<BillsPage> {
         ),
       ),
     );
+  }
+
+  Future<BillsInfo> fetchBillsInfo() async {
+    final prefs = await SharedPreferences.getInstance();
+    final url = prefs.getString('url');
+    final bio = prefs.getString('bio');
+    Map<String, String> requestHeaders = {
+      'Authorization': 'Basic 0JLQtdGC0LrQuNC90LA6'
+    };
+
+    final response = await http.post(
+      Uri.parse(url! + "/hs/diploma/get/profile"),
+      headers: requestHeaders,
+      body: jsonEncode(
+        <String, String>{
+          'bio': bio!,
+        },
+      ),
+    );
+
+    if (response.statusCode == 200) {
+      return BillsInfo.fromJson(jsonDecode(response.body));
+    } else {
+      print('Request failed with status: ${response.statusCode}. ' + response.body.toString());
+      throw Exception('Failed to load user info');
+    }
   }
 }
