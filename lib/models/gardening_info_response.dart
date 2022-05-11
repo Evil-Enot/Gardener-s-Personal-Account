@@ -6,7 +6,9 @@ class GardeningInfo {
 
   factory GardeningInfo.fromJson(Map<String, dynamic> json) {
     return GardeningInfo(
-        error: json['error'], info: Info.fromJson(json['info']));
+      error: json['error'],
+      info: Info.fromJson(json['info']),
+    );
   }
 }
 

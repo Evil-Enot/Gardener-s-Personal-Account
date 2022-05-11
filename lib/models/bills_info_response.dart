@@ -7,9 +7,10 @@ class BillsInfo {
 
   factory BillsInfo.fromJson(Map<String, dynamic> json) {
     return BillsInfo(
-        error: json['error'],
-        info: Info.fromJson(json['info']),
-        message: json['message']);
+      error: json['error'],
+      info: Info.fromJson(json['info']),
+      message: json['message'],
+    );
   }
 }
 
