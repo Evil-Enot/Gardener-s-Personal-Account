@@ -325,7 +325,7 @@ class _InfoPageState extends State<InfoPage> {
       return GardeningInfo.fromJson(jsonDecode(response.body));
     } else {
       print('Request failed with status: ${response.statusCode}.');
-      throw Exception('Failed to load album');
+      throw Exception('Failed to load gardening info');
     }
   }
 }
