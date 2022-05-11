@@ -1,6 +1,8 @@
 // import 'dart:convert' as convert;
 // import 'package:http/http.dart' as http;
 
+import 'dart:convert';
+
 import 'package:diploma/pages/bills_page.dart';
 import 'package:diploma/pages/info_page.dart';
 import 'package:diploma/pages/meters_page.dart';
@@ -8,6 +10,10 @@ import 'package:diploma/pages/settings_page.dart';
 import 'package:diploma/theme/custom_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../models/user_info_resposne.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
@@ -17,18 +23,36 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
+  late Future<UserInfo> userInfo;
+
+  @override
+  void initState() {
+    super.initState();
+    userInfo = fetchUserInfo();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
         resizeToAvoidBottomInset: false,
         body: Center(
-          child: Column(
-            children: <Widget>[
-              _buildToolbar(context),
-              _buildMainContent(context),
-              _buildMenu(context),
-            ],
+          child: FutureBuilder<UserInfo>(
+            future: userInfo,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return Column(
+                  children: <Widget>[
+                    _buildToolbar(context),
+                    _buildMainContent(context, snapshot),
+                    _buildMenu(context),
+                  ],
+                );
+              } else if (snapshot.hasError) {
+                return Text('${snapshot.error}');
+              }
+              return const CircularProgressIndicator();
+            },
           ),
         ),
       ),
@@ -82,7 +106,8 @@ class _MainPageState extends State<MainPage> {
     );
   }
 
-  Widget _buildMainContent(BuildContext context) {
+  Widget _buildMainContent(
+      BuildContext context, AsyncSnapshot<UserInfo> snapshot) {
     return Container(
       alignment: Alignment.center,
       margin: EdgeInsets.only(
@@ -103,7 +128,7 @@ class _MainPageState extends State<MainPage> {
                     left: MediaQuery.of(context).size.width * 0.05,
                   ),
                   child: Text(
-                    'Валеев Артур Рудольфович',
+                    snapshot.data!.info.name,
                     style: CustomTheme.textStyle20_400,
                   ),
                 ),
@@ -130,7 +155,7 @@ class _MainPageState extends State<MainPage> {
                     left: MediaQuery.of(context).size.width * 0.05,
                   ),
                   child: Text(
-                    'Тел: 8(223) 456-96-14',
+                    'Тел: ' + snapshot.data!.info.number,
                     style: CustomTheme.textStyle20_400,
                   ),
                 ),
@@ -142,7 +167,7 @@ class _MainPageState extends State<MainPage> {
                     left: MediaQuery.of(context).size.width * 0.05,
                   ),
                   child: Text(
-                    'E-mail: ravine_deep@smail.ru',
+                    'E-mail: ' + snapshot.data!.info.email,
                     style: CustomTheme.textStyle20_400,
                   ),
                 ),
@@ -169,7 +194,7 @@ class _MainPageState extends State<MainPage> {
                     left: MediaQuery.of(context).size.width * 0.05,
                   ),
                   child: Text(
-                    'Адрес: Лесная, 11',
+                    snapshot.data!.info.address,
                     style: CustomTheme.textStyle20_400,
                   ),
                 ),
@@ -181,7 +206,9 @@ class _MainPageState extends State<MainPage> {
                     left: MediaQuery.of(context).size.width * 0.05,
                   ),
                   child: Text(
-                    'Площадь участка: 400,00 м. кв.',
+                    'Площадь участка: ' +
+                        snapshot.data!.info.area.toString() +
+                        ' м. кв.',
                     style: CustomTheme.textStyle20_400,
                   ),
                 ),
@@ -193,7 +220,10 @@ class _MainPageState extends State<MainPage> {
                     left: MediaQuery.of(context).size.width * 0.05,
                   ),
                   child: Text(
-                    'Кадастровый номер: \nинформация отсутствует',
+                    snapshot.data!.info.cadastral.isEmpty
+                        ? 'Кадастровый номер: \nинформация отсутствует'
+                        : 'Кадастровый номер: \n' +
+                            snapshot.data!.info.cadastral,
                     style: CustomTheme.textStyle20_400,
                   ),
                 ),
@@ -223,17 +253,43 @@ class _MainPageState extends State<MainPage> {
                     text: TextSpan(
                       text: 'Текущий долг: ',
                       style: CustomTheme.textStyle20_400,
-                      children: const [
-                        TextSpan(
-                          text: '11.87',
-                          style: TextStyle(
-                            color: Colors.green,
-                            fontSize: 18,
-                            fontWeight: FontWeight.w400,
-                            fontFamily: 'Montserrat',
-                          ),
-                        )
-                      ],
+                      children: snapshot.data!.info.billduty > 0
+                          ? [
+                              TextSpan(
+                                text: snapshot.data!.info.billduty.toString(),
+                                style: const TextStyle(
+                                  color: Colors.red,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w400,
+                                  fontFamily: 'Montserrat',
+                                ),
+                              )
+                            ]
+                          : snapshot.data!.info.billoverpayment > 0
+                              ? [
+                                  TextSpan(
+                                    text: snapshot.data!.info.billoverpayment
+                                        .toString(),
+                                    style: const TextStyle(
+                                      color: Colors.green,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w400,
+                                      fontFamily: 'Montserrat',
+                                    ),
+                                  ),
+                                ]
+                              : [
+                                  const TextSpan(
+                                    text:
+                                        'Ошибка на сервере, обраитесь к администратору',
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w400,
+                                      fontFamily: 'Montserrat',
+                                    ),
+                                  ),
+                                ],
                     ),
                   ),
                 ),
@@ -245,7 +301,21 @@ class _MainPageState extends State<MainPage> {
                     left: MediaQuery.of(context).size.width * 0.05,
                   ),
                   child: Text(
-                    'Дата последней подачи показаний: 30.02.2021 ',
+                    'Дата последней подачи показаний по водоснабжению: ' +
+                        snapshot.data!.info.lastbillelwater,
+                    style: CustomTheme.textStyle20_400,
+                  ),
+                ),
+              ),
+              Align(
+                alignment: Alignment.topLeft,
+                child: Container(
+                  padding: EdgeInsets.only(
+                    left: MediaQuery.of(context).size.width * 0.05,
+                  ),
+                  child: Text(
+                    'Дата последней подачи показаний по электричеству: ' +
+                        snapshot.data!.info.lastbillelectro,
                     style: CustomTheme.textStyle20_400,
                   ),
                 ),
@@ -344,5 +414,31 @@ class _MainPageState extends State<MainPage> {
         ),
       ),
     );
+  }
+
+  Future<UserInfo> fetchUserInfo() async {
+    final prefs = await SharedPreferences.getInstance();
+    final url = prefs.getString('url');
+    final bio = prefs.getString('bio');
+    Map<String, String> requestHeaders = {
+      'Authorization': 'Basic 0JLQtdGC0LrQuNC90LA6'
+    };
+
+    final response = await http.post(
+      Uri.parse(url! + "/hs/diploma/get/profile"),
+      headers: requestHeaders,
+      body: jsonEncode(
+        <String, String>{
+          'bio': bio!,
+        },
+      ),
+    );
+
+    if (response.statusCode == 200) {
+      return UserInfo.fromJson(jsonDecode(response.body));
+    } else {
+      print('Request failed with status: ${response.statusCode}. ' + response.body.toString());
+      throw Exception('Failed to load user info');
+    }
   }
 }
