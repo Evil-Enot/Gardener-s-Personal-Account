@@ -303,7 +303,7 @@ class _BillsPageState extends State<BillsPage> {
     };
 
     final response = await http.post(
-      Uri.parse(url! + "/hs/diploma/get/profile"),
+      Uri.parse(url! + "/hs/diploma/get/bills"),
       headers: requestHeaders,
       body: jsonEncode(
         <String, String>{

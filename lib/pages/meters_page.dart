@@ -1,8 +1,13 @@
+import 'dart:convert';
+
+import 'package:diploma/models/meters_info_response.dart';
 import 'package:diploma/pages/bills_page.dart';
 import 'package:diploma/pages/main_page.dart';
 import 'package:diploma/theme/custom_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MetersPage extends StatefulWidget {
   const MetersPage({Key? key}) : super(key: key);
@@ -12,18 +17,36 @@ class MetersPage extends StatefulWidget {
 }
 
 class _MetersPageState extends State<MetersPage> {
+  late Future<MetersInfo> metersInfo;
+
+  @override
+  void initState() {
+    super.initState();
+    metersInfo = fetchMetersInfo();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
         resizeToAvoidBottomInset: false,
         body: Center(
-          child: Column(
-            children: <Widget>[
-              _buildToolbarMeters(context),
-              _buildMainMetersContent(context),
-              _buildMenu(context),
-            ],
+          child: FutureBuilder<MetersInfo>(
+            future: metersInfo,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return Column(
+                  children: <Widget>[
+                    _buildToolbarMeters(context),
+                    _buildMainMetersContent(context, snapshot),
+                    _buildMenu(context),
+                  ],
+                );
+              } else if (snapshot.hasError) {
+                return Text('${snapshot.error}');
+              }
+              return const CircularProgressIndicator();
+            },
           ),
         ),
       ),
@@ -76,7 +99,8 @@ class _MetersPageState extends State<MetersPage> {
     );
   }
 
-  Widget _buildMainMetersContent(BuildContext context) {
+  Widget _buildMainMetersContent(
+      BuildContext context, AsyncSnapshot<MetersInfo> snapshot) {
     return Container(
       alignment: Alignment.center,
       margin: EdgeInsets.only(
@@ -97,23 +121,13 @@ class _MetersPageState extends State<MetersPage> {
                     left: MediaQuery.of(context).size.width * 0.05,
                   ),
                   child: Text(
-                    'Дата последней подачи показаний: 30.02.2021 ',
+                    'Дата последней подачи показаний: ' +
+                        snapshot.data!.info.lastbillelwaterdata,
                     style: CustomTheme.textStyle20_400,
                   ),
                 ),
               ),
-              Align(
-                alignment: Alignment.topLeft,
-                child: Container(
-                  padding: EdgeInsets.only(
-                    left: MediaQuery.of(context).size.width * 0.05,
-                  ),
-                  child: Text(
-                    'Показания: 158.000',
-                    style: CustomTheme.textStyle20_400,
-                  ),
-                ),
-              ),
+              _printWaterMetersData(snapshot),
               Divider(
                 height: 20,
                 thickness: 2,
@@ -131,30 +145,7 @@ class _MetersPageState extends State<MetersPage> {
               ),
               Row(
                 children: [
-                  Container(
-                    margin: EdgeInsets.only(
-                      top: MediaQuery.of(context).size.height * 0.01,
-                      left: MediaQuery.of(context).size.width * 0.05,
-                    ),
-                    width: MediaQuery.of(context).size.width * 0.6,
-                    height: MediaQuery.of(context).size.height * 0.05,
-                    decoration: CustomTheme.inputFieldsDecoration,
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: MediaQuery.of(context).size.width * 0.01,
-                        vertical: MediaQuery.of(context).size.height * 0.01,
-                      ),
-                      child: TextField(
-                        keyboardType: TextInputType.number,
-                        maxLines: 1,
-                        textAlign: TextAlign.center,
-                        style: CustomTheme.textStyle20_400,
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                        ),
-                      ),
-                    ),
-                  ),
+                  _inputWaterDataFields(snapshot),
                   Container(
                     margin: EdgeInsets.only(
                       left: MediaQuery.of(context).size.width * 0.01,
@@ -197,23 +188,13 @@ class _MetersPageState extends State<MetersPage> {
                     left: MediaQuery.of(context).size.width * 0.05,
                   ),
                   child: Text(
-                    'Дата последней подачи показаний: 31.02.2021',
+                    'Дата последней подачи показаний: ' +
+                        snapshot.data!.info.lastbillelectrodata,
                     style: CustomTheme.textStyle20_400,
                   ),
                 ),
               ),
-              Align(
-                alignment: Alignment.topLeft,
-                child: Container(
-                  padding: EdgeInsets.only(
-                    left: MediaQuery.of(context).size.width * 0.05,
-                  ),
-                  child: Text(
-                    'Показания: 268.000',
-                    style: CustomTheme.textStyle20_400,
-                  ),
-                ),
-              ),
+              _printElectroMetersData(snapshot),
               Divider(
                 height: 20,
                 thickness: 2,
@@ -231,30 +212,7 @@ class _MetersPageState extends State<MetersPage> {
               ),
               Row(
                 children: [
-                  Container(
-                    margin: EdgeInsets.only(
-                      top: MediaQuery.of(context).size.height * 0.01,
-                      left: MediaQuery.of(context).size.width * 0.05,
-                    ),
-                    width: MediaQuery.of(context).size.width * 0.6,
-                    height: MediaQuery.of(context).size.height * 0.05,
-                    decoration: CustomTheme.inputFieldsDecoration,
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: MediaQuery.of(context).size.width * 0.01,
-                        vertical: MediaQuery.of(context).size.height * 0.01,
-                      ),
-                      child: TextField(
-                        keyboardType: TextInputType.number,
-                        maxLines: 1,
-                        textAlign: TextAlign.center,
-                        style: CustomTheme.textStyle20_400,
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                        ),
-                      ),
-                    ),
-                  ),
+                  _inputElectroDataFields(snapshot),
                   Container(
                     margin: EdgeInsets.only(
                       left: MediaQuery.of(context).size.width * 0.01,
@@ -359,6 +317,395 @@ class _MetersPageState extends State<MetersPage> {
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Future<MetersInfo> fetchMetersInfo() async {
+    final prefs = await SharedPreferences.getInstance();
+    final url = prefs.getString('url');
+    final bio = prefs.getString('bio');
+    Map<String, String> requestHeaders = {
+      'Authorization': 'Basic 0JLQtdGC0LrQuNC90LA6'
+    };
+
+    final response = await http.post(
+      Uri.parse(url! + "/hs/diploma/get/meters"),
+      headers: requestHeaders,
+      body: jsonEncode(
+        <String, String>{
+          'bio': bio!,
+        },
+      ),
+    );
+
+    if (response.statusCode == 200) {
+      return MetersInfo.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception('Failed to load user info: ${response.statusCode}. ' +
+          response.body.toString());
+    }
+  }
+
+  Widget _printWaterMetersData(AsyncSnapshot<MetersInfo> snapshot) {
+    return _printMetersData(snapshot, "Вода");
+  }
+
+  Widget _printElectroMetersData(AsyncSnapshot<MetersInfo> snapshot) {
+    return _printMetersData(snapshot, "Электроэнергия");
+  }
+
+  RenderObjectWidget _printMetersData(AsyncSnapshot<MetersInfo> snapshot, String servicebymeter) {
+    List meters = snapshot.data!.info.meters;
+    bool t1 = false, t2 = false, t3 = false;
+    for (var i = 0; i < meters.length; i++) {
+      Meter meter = meters[i];
+      if (meter.servicebymeter == servicebymeter) {
+        if (meter.datat1 != 0.0) {
+          t1 = true;
+        }
+        if (meter.datat2 != 0.0) {
+          t2 = true;
+        }
+        if (meter.datat3 != 0.0) {
+          t3 = true;
+        }
+        if (t1 && t2 && t3) {
+          return Column(
+            children: [
+              Align(
+                alignment: Alignment.topLeft,
+                child: Container(
+                  padding: EdgeInsets.only(
+                    left: MediaQuery.of(context).size.width * 0.05,
+                  ),
+                  child: Text(
+                    'Показания T1: ' + meter.datat1.toString(),
+                    style: CustomTheme.textStyle20_400,
+                  ),
+                ),
+              ),
+              Align(
+                alignment: Alignment.topLeft,
+                child: Container(
+                  padding: EdgeInsets.only(
+                    left: MediaQuery.of(context).size.width * 0.05,
+                  ),
+                  child: Text(
+                    'Показания T2: ' + meter.datat2.toString(),
+                    style: CustomTheme.textStyle20_400,
+                  ),
+                ),
+              ),
+              Align(
+                alignment: Alignment.topLeft,
+                child: Container(
+                  padding: EdgeInsets.only(
+                    left: MediaQuery.of(context).size.width * 0.05,
+                  ),
+                  child: Text(
+                    'Показания T3: ' + meter.datat1.toString(),
+                    style: CustomTheme.textStyle20_400,
+                  ),
+                ),
+              ),
+            ],
+          );
+        } else if (t1 && t2) {
+          return Column(
+            children: [
+              Align(
+                alignment: Alignment.topLeft,
+                child: Container(
+                  padding: EdgeInsets.only(
+                    left: MediaQuery.of(context).size.width * 0.05,
+                  ),
+                  child: Text(
+                    'Показания T1: ' + meter.datat1.toString(),
+                    style: CustomTheme.textStyle20_400,
+                  ),
+                ),
+              ),
+              Align(
+                alignment: Alignment.topLeft,
+                child: Container(
+                  padding: EdgeInsets.only(
+                    left: MediaQuery.of(context).size.width * 0.05,
+                  ),
+                  child: Text(
+                    'Показания T2: ' + meter.datat2.toString(),
+                    style: CustomTheme.textStyle20_400,
+                  ),
+                ),
+              ),
+            ],
+          );
+        } else if (t1) {
+          return Align(
+            alignment: Alignment.topLeft,
+            child: Container(
+              padding: EdgeInsets.only(
+                left: MediaQuery.of(context).size.width * 0.05,
+              ),
+              child: Text(
+                'Показания: ' + meter.datat1.toString(),
+                style: CustomTheme.textStyle20_400,
+              ),
+            ),
+          );
+        } else {
+          continue;
+        }
+      } else {
+        continue;
+      }
+    }
+    return Align(
+      alignment: Alignment.topLeft,
+      child: Container(
+        padding: EdgeInsets.only(
+          left: MediaQuery.of(context).size.width * 0.05,
+        ),
+        child: Text(
+          'Счетчики не обнаружены',
+          style: CustomTheme.textStyle20_400,
+        ),
+      ),
+    );
+  }
+
+  Widget _inputWaterDataFields(AsyncSnapshot<MetersInfo> snapshot) {
+    return _inputDataFields(snapshot, "Вода");
+  }
+
+  Widget _inputElectroDataFields(AsyncSnapshot<MetersInfo> snapshot) {
+    return _inputDataFields(snapshot, "Электроэнергия");
+  }
+
+  Widget _inputDataFields(AsyncSnapshot<MetersInfo> snapshot, String servicebymeter) {
+    List meters = snapshot.data!.info.meters;
+    bool t1 = false, t2 = false, t3 = false;
+    for (var i = 0; i < meters.length; i++) {
+      Meter meter = meters[i];
+      if (meter.servicebymeter == servicebymeter) {
+        if (meter.datat1 != 0.0) {
+          t1 = true;
+        }
+        if (meter.datat2 != 0.0) {
+          t2 = true;
+        }
+        if (meter.datat3 != 0.0) {
+          t3 = true;
+        }
+        if (t1 && t2 && t3) {
+          return Column(
+            children: [
+              Align(
+                alignment: Alignment.topLeft,
+                child: Container(
+                  margin: EdgeInsets.only(
+                    top: MediaQuery.of(context).size.height * 0.01,
+                    left: MediaQuery.of(context).size.width * 0.05,
+                  ),
+                  width: MediaQuery.of(context).size.width * 0.6,
+                  height: MediaQuery.of(context).size.height * 0.05,
+                  decoration: CustomTheme.inputFieldsDecoration,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: MediaQuery.of(context).size.width * 0.01,
+                      vertical: MediaQuery.of(context).size.height * 0.01,
+                    ),
+                    child: TextField(
+                      keyboardType: TextInputType.number,
+                      maxLines: 1,
+                      textAlign: TextAlign.center,
+                      style: CustomTheme.textStyle20_400,
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: 'Введите показания T1',
+                        hintStyle: CustomTheme.textStyle20_400,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Align(
+                alignment: Alignment.topLeft,
+                child: Container(
+                  margin: EdgeInsets.only(
+                    top: MediaQuery.of(context).size.height * 0.01,
+                    left: MediaQuery.of(context).size.width * 0.05,
+                  ),
+                  width: MediaQuery.of(context).size.width * 0.6,
+                  height: MediaQuery.of(context).size.height * 0.05,
+                  decoration: CustomTheme.inputFieldsDecoration,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: MediaQuery.of(context).size.width * 0.01,
+                      vertical: MediaQuery.of(context).size.height * 0.01,
+                    ),
+                    child: TextField(
+                      keyboardType: TextInputType.number,
+                      maxLines: 1,
+                      textAlign: TextAlign.center,
+                      style: CustomTheme.textStyle20_400,
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: 'Введите показания T2',
+                        hintStyle: CustomTheme.textStyle20_400,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Align(
+                alignment: Alignment.topLeft,
+                child: Container(
+                  margin: EdgeInsets.only(
+                    top: MediaQuery.of(context).size.height * 0.01,
+                    left: MediaQuery.of(context).size.width * 0.05,
+                  ),
+                  width: MediaQuery.of(context).size.width * 0.6,
+                  height: MediaQuery.of(context).size.height * 0.05,
+                  decoration: CustomTheme.inputFieldsDecoration,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: MediaQuery.of(context).size.width * 0.01,
+                      vertical: MediaQuery.of(context).size.height * 0.01,
+                    ),
+                    child: TextField(
+                      keyboardType: TextInputType.number,
+                      maxLines: 1,
+                      textAlign: TextAlign.center,
+                      style: CustomTheme.textStyle20_400,
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: 'Введите показания T3',
+                        hintStyle: CustomTheme.textStyle20_400,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          );
+        } else if (t1 && t2) {
+          return Column(
+            children: [
+              Align(
+                alignment: Alignment.topLeft,
+                child: Container(
+                  margin: EdgeInsets.only(
+                    top: MediaQuery.of(context).size.height * 0.01,
+                    left: MediaQuery.of(context).size.width * 0.05,
+                  ),
+                  width: MediaQuery.of(context).size.width * 0.6,
+                  height: MediaQuery.of(context).size.height * 0.05,
+                  decoration: CustomTheme.inputFieldsDecoration,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: MediaQuery.of(context).size.width * 0.01,
+                      vertical: MediaQuery.of(context).size.height * 0.01,
+                    ),
+                    child: TextField(
+                      keyboardType: TextInputType.number,
+                      maxLines: 1,
+                      textAlign: TextAlign.center,
+                      style: CustomTheme.textStyle20_400,
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: 'Введите показания T1',
+                        hintStyle: CustomTheme.textStyle20_400,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Align(
+                alignment: Alignment.topLeft,
+                child: Container(
+                  margin: EdgeInsets.only(
+                    top: MediaQuery.of(context).size.height * 0.01,
+                    left: MediaQuery.of(context).size.width * 0.05,
+                  ),
+                  width: MediaQuery.of(context).size.width * 0.6,
+                  height: MediaQuery.of(context).size.height * 0.05,
+                  decoration: CustomTheme.inputFieldsDecoration,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: MediaQuery.of(context).size.width * 0.01,
+                      vertical: MediaQuery.of(context).size.height * 0.01,
+                    ),
+                    child: TextField(
+                      keyboardType: TextInputType.number,
+                      maxLines: 1,
+                      textAlign: TextAlign.center,
+                      style: CustomTheme.textStyle20_400,
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: 'Введите показания T2',
+                        hintStyle: CustomTheme.textStyle20_400,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          );
+        } else if (t1) {
+          return Align(
+            alignment: Alignment.topLeft,
+            child: Container(
+              margin: EdgeInsets.only(
+                top: MediaQuery.of(context).size.height * 0.01,
+                left: MediaQuery.of(context).size.width * 0.05,
+              ),
+              width: MediaQuery.of(context).size.width * 0.6,
+              height: MediaQuery.of(context).size.height * 0.05,
+              decoration: CustomTheme.inputFieldsDecoration,
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: MediaQuery.of(context).size.width * 0.01,
+                  vertical: MediaQuery.of(context).size.height * 0.01,
+                ),
+                child: TextField(
+                  keyboardType: TextInputType.number,
+                  maxLines: 1,
+                  textAlign: TextAlign.center,
+                  style: CustomTheme.textStyle20_400,
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    hintText: 'Введите показания',
+                    hintStyle: CustomTheme.textStyle20_400,
+                  ),
+                ),
+              ),
+            ),
+          );
+        } else {
+          continue;
+        }
+      } else {
+        continue;
+      }
+    }
+    return Container(
+      margin: EdgeInsets.only(
+        top: MediaQuery.of(context).size.height * 0.01,
+        left: MediaQuery.of(context).size.width * 0.05,
+      ),
+      width: MediaQuery.of(context).size.width * 0.6,
+      height: MediaQuery.of(context).size.height * 0.05,
+      decoration: CustomTheme.inputFieldsDecoration,
+      child: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: MediaQuery.of(context).size.width * 0.01,
+          vertical: MediaQuery.of(context).size.height * 0.01,
+        ),
+        child: Text(
+          'Счетчики не обнаружены',
+          style: CustomTheme.textStyle20_400,
         ),
       ),
     );

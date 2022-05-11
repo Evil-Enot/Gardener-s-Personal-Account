@@ -7,9 +7,10 @@ class UserInfo {
 
   factory UserInfo.fromJson(Map<String, dynamic> json) {
     return UserInfo(
-        error: json['error'],
-        info: Info.fromJson(json['info']),
-        message: json['message']);
+      error: json['error'],
+      info: Info.fromJson(json['info']),
+      message: json['message'],
+    );
   }
 }
 
