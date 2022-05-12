@@ -1,4 +1,5 @@
 import 'package:diploma/pages/auth_page.dart';
+import 'package:diploma/pages/main_page.dart';
 import 'package:diploma/theme/custom_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -149,10 +150,9 @@ class _UrlPageState extends State<UrlPage> {
 
   _checkURL() async {
     final prefs = await SharedPreferences.getInstance();
+    bool auth = false;
 
     Map<String, String> requestHeaders = {
-      // 'Content-type': 'application/json',
-      // 'Accept': 'application/json',
       'Authorization': 'Basic 0JLQtdGC0LrQuNC90LA6'
     };
     if (_url.isNotEmpty) {
@@ -160,8 +160,20 @@ class _UrlPageState extends State<UrlPage> {
           headers: requestHeaders);
       if (response.statusCode == 200) {
         prefs.setString('url', _url);
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => const AuthPage()));
+
+        if (prefs.containsKey('auth')) {
+          auth = prefs.getBool('auth')!;
+        }
+
+        if (auth) {
+          Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const MainPage()));
+        } else {
+          Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const AuthPage()));
+        }
       } else {
         print('Request failed with status: ${response.statusCode}.');
       }
