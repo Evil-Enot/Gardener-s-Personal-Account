@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:diploma/models/auth_response.dart';
 import 'package:diploma/pages/code_page.dart';
 import 'package:diploma/theme/custom_theme.dart';
 import 'package:flutter/material.dart';
@@ -121,7 +122,7 @@ class _AuthPageState extends State<AuthPage> {
             style: CustomTheme.textStyle20_400,
             decoration: InputDecoration(
               border: InputBorder.none,
-              hintText: 'Введите номер телефона',
+              hintText: 'Введите номер телефона (через +7)',
               hintStyle: CustomTheme.textStyle20_400,
             ),
             onSubmitted: (text) {
@@ -174,8 +175,9 @@ class _AuthPageState extends State<AuthPage> {
         ),
       );
       if (response.statusCode == 200) {
+        AuthResponse responseAuth = AuthResponse.fromJson(jsonDecode(response.body));
         prefs.setString("bio", _bio);
-        prefs.setBool("auth", true);
+        prefs.setInt("code", responseAuth.code);
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => const CodePage()));
       } else {
