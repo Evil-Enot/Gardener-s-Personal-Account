@@ -51,34 +51,30 @@ class _CodePageState extends State<CodePage> {
 
   Widget _buildCodeInput(BuildContext context) {
     return Container(
-      alignment: Alignment.center,
+      width: MediaQuery.of(context).size.width * 0.8,
       margin: EdgeInsets.only(
         top: MediaQuery.of(context).size.height * 0.01,
         bottom: MediaQuery.of(context).size.height * 0.01,
       ),
-      child: Container(
-        width: MediaQuery.of(context).size.width * 0.8,
-        decoration: CustomTheme.inputFieldsDecoration,
-        child: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: MediaQuery.of(context).size.width * 0.01,
-            vertical: MediaQuery.of(context).size.height * 0.01,
+      decoration: CustomTheme.inputFieldsDecoration,
+      child: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: MediaQuery.of(context).size.width * 0.01,
+          vertical: MediaQuery.of(context).size.height * 0.01,
+        ),
+        child: TextField(
+          keyboardType: TextInputType.text,
+          maxLines: 1,
+          textAlign: TextAlign.center,
+          style: CustomTheme.textStyle20_400,
+          decoration: InputDecoration(
+            border: InputBorder.none,
+            hintText: 'Код из смс',
+            hintStyle: CustomTheme.textStyle20_400,
           ),
-          child: TextField(
-            keyboardType: TextInputType.text,
-            maxLines: 1,
-            textAlign: TextAlign.center,
-            style: CustomTheme.textStyle20_400,
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              hintText: 'Код из смс',
-              hintStyle: CustomTheme.textStyle20_400,
-            ),
-            onSubmitted: (text) {
-              print(text);
-              _code = text.trim();
-            },
-          ),
+          onSubmitted: (text) {
+            _code = text.trim();
+          },
         ),
       ),
     );
@@ -88,22 +84,16 @@ class _CodePageState extends State<CodePage> {
     return Container(
       alignment: Alignment.center,
       child: GestureDetector(
-        // onTap: _showOverlay(),
-        child: Container(
-          margin: EdgeInsets.only(
-            bottom: MediaQuery.of(context).size.height * 0.01,
-          ),
-          child: RichText(
-            text: TextSpan(
-              text: 'Не пришел код? ',
-              style: CustomTheme.textStyle14_400U,
-              children: [
-                TextSpan(
-                  text: 'Отправить еще раз',
-                  style: CustomTheme.textStyle14_700U,
-                )
-              ],
-            ),
+        child: RichText(
+          text: TextSpan(
+            text: 'Не пришел код? ',
+            style: CustomTheme.textStyle14_400U,
+            children: [
+              TextSpan(
+                text: 'Отправить еще раз',
+                style: CustomTheme.textStyle14_700U,
+              )
+            ],
           ),
         ),
       ),
@@ -139,8 +129,11 @@ class _CodePageState extends State<CodePage> {
 
       if (_code == code) {
         prefs.setBool("auth", true);
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => const MainPage()));
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => const MainPage()),
+          (route) => false,
+        );
       } else {
         print("different codes");
       }

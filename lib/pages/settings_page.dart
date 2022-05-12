@@ -21,7 +21,6 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        resizeToAvoidBottomInset: false,
         body: Center(
           child: Column(
             children: <Widget>[
@@ -188,7 +187,7 @@ class _SettingsPageState extends State<SettingsPage> {
                           builder: (context) => const BillsPage(),
                         ),
                       );
-                    }, // button pressed
+                    },
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
@@ -197,7 +196,7 @@ class _SettingsPageState extends State<SettingsPage> {
                           color: Colors.black,
                           width: MediaQuery.of(context).size.width * 0.1,
                         ),
-                        const Text("Счета"), // text
+                        const Text("Счета"),
                       ],
                     ),
                   ),
@@ -229,7 +228,7 @@ class _SettingsPageState extends State<SettingsPage> {
                           color: Colors.black,
                           width: MediaQuery.of(context).size.width * 0.1,
                         ),
-                        const Text("Счетчики"), // text
+                        const Text("Счетчики"),
                       ],
                     ),
                   ),
