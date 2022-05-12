@@ -1,9 +1,11 @@
+import 'package:diploma/pages/auth_page.dart';
 import 'package:diploma/pages/bills_page.dart';
 import 'package:diploma/pages/main_page.dart';
 import 'package:diploma/pages/meters_page.dart';
 import 'package:diploma/theme/custom_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({Key? key}) : super(key: key);
@@ -122,6 +124,38 @@ class _SettingsPageState extends State<SettingsPage> {
                 endIndent: MediaQuery.of(context).size.width * 0.05,
                 color: Colors.black,
               ),
+              Align(
+                alignment: Alignment.topCenter,
+                child: Row(
+                  children: [
+                    Container(
+                      alignment: Alignment.center,
+                      margin: EdgeInsets.only(
+                        top: MediaQuery.of(context).size.height * 0.02,
+                      ),
+                      width: MediaQuery.of(context).size.width * 0.5,
+                      decoration: CustomTheme.buttonsDecoration,
+                      child: TextButton.icon(
+                        onPressed: () {
+                          _logout();
+                        },
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(const Color(0xFFFFED4D)),
+                        ),
+                        icon: const Icon(
+                          Icons.logout,
+                          size: 20,
+                        ),
+                        label: Text(
+                          "Выйти",
+                          textAlign: TextAlign.center,
+                          style: CustomTheme.textStyle20_400,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
         ],
@@ -208,6 +242,18 @@ class _SettingsPageState extends State<SettingsPage> {
           ),
         ),
       ),
+    );
+  }
+
+  void _logout() async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setBool('auth', false);
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(
+        builder: (BuildContext context) => AuthPage(),
+      ),
+      (route) => false,
     );
   }
 }

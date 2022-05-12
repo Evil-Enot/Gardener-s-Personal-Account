@@ -175,6 +175,7 @@ class _AuthPageState extends State<AuthPage> {
       );
       if (response.statusCode == 200) {
         prefs.setString("bio", _bio);
+        prefs.setBool("auth", true);
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => const CodePage()));
       } else {
