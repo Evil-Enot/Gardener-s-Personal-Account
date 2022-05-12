@@ -115,11 +115,11 @@ class _BillsPageState extends State<BillsPage> {
                     left: MediaQuery.of(context).size.width * 0.05,
                   ),
                   child: RichText(
-                    text: TextSpan(
+                    text: snapshot.data!.info.billduty > 0
+                        ? TextSpan(
                       text: 'Текущий долг: ',
                       style: CustomTheme.textStyle20_400,
-                      children: snapshot.data!.info.billduty > 0
-                          ? [
+                      children: [
                         TextSpan(
                           text: snapshot.data!.info.billduty.toString(),
                           style: const TextStyle(
@@ -129,9 +129,13 @@ class _BillsPageState extends State<BillsPage> {
                             fontFamily: 'Montserrat',
                           ),
                         )
-                      ]
-                          : snapshot.data!.info.billoverpayment > 0
-                          ? [
+                      ],
+                    )
+                        : snapshot.data!.info.billoverpayment > 0
+                        ? TextSpan(
+                      text: 'Текущая переплата: ',
+                      style: CustomTheme.textStyle20_400,
+                      children: [
                         TextSpan(
                           text: snapshot.data!.info.billoverpayment
                               .toString(),
@@ -142,19 +146,17 @@ class _BillsPageState extends State<BillsPage> {
                             fontFamily: 'Montserrat',
                           ),
                         ),
-                      ]
-                          : [
-                        const TextSpan(
-                          text:
-                          'Ошибка на сервере, обраитесь к администратору',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 18,
-                            fontWeight: FontWeight.w400,
-                            fontFamily: 'Montserrat',
-                          ),
-                        ),
                       ],
+                    )
+                        : const TextSpan(
+                      text:
+                      'Ошибка на сервере, обраитесь к администратору',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w400,
+                        fontFamily: 'Montserrat',
+                      ),
                     ),
                   ),
                 ),
@@ -165,9 +167,12 @@ class _BillsPageState extends State<BillsPage> {
                   padding: EdgeInsets.only(
                     left: MediaQuery.of(context).size.width * 0.05,
                   ),
-                  child: Text(
+                  child: snapshot.data!.info.lastbillelwater.isNotEmpty ? Text(
                     'Дата последней подачи показаний по водоснабжению: ' +
                         snapshot.data!.info.lastbillelwater,
+                    style: CustomTheme.textStyle20_400,
+                  ) : Text(
+                    'Счетчики по водоснабжению не обнаружены',
                     style: CustomTheme.textStyle20_400,
                   ),
                 ),

@@ -7,6 +7,7 @@ import 'package:diploma/theme/custom_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:http/http.dart' as http;
+import  'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MetersPage extends StatefulWidget {
@@ -18,6 +19,14 @@ class MetersPage extends StatefulWidget {
 
 class _MetersPageState extends State<MetersPage> {
   late Future<MetersInfo> metersInfo;
+
+  FocusNode nodeOne = FocusNode();
+  FocusNode nodeTwo = FocusNode();
+  FocusNode nodeThree = FocusNode();
+
+  String _datat1 = "0";
+  String _datat2 = "0";
+  String _datat3 = "0";
 
   @override
   void initState() {
@@ -156,7 +165,9 @@ class _MetersPageState extends State<MetersPage> {
                       width: MediaQuery.of(context).size.width * 0.3,
                       child: ElevatedButton(
                         style: CustomTheme.elevatedButtonStyle,
-                        onPressed: () {},
+                        onPressed: () {
+                          _submitData("Вода");
+                        },
                         child: Text(
                           'Отправить',
                           style: CustomTheme.textStyle20_400,
@@ -223,7 +234,9 @@ class _MetersPageState extends State<MetersPage> {
                       width: MediaQuery.of(context).size.width * 0.3,
                       child: ElevatedButton(
                         style: CustomTheme.elevatedButtonStyle,
-                        onPressed: () {},
+                        onPressed: () {
+                          _submitData("Электроэнергия");
+                        },
                         child: Text(
                           'Отправить',
                           style: CustomTheme.textStyle20_400,
@@ -320,32 +333,6 @@ class _MetersPageState extends State<MetersPage> {
         ),
       ),
     );
-  }
-
-  Future<MetersInfo> fetchMetersInfo() async {
-    final prefs = await SharedPreferences.getInstance();
-    final url = prefs.getString('url');
-    final bio = prefs.getString('bio');
-    Map<String, String> requestHeaders = {
-      'Authorization': 'Basic 0JLQtdGC0LrQuNC90LA6'
-    };
-
-    final response = await http.post(
-      Uri.parse(url! + "/hs/diploma/get/meters"),
-      headers: requestHeaders,
-      body: jsonEncode(
-        <String, String>{
-          'bio': bio!,
-        },
-      ),
-    );
-
-    if (response.statusCode == 200) {
-      return MetersInfo.fromJson(jsonDecode(response.body));
-    } else {
-      throw Exception('Failed to load user info: ${response.statusCode}. ' +
-          response.body.toString());
-    }
   }
 
   Widget _printWaterMetersData(AsyncSnapshot<MetersInfo> snapshot) {
@@ -518,6 +505,7 @@ class _MetersPageState extends State<MetersPage> {
                     ),
                     child: TextField(
                       keyboardType: TextInputType.number,
+                      focusNode: nodeOne,
                       maxLines: 1,
                       textAlign: TextAlign.center,
                       style: CustomTheme.textStyle20_400,
@@ -526,6 +514,10 @@ class _MetersPageState extends State<MetersPage> {
                         hintText: 'Введите показания T1',
                         hintStyle: CustomTheme.textStyle20_400,
                       ),
+                      onSubmitted: (text) {
+                        _datat1 = text.trim();
+                        FocusScope.of(context).requestFocus(nodeTwo);
+                      },
                     ),
                   ),
                 ),
@@ -547,6 +539,7 @@ class _MetersPageState extends State<MetersPage> {
                     ),
                     child: TextField(
                       keyboardType: TextInputType.number,
+                      focusNode: nodeTwo,
                       maxLines: 1,
                       textAlign: TextAlign.center,
                       style: CustomTheme.textStyle20_400,
@@ -555,6 +548,10 @@ class _MetersPageState extends State<MetersPage> {
                         hintText: 'Введите показания T2',
                         hintStyle: CustomTheme.textStyle20_400,
                       ),
+                      onSubmitted: (text) {
+                        _datat2 = text.trim();
+                        FocusScope.of(context).requestFocus(nodeThree);
+                      },
                     ),
                   ),
                 ),
@@ -576,6 +573,7 @@ class _MetersPageState extends State<MetersPage> {
                     ),
                     child: TextField(
                       keyboardType: TextInputType.number,
+                      focusNode: nodeThree,
                       maxLines: 1,
                       textAlign: TextAlign.center,
                       style: CustomTheme.textStyle20_400,
@@ -584,6 +582,9 @@ class _MetersPageState extends State<MetersPage> {
                         hintText: 'Введите показания T3',
                         hintStyle: CustomTheme.textStyle20_400,
                       ),
+                      onSubmitted: (text) {
+                        _datat3 = text.trim();
+                      },
                     ),
                   ),
                 ),
@@ -610,6 +611,7 @@ class _MetersPageState extends State<MetersPage> {
                     ),
                     child: TextField(
                       keyboardType: TextInputType.number,
+                      focusNode: nodeOne,
                       maxLines: 1,
                       textAlign: TextAlign.center,
                       style: CustomTheme.textStyle20_400,
@@ -618,6 +620,10 @@ class _MetersPageState extends State<MetersPage> {
                         hintText: 'Введите показания T1',
                         hintStyle: CustomTheme.textStyle20_400,
                       ),
+                      onSubmitted: (text) {
+                        _datat1 = text.trim();
+                        FocusScope.of(context).requestFocus(nodeTwo);
+                      },
                     ),
                   ),
                 ),
@@ -639,6 +645,7 @@ class _MetersPageState extends State<MetersPage> {
                     ),
                     child: TextField(
                       keyboardType: TextInputType.number,
+                      focusNode: nodeTwo,
                       maxLines: 1,
                       textAlign: TextAlign.center,
                       style: CustomTheme.textStyle20_400,
@@ -647,6 +654,9 @@ class _MetersPageState extends State<MetersPage> {
                         hintText: 'Введите показания T2',
                         hintStyle: CustomTheme.textStyle20_400,
                       ),
+                      onSubmitted: (text) {
+                        _datat2 = text.trim();
+                      },
                     ),
                   ),
                 ),
@@ -679,6 +689,9 @@ class _MetersPageState extends State<MetersPage> {
                     hintText: 'Введите показания',
                     hintStyle: CustomTheme.textStyle20_400,
                   ),
+                  onSubmitted: (text) {
+                    _datat1 = text.trim();
+                  },
                 ),
               ),
             ),
@@ -709,5 +722,75 @@ class _MetersPageState extends State<MetersPage> {
         ),
       ),
     );
+  }
+
+  Future<MetersInfo> fetchMetersInfo() async {
+    final prefs = await SharedPreferences.getInstance();
+    final url = prefs.getString('url');
+    final bio = prefs.getString('bio');
+    Map<String, String> requestHeaders = {
+      'Authorization': 'Basic 0JLQtdGC0LrQuNC90LA6'
+    };
+
+    final response = await http.post(
+      Uri.parse(url! + "/hs/diploma/get/meters"),
+      headers: requestHeaders,
+      body: jsonEncode(
+        <String, String>{
+          'bio': bio!,
+        },
+      ),
+    );
+
+    if (response.statusCode == 200) {
+      return MetersInfo.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception('Failed to load user info: ${response.statusCode}. ' +
+          response.body.toString());
+    }
+  }
+
+  void _submitData(String servicebymeter) async{
+    final prefs = await SharedPreferences.getInstance();
+    final url = prefs.getString('url');
+    final bio = prefs.getString('bio');
+    Map<String, String> requestHeaders = {
+      'Authorization': 'Basic 0JLQtdGC0LrQuNC90LA6'
+    };
+
+    String datetime = DateFormat("d.MM.yyy HH:mm:ss").format(DateTime.now());
+    print(datetime);
+    print(_datat1);
+    print(_datat2);
+    print(_datat3);
+
+
+    final response = await http.post(
+      Uri.parse(url! + "/hs/diploma/put/meters"),
+      headers: requestHeaders,
+      body: jsonEncode(
+        <String, String>{
+          'bio': bio!,
+          'type': servicebymeter,
+          'valuet1': _datat1,
+          'valuet2': _datat2,
+          'valuet3': _datat3,
+          'date': datetime,
+        },
+      ),
+    );
+
+    if (response.statusCode == 200) {
+      metersInfo = fetchMetersInfo();
+      _datat1 = "0";
+      _datat2 = "0";
+      _datat3 = "0";
+      setState(() {
+
+      });
+    } else {
+      throw Exception('Failed to update meters data: ${response.statusCode}. ' +
+          response.body.toString());
+    }
   }
 }

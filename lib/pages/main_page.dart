@@ -250,11 +250,11 @@ class _MainPageState extends State<MainPage> {
                     left: MediaQuery.of(context).size.width * 0.05,
                   ),
                   child: RichText(
-                    text: TextSpan(
-                      text: 'Текущий долг: ',
-                      style: CustomTheme.textStyle20_400,
-                      children: snapshot.data!.info.billduty > 0
-                          ? [
+                    text: snapshot.data!.info.billduty > 0
+                        ? TextSpan(
+                            text: 'Текущий долг: ',
+                            style: CustomTheme.textStyle20_400,
+                            children: [
                               TextSpan(
                                 text: snapshot.data!.info.billduty.toString(),
                                 style: const TextStyle(
@@ -264,9 +264,13 @@ class _MainPageState extends State<MainPage> {
                                   fontFamily: 'Montserrat',
                                 ),
                               )
-                            ]
-                          : snapshot.data!.info.billoverpayment > 0
-                              ? [
+                            ],
+                          )
+                        : snapshot.data!.info.billoverpayment > 0
+                            ? TextSpan(
+                                text: 'Текущая переплата: ',
+                                style: CustomTheme.textStyle20_400,
+                                children: [
                                   TextSpan(
                                     text: snapshot.data!.info.billoverpayment
                                         .toString(),
@@ -277,20 +281,18 @@ class _MainPageState extends State<MainPage> {
                                       fontFamily: 'Montserrat',
                                     ),
                                   ),
-                                ]
-                              : [
-                                  const TextSpan(
-                                    text:
-                                        'Ошибка на сервере, обраитесь к администратору',
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w400,
-                                      fontFamily: 'Montserrat',
-                                    ),
-                                  ),
                                 ],
-                    ),
+                              )
+                            : const TextSpan(
+                                text:
+                                    'Ошибка на сервере, обраитесь к администратору',
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w400,
+                                  fontFamily: 'Montserrat',
+                                ),
+                              ),
                   ),
                 ),
               ),
@@ -437,7 +439,8 @@ class _MainPageState extends State<MainPage> {
     if (response.statusCode == 200) {
       return UserInfo.fromJson(jsonDecode(response.body));
     } else {
-      print('Request failed with status: ${response.statusCode}. ' + response.body.toString());
+      print('Request failed with status: ${response.statusCode}. ' +
+          response.body.toString());
       throw Exception('Failed to load user info');
     }
   }
