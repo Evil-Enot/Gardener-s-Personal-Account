@@ -22,14 +22,13 @@ class _BillsPageState extends State<BillsPage> {
   @override
   void initState() {
     super.initState();
-    billsInfo = fetchBillsInfo();
+    billsInfo = _fetchBillsInfo();
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        resizeToAvoidBottomInset: false,
         body: Center(
           child: FutureBuilder<BillsInfo>(
             future: billsInfo,
@@ -303,11 +302,12 @@ class _BillsPageState extends State<BillsPage> {
     );
   }
 
-  Future<BillsInfo> fetchBillsInfo() async {
+  Future<BillsInfo> _fetchBillsInfo() async {
     final prefs = await SharedPreferences.getInstance();
     final url = prefs.getString('url');
     final bio = prefs.getString('bio');
     final authCode = prefs.getString('auth_code');
+
     Map<String, String> requestHeaders = {
       'Authorization': 'Basic ' + authCode!
     };

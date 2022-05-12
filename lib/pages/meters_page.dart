@@ -38,7 +38,6 @@ class _MetersPageState extends State<MetersPage> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        resizeToAvoidBottomInset: false,
         body: Center(
           child: FutureBuilder<MetersInfo>(
             future: metersInfo,
@@ -154,7 +153,7 @@ class _MetersPageState extends State<MetersPage> {
               ),
               Row(
                 children: [
-                  _inputWaterDataFields(snapshot),
+                  _inputWaterDataFields(context, snapshot),
                   Container(
                     margin: EdgeInsets.only(
                       left: MediaQuery.of(context).size.width * 0.01,
@@ -223,7 +222,7 @@ class _MetersPageState extends State<MetersPage> {
               ),
               Row(
                 children: [
-                  _inputElectroDataFields(snapshot),
+                  _inputElectroDataFields(context, snapshot),
                   Container(
                     margin: EdgeInsets.only(
                       left: MediaQuery.of(context).size.width * 0.01,
@@ -288,7 +287,7 @@ class _MetersPageState extends State<MetersPage> {
                           builder: (context) => const BillsPage(),
                         ),
                       );
-                    }, // button pressed
+                    },
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
@@ -297,7 +296,7 @@ class _MetersPageState extends State<MetersPage> {
                           color: Colors.black,
                           width: MediaQuery.of(context).size.width * 0.1,
                         ),
-                        const Text("Счета"), // text
+                        const Text("Счета"),
                       ],
                     ),
                   ),
@@ -322,7 +321,7 @@ class _MetersPageState extends State<MetersPage> {
                           color: Colors.black,
                           width: MediaQuery.of(context).size.width * 0.1,
                         ),
-                        const Text("Счетчики"), // text
+                        const Text("Счетчики"),
                       ],
                     ),
                   ),
@@ -463,16 +462,16 @@ class _MetersPageState extends State<MetersPage> {
     );
   }
 
-  Widget _inputWaterDataFields(AsyncSnapshot<MetersInfo> snapshot) {
-    return _inputDataFields(snapshot, "Вода");
+  Widget _inputWaterDataFields(BuildContext context, AsyncSnapshot<MetersInfo> snapshot) {
+    return _inputDataFields(context, snapshot, "Вода");
   }
 
-  Widget _inputElectroDataFields(AsyncSnapshot<MetersInfo> snapshot) {
-    return _inputDataFields(snapshot, "Электроэнергия");
+  Widget _inputElectroDataFields(BuildContext context, AsyncSnapshot<MetersInfo> snapshot) {
+    return _inputDataFields(context, snapshot, "Электроэнергия");
   }
 
   Widget _inputDataFields(
-      AsyncSnapshot<MetersInfo> snapshot, String servicebymeter) {
+      BuildContext context, AsyncSnapshot<MetersInfo> snapshot, String servicebymeter) {
     List meters = snapshot.data!.info.meters;
     bool t1 = false, t2 = false, t3 = false;
     for (var i = 0; i < meters.length; i++) {
@@ -490,104 +489,95 @@ class _MetersPageState extends State<MetersPage> {
         if (t1 && t2 && t3) {
           return Column(
             children: [
-              Align(
-                alignment: Alignment.topLeft,
-                child: Container(
-                  margin: EdgeInsets.only(
-                    top: MediaQuery.of(context).size.height * 0.01,
-                    left: MediaQuery.of(context).size.width * 0.05,
+              Container(
+                margin: EdgeInsets.only(
+                  top: MediaQuery.of(context).size.height * 0.01,
+                  left: MediaQuery.of(context).size.width * 0.05,
+                ),
+                width: MediaQuery.of(context).size.width * 0.6,
+                height: MediaQuery.of(context).size.height * 0.05,
+                decoration: CustomTheme.inputFieldsDecoration,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: MediaQuery.of(context).size.width * 0.01,
+                    vertical: MediaQuery.of(context).size.height * 0.003,
                   ),
-                  width: MediaQuery.of(context).size.width * 0.6,
-                  height: MediaQuery.of(context).size.height * 0.05,
-                  decoration: CustomTheme.inputFieldsDecoration,
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: MediaQuery.of(context).size.width * 0.01,
-                      vertical: MediaQuery.of(context).size.height * 0.01,
+                  child: TextField(
+                    keyboardType: TextInputType.number,
+                    focusNode: nodeOne,
+                    maxLines: 1,
+                    textAlign: TextAlign.center,
+                    style: CustomTheme.textStyle20_400,
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: 'Введите показания T1',
+                      hintStyle: CustomTheme.textStyle20_400,
                     ),
-                    child: TextField(
-                      keyboardType: TextInputType.number,
-                      focusNode: nodeOne,
-                      maxLines: 1,
-                      textAlign: TextAlign.center,
-                      style: CustomTheme.textStyle20_400,
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: 'Введите показания T1',
-                        hintStyle: CustomTheme.textStyle20_400,
-                      ),
-                      onSubmitted: (text) {
-                        _datat1 = text.trim();
-                        FocusScope.of(context).requestFocus(nodeTwo);
-                      },
-                    ),
+                    onSubmitted: (text) {
+                      _datat1 = text.trim();
+                      FocusScope.of(context).requestFocus(nodeTwo);
+                    },
                   ),
                 ),
               ),
-              Align(
-                alignment: Alignment.topLeft,
-                child: Container(
-                  margin: EdgeInsets.only(
-                    top: MediaQuery.of(context).size.height * 0.01,
-                    left: MediaQuery.of(context).size.width * 0.05,
+              Container(
+                margin: EdgeInsets.only(
+                  top: MediaQuery.of(context).size.height * 0.01,
+                  left: MediaQuery.of(context).size.width * 0.05,
+                ),
+                width: MediaQuery.of(context).size.width * 0.6,
+                height: MediaQuery.of(context).size.height * 0.05,
+                decoration: CustomTheme.inputFieldsDecoration,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: MediaQuery.of(context).size.width * 0.01,
+                    vertical: MediaQuery.of(context).size.height * 0.003,
                   ),
-                  width: MediaQuery.of(context).size.width * 0.6,
-                  height: MediaQuery.of(context).size.height * 0.05,
-                  decoration: CustomTheme.inputFieldsDecoration,
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: MediaQuery.of(context).size.width * 0.01,
-                      vertical: MediaQuery.of(context).size.height * 0.01,
+                  child: TextField(
+                    keyboardType: TextInputType.number,
+                    focusNode: nodeTwo,
+                    maxLines: 1,
+                    textAlign: TextAlign.center,
+                    style: CustomTheme.textStyle20_400,
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: 'Введите показания T2',
+                      hintStyle: CustomTheme.textStyle20_400,
                     ),
-                    child: TextField(
-                      keyboardType: TextInputType.number,
-                      focusNode: nodeTwo,
-                      maxLines: 1,
-                      textAlign: TextAlign.center,
-                      style: CustomTheme.textStyle20_400,
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: 'Введите показания T2',
-                        hintStyle: CustomTheme.textStyle20_400,
-                      ),
-                      onSubmitted: (text) {
-                        _datat2 = text.trim();
-                        FocusScope.of(context).requestFocus(nodeThree);
-                      },
-                    ),
+                    onSubmitted: (text) {
+                      _datat2 = text.trim();
+                      FocusScope.of(context).requestFocus(nodeThree);
+                    },
                   ),
                 ),
               ),
-              Align(
-                alignment: Alignment.topLeft,
-                child: Container(
-                  margin: EdgeInsets.only(
-                    top: MediaQuery.of(context).size.height * 0.01,
-                    left: MediaQuery.of(context).size.width * 0.05,
+              Container(
+                margin: EdgeInsets.only(
+                  top: MediaQuery.of(context).size.height * 0.01,
+                  left: MediaQuery.of(context).size.width * 0.05,
+                ),
+                width: MediaQuery.of(context).size.width * 0.6,
+                height: MediaQuery.of(context).size.height * 0.05,
+                decoration: CustomTheme.inputFieldsDecoration,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: MediaQuery.of(context).size.width * 0.01,
+                    vertical: MediaQuery.of(context).size.height * 0.003,
                   ),
-                  width: MediaQuery.of(context).size.width * 0.6,
-                  height: MediaQuery.of(context).size.height * 0.05,
-                  decoration: CustomTheme.inputFieldsDecoration,
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: MediaQuery.of(context).size.width * 0.01,
-                      vertical: MediaQuery.of(context).size.height * 0.01,
+                  child: TextField(
+                    keyboardType: TextInputType.number,
+                    focusNode: nodeThree,
+                    maxLines: 1,
+                    textAlign: TextAlign.center,
+                    style: CustomTheme.textStyle20_400,
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: 'Введите показания T3',
+                      hintStyle: CustomTheme.textStyle20_400,
                     ),
-                    child: TextField(
-                      keyboardType: TextInputType.number,
-                      focusNode: nodeThree,
-                      maxLines: 1,
-                      textAlign: TextAlign.center,
-                      style: CustomTheme.textStyle20_400,
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: 'Введите показания T3',
-                        hintStyle: CustomTheme.textStyle20_400,
-                      ),
-                      onSubmitted: (text) {
-                        _datat3 = text.trim();
-                      },
-                    ),
+                    onSubmitted: (text) {
+                      _datat3 = text.trim();
+                    },
                   ),
                 ),
               ),
@@ -596,105 +586,96 @@ class _MetersPageState extends State<MetersPage> {
         } else if (t1 && t2) {
           return Column(
             children: [
-              Align(
-                alignment: Alignment.topLeft,
-                child: Container(
-                  margin: EdgeInsets.only(
-                    top: MediaQuery.of(context).size.height * 0.01,
-                    left: MediaQuery.of(context).size.width * 0.05,
+              Container(
+                margin: EdgeInsets.only(
+                  top: MediaQuery.of(context).size.height * 0.01,
+                  left: MediaQuery.of(context).size.width * 0.05,
+                ),
+                width: MediaQuery.of(context).size.width * 0.6,
+                height: MediaQuery.of(context).size.height * 0.05,
+                decoration: CustomTheme.inputFieldsDecoration,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: MediaQuery.of(context).size.width * 0.01,
+                    vertical: MediaQuery.of(context).size.height * 0.003,
                   ),
-                  width: MediaQuery.of(context).size.width * 0.6,
-                  height: MediaQuery.of(context).size.height * 0.05,
-                  decoration: CustomTheme.inputFieldsDecoration,
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: MediaQuery.of(context).size.width * 0.01,
-                      vertical: MediaQuery.of(context).size.height * 0.01,
+                  child: TextField(
+                    keyboardType: TextInputType.number,
+                    focusNode: nodeOne,
+                    maxLines: 1,
+                    textAlign: TextAlign.center,
+                    style: CustomTheme.textStyle20_400,
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: 'Введите показания T1',
+                      hintStyle: CustomTheme.textStyle20_400,
                     ),
-                    child: TextField(
-                      keyboardType: TextInputType.number,
-                      focusNode: nodeOne,
-                      maxLines: 1,
-                      textAlign: TextAlign.center,
-                      style: CustomTheme.textStyle20_400,
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: 'Введите показания T1',
-                        hintStyle: CustomTheme.textStyle20_400,
-                      ),
-                      onSubmitted: (text) {
-                        _datat1 = text.trim();
-                        FocusScope.of(context).requestFocus(nodeTwo);
-                      },
-                    ),
+                    onSubmitted: (text) {
+                      _datat1 = text.trim();
+                      FocusScope.of(context).requestFocus(nodeTwo);
+                    },
                   ),
                 ),
               ),
-              Align(
-                alignment: Alignment.topLeft,
-                child: Container(
-                  margin: EdgeInsets.only(
-                    top: MediaQuery.of(context).size.height * 0.01,
-                    left: MediaQuery.of(context).size.width * 0.05,
+              Container(
+                margin: EdgeInsets.only(
+                  top: MediaQuery.of(context).size.height * 0.01,
+                  left: MediaQuery.of(context).size.width * 0.05,
+                ),
+                width: MediaQuery.of(context).size.width * 0.6,
+                height: MediaQuery.of(context).size.height * 0.05,
+                decoration: CustomTheme.inputFieldsDecoration,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: MediaQuery.of(context).size.width * 0.01,
+                    vertical: MediaQuery.of(context).size.height * 0.003,
                   ),
-                  width: MediaQuery.of(context).size.width * 0.6,
-                  height: MediaQuery.of(context).size.height * 0.05,
-                  decoration: CustomTheme.inputFieldsDecoration,
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: MediaQuery.of(context).size.width * 0.01,
-                      vertical: MediaQuery.of(context).size.height * 0.01,
+                  child: TextField(
+                    keyboardType: TextInputType.number,
+                    focusNode: nodeTwo,
+                    maxLines: 1,
+                    textAlign: TextAlign.center,
+                    style: CustomTheme.textStyle20_400,
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: 'Введите показания T2',
+                      hintStyle: CustomTheme.textStyle20_400,
                     ),
-                    child: TextField(
-                      keyboardType: TextInputType.number,
-                      focusNode: nodeTwo,
-                      maxLines: 1,
-                      textAlign: TextAlign.center,
-                      style: CustomTheme.textStyle20_400,
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: 'Введите показания T2',
-                        hintStyle: CustomTheme.textStyle20_400,
-                      ),
-                      onSubmitted: (text) {
-                        _datat2 = text.trim();
-                      },
-                    ),
+                    onSubmitted: (text) {
+                      _datat2 = text.trim();
+                    },
                   ),
                 ),
               ),
             ],
           );
         } else if (t1) {
-          return Align(
-            alignment: Alignment.topLeft,
-            child: Container(
-              margin: EdgeInsets.only(
-                top: MediaQuery.of(context).size.height * 0.01,
-                left: MediaQuery.of(context).size.width * 0.05,
+          return Container(
+            width: MediaQuery.of(context).size.width * 0.6,
+            height: MediaQuery.of(context).size.height * 0.05,
+            margin: EdgeInsets.only(
+              top: MediaQuery.of(context).size.height * 0.01,
+              left: MediaQuery.of(context).size.width * 0.05,
+            ),
+            decoration: CustomTheme.inputFieldsDecoration,
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: MediaQuery.of(context).size.width * 0.01,
+                vertical: MediaQuery.of(context).size.height * 0.003,
               ),
-              width: MediaQuery.of(context).size.width * 0.6,
-              height: MediaQuery.of(context).size.height * 0.05,
-              decoration: CustomTheme.inputFieldsDecoration,
-              child: Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: MediaQuery.of(context).size.width * 0.01,
-                  vertical: MediaQuery.of(context).size.height * 0.01,
+              child: TextField(
+                keyboardType: TextInputType.number,
+                maxLines: 1,
+                textAlign: TextAlign.center,
+                style: CustomTheme.textStyle20_400,
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  hintText: 'Введите показания',
+                  hintStyle: CustomTheme.textStyle20_400,
                 ),
-                child: TextField(
-                  keyboardType: TextInputType.number,
-                  maxLines: 1,
-                  textAlign: TextAlign.center,
-                  style: CustomTheme.textStyle20_400,
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    hintText: 'Введите показания',
-                    hintStyle: CustomTheme.textStyle20_400,
-                  ),
-                  onSubmitted: (text) {
-                    _datat1 = text.trim();
-                  },
-                ),
+                onSubmitted: (text) {
+                  _datat1 = text.trim();
+                },
               ),
             ),
           );

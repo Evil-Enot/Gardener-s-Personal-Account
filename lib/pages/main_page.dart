@@ -1,6 +1,3 @@
-// import 'dart:convert' as convert;
-// import 'package:http/http.dart' as http;
-
 import 'dart:convert';
 
 import 'package:diploma/pages/bills_page.dart';
@@ -13,7 +10,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../models/user_info_resposne.dart';
+import '../models/user_info_response.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
@@ -28,7 +25,7 @@ class _MainPageState extends State<MainPage> {
   @override
   void initState() {
     super.initState();
-    userInfo = fetchUserInfo();
+    userInfo = _fetchUserInfo();
   }
 
   @override
@@ -364,7 +361,7 @@ class _MainPageState extends State<MainPage> {
                           builder: (context) => const BillsPage(),
                         ),
                       );
-                    }, // button pressed
+                    },
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
@@ -373,7 +370,7 @@ class _MainPageState extends State<MainPage> {
                           color: Colors.black,
                           width: MediaQuery.of(context).size.width * 0.1,
                         ),
-                        const Text("Счета"), // text
+                        const Text("Счета"),
                       ],
                     ),
                   ),
@@ -405,7 +402,7 @@ class _MainPageState extends State<MainPage> {
                           color: Colors.black,
                           width: MediaQuery.of(context).size.width * 0.1,
                         ),
-                        const Text("Счетчики"), // text
+                        const Text("Счетчики"),
                       ],
                     ),
                   ),
@@ -418,11 +415,12 @@ class _MainPageState extends State<MainPage> {
     );
   }
 
-  Future<UserInfo> fetchUserInfo() async {
+  Future<UserInfo> _fetchUserInfo() async {
     final prefs = await SharedPreferences.getInstance();
     final url = prefs.getString('url');
     final bio = prefs.getString('bio');
     final authCode = prefs.getString('auth_code');
+
     Map<String, String> requestHeaders = {
       'Authorization': 'Basic ' + authCode!
     };

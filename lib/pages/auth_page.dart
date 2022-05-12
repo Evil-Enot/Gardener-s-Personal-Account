@@ -57,36 +57,33 @@ class _AuthPageState extends State<AuthPage> {
 
   Widget _buildBioInput(BuildContext context) {
     return Container(
-      alignment: Alignment.center,
+      width: MediaQuery.of(context).size.width * 0.8,
       margin: EdgeInsets.only(
-        top: MediaQuery.of(context).size.height * 0.02,
+        top: MediaQuery.of(context).size.height * 0.01,
         bottom: MediaQuery.of(context).size.height * 0.01,
       ),
-      child: Container(
-        width: MediaQuery.of(context).size.width * 0.8,
-        decoration: CustomTheme.inputFieldsDecoration,
-        child: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: MediaQuery.of(context).size.width * 0.01,
-            vertical: MediaQuery.of(context).size.height * 0.01,
+      decoration: CustomTheme.inputFieldsDecoration,
+      child: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: MediaQuery.of(context).size.width * 0.01,
+          vertical: MediaQuery.of(context).size.height * 0.01,
+        ),
+        child: TextField(
+          keyboardType: TextInputType.text,
+          focusNode: nodeOne,
+          textCapitalization: TextCapitalization.words,
+          maxLines: 1,
+          textAlign: TextAlign.center,
+          style: CustomTheme.textStyle20_400,
+          decoration: InputDecoration(
+            border: InputBorder.none,
+            hintText: 'Введите ФИО',
+            hintStyle: CustomTheme.textStyle20_400,
           ),
-          child: TextField(
-            keyboardType: TextInputType.text,
-            focusNode: nodeOne,
-            textCapitalization: TextCapitalization.words,
-            maxLines: 1,
-            textAlign: TextAlign.center,
-            style: CustomTheme.textStyle20_400,
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              hintText: 'Введите ФИО',
-              hintStyle: CustomTheme.textStyle20_400,
-            ),
-            onSubmitted: (text) {
-              _bio = text.trim();
-              FocusScope.of(context).requestFocus(nodeTwo);
-            },
-          ),
+          onSubmitted: (text) {
+            _bio = text.trim();
+            FocusScope.of(context).requestFocus(nodeTwo);
+          },
         ),
       ),
     );
@@ -94,35 +91,28 @@ class _AuthPageState extends State<AuthPage> {
 
   Widget _buildNumberInput(BuildContext context) {
     return Container(
-      alignment: Alignment.center,
-      margin: EdgeInsets.only(
-        top: MediaQuery.of(context).size.height * 0.01,
-        bottom: MediaQuery.of(context).size.height * 0.01,
-      ),
-      child: Container(
-        width: MediaQuery.of(context).size.width * 0.8,
-        decoration: CustomTheme.inputFieldsDecoration,
-        child: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: MediaQuery.of(context).size.width * 0.01,
-            vertical: MediaQuery.of(context).size.height * 0.01,
+      width: MediaQuery.of(context).size.width * 0.8,
+      decoration: CustomTheme.inputFieldsDecoration,
+      child: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: MediaQuery.of(context).size.width * 0.01,
+          vertical: MediaQuery.of(context).size.height * 0.01,
+        ),
+        child: TextField(
+          keyboardType: TextInputType.phone,
+          focusNode: nodeTwo,
+          maxLines: 1,
+          textAlign: TextAlign.center,
+          style: CustomTheme.textStyle20_400,
+          decoration: InputDecoration(
+            border: InputBorder.none,
+            hintText: 'Введите номер телефона (через +7)',
+            hintStyle: CustomTheme.textStyle20_400,
           ),
-          child: TextField(
-            keyboardType: TextInputType.phone,
-            focusNode: nodeTwo,
-            maxLines: 1,
-            textAlign: TextAlign.center,
-            style: CustomTheme.textStyle20_400,
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              hintText: 'Введите номер телефона (через +7)',
-              hintStyle: CustomTheme.textStyle20_400,
-            ),
-            onSubmitted: (text) {
-              _number = text.trim();
-            },
-            scrollPadding: const EdgeInsets.only(bottom: 40),
-          ),
+          onSubmitted: (text) {
+            _number = text.trim();
+          },
+          scrollPadding: const EdgeInsets.only(bottom: 40),
         ),
       ),
     );

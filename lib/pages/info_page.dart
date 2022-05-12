@@ -256,7 +256,7 @@ class _InfoPageState extends State<InfoPage> {
                           builder: (context) => const BillsPage(),
                         ),
                       );
-                    }, // button pressed
+                    },
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
@@ -265,7 +265,7 @@ class _InfoPageState extends State<InfoPage> {
                           color: Colors.black,
                           width: MediaQuery.of(context).size.width * 0.1,
                         ),
-                        const Text("Счета"), // text
+                        const Text("Счета"),
                       ],
                     ),
                   ),
@@ -297,7 +297,7 @@ class _InfoPageState extends State<InfoPage> {
                           color: Colors.black,
                           width: MediaQuery.of(context).size.width * 0.1,
                         ),
-                        const Text("Счетчики"), // text
+                        const Text("Счетчики"),
                       ],
                     ),
                   ),

@@ -78,35 +78,32 @@ class _UrlPageState extends State<UrlPage> {
 
   Widget _buildURLInput(BuildContext context) {
     return Container(
-      alignment: Alignment.center,
+      width: MediaQuery.of(context).size.width * 0.8,
       margin: EdgeInsets.only(
-        top: MediaQuery.of(context).size.height * 0.02,
+        top: MediaQuery.of(context).size.height * 0.01,
         bottom: MediaQuery.of(context).size.height * 0.01,
       ),
-      child: Container(
-        width: MediaQuery.of(context).size.width * 0.8,
-        decoration: CustomTheme.inputFieldsDecoration,
-        child: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: MediaQuery.of(context).size.width * 0.01,
-            vertical: MediaQuery.of(context).size.height * 0.01,
+      decoration: CustomTheme.inputFieldsDecoration,
+      child: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: MediaQuery.of(context).size.width * 0.01,
+          vertical: MediaQuery.of(context).size.height * 0.01,
+        ),
+        child: TextField(
+          keyboardType: TextInputType.text,
+          focusNode: nodeOne,
+          maxLines: 1,
+          textAlign: TextAlign.center,
+          style: CustomTheme.textStyle20_400,
+          decoration: InputDecoration(
+            border: InputBorder.none,
+            hintText: 'Введите URL сервера',
+            hintStyle: CustomTheme.textStyle20_400,
           ),
-          child: TextField(
-            keyboardType: TextInputType.text,
-            focusNode: nodeOne,
-            maxLines: 1,
-            textAlign: TextAlign.center,
-            style: CustomTheme.textStyle20_400,
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              hintText: 'Введите URL сервера',
-              hintStyle: CustomTheme.textStyle20_400,
-            ),
-            onSubmitted: (text) {
-              _url = text.trim();
-              FocusScope.of(context).requestFocus(nodeTwo);
-            },
-          ),
+          onSubmitted: (text) {
+            _url = text.trim();
+            FocusScope.of(context).requestFocus(nodeTwo);
+          },
         ),
       ),
     );
@@ -114,35 +111,28 @@ class _UrlPageState extends State<UrlPage> {
 
   Widget _buildCodeInput(BuildContext context) {
     return Container(
-      alignment: Alignment.center,
-      margin: EdgeInsets.only(
-        top: MediaQuery.of(context).size.height * 0.02,
-        bottom: MediaQuery.of(context).size.height * 0.01,
-      ),
-      child: Container(
-        width: MediaQuery.of(context).size.width * 0.8,
-        decoration: CustomTheme.inputFieldsDecoration,
-        child: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: MediaQuery.of(context).size.width * 0.01,
-            vertical: MediaQuery.of(context).size.height * 0.01,
+      width: MediaQuery.of(context).size.width * 0.8,
+      decoration: CustomTheme.inputFieldsDecoration,
+      child: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: MediaQuery.of(context).size.width * 0.01,
+          vertical: MediaQuery.of(context).size.height * 0.01,
+        ),
+        child: TextField(
+          keyboardType: TextInputType.text,
+          focusNode: nodeTwo,
+          maxLines: 1,
+          textAlign: TextAlign.center,
+          style: CustomTheme.textStyle20_400,
+          decoration: InputDecoration(
+            border: InputBorder.none,
+            hintText: 'Введите код авторизации',
+            hintStyle: CustomTheme.textStyle20_400,
           ),
-          child: TextField(
-            keyboardType: TextInputType.text,
-            focusNode: nodeTwo,
-            maxLines: 1,
-            textAlign: TextAlign.center,
-            style: CustomTheme.textStyle20_400,
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              hintText: 'Введите код авторизации',
-              hintStyle: CustomTheme.textStyle20_400,
-            ),
-            onSubmitted: (text) {
-              _code = text.trim();
-            },
-            scrollPadding: const EdgeInsets.only(bottom: 40),
-          ),
+          onSubmitted: (text) {
+            _code = text.trim();
+          },
+          scrollPadding: const EdgeInsets.only(bottom: 40),
         ),
       ),
     );
@@ -154,6 +144,7 @@ class _UrlPageState extends State<UrlPage> {
       child: GestureDetector(
         child: Container(
           margin: EdgeInsets.only(
+            top: MediaQuery.of(context).size.height * 0.01,
             bottom: MediaQuery.of(context).size.height * 0.01,
           ),
           child: Text(
@@ -191,8 +182,9 @@ class _UrlPageState extends State<UrlPage> {
     final prefs = await SharedPreferences.getInstance();
     bool auth = false;
 
-    Map<String, String> requestHeaders = {'Authorization': 'Basic ' + _code};
-    if (_url.isNotEmpty) {
+    if (_url.isNotEmpty && _code.isNotEmpty) {
+      Map<String, String> requestHeaders = {'Authorization': 'Basic ' + _code};
+
       var response = await http.get(Uri.parse(_url + "/hs/diploma/check/url"),
           headers: requestHeaders);
       if (response.statusCode == 200) {
@@ -204,8 +196,11 @@ class _UrlPageState extends State<UrlPage> {
         }
 
         if (auth) {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => const MainPage()));
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => const MainPage()),
+            (route) => false,
+          );
         } else {
           Navigator.push(context,
               MaterialPageRoute(builder: (context) => const AuthPage()));
