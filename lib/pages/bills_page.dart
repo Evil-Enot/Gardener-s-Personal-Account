@@ -24,6 +24,7 @@ class _BillsPageState extends State<BillsPage> {
     super.initState();
     billsInfo = fetchBillsInfo();
   }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -98,7 +99,8 @@ class _BillsPageState extends State<BillsPage> {
     );
   }
 
-  Widget _buildMainBillsContent(BuildContext context, AsyncSnapshot<BillsInfo> snapshot) {
+  Widget _buildMainBillsContent(
+      BuildContext context, AsyncSnapshot<BillsInfo> snapshot) {
     return Container(
       alignment: Alignment.center,
       margin: EdgeInsets.only(
@@ -117,47 +119,47 @@ class _BillsPageState extends State<BillsPage> {
                   child: RichText(
                     text: snapshot.data!.info.billduty > 0
                         ? TextSpan(
-                      text: 'Текущий долг: ',
-                      style: CustomTheme.textStyle20_400,
-                      children: [
-                        TextSpan(
-                          text: snapshot.data!.info.billduty.toString(),
-                          style: const TextStyle(
-                            color: Colors.red,
-                            fontSize: 18,
-                            fontWeight: FontWeight.w400,
-                            fontFamily: 'Montserrat',
-                          ),
-                        )
-                      ],
-                    )
+                            text: 'Текущий долг: ',
+                            style: CustomTheme.textStyle20_400,
+                            children: [
+                              TextSpan(
+                                text: snapshot.data!.info.billduty.toString(),
+                                style: const TextStyle(
+                                  color: Colors.red,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w400,
+                                  fontFamily: 'Montserrat',
+                                ),
+                              )
+                            ],
+                          )
                         : snapshot.data!.info.billoverpayment > 0
-                        ? TextSpan(
-                      text: 'Текущая переплата: ',
-                      style: CustomTheme.textStyle20_400,
-                      children: [
-                        TextSpan(
-                          text: snapshot.data!.info.billoverpayment
-                              .toString(),
-                          style: const TextStyle(
-                            color: Colors.green,
-                            fontSize: 18,
-                            fontWeight: FontWeight.w400,
-                            fontFamily: 'Montserrat',
-                          ),
-                        ),
-                      ],
-                    )
-                        : const TextSpan(
-                      text:
-                      'Ошибка на сервере, обраитесь к администратору',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w400,
-                        fontFamily: 'Montserrat',
-                      ),
-                    ),
+                            ? TextSpan(
+                                text: 'Текущая переплата: ',
+                                style: CustomTheme.textStyle20_400,
+                                children: [
+                                  TextSpan(
+                                    text: snapshot.data!.info.billoverpayment
+                                        .toString(),
+                                    style: const TextStyle(
+                                      color: Colors.green,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w400,
+                                      fontFamily: 'Montserrat',
+                                    ),
+                                  ),
+                                ],
+                              )
+                            : const TextSpan(
+                                text:
+                                    'Ошибка на сервере, обраитесь к администратору',
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w400,
+                                  fontFamily: 'Montserrat',
+                                ),
+                              ),
                   ),
                 ),
               ),
@@ -167,14 +169,16 @@ class _BillsPageState extends State<BillsPage> {
                   padding: EdgeInsets.only(
                     left: MediaQuery.of(context).size.width * 0.05,
                   ),
-                  child: snapshot.data!.info.lastbillelwater.isNotEmpty ? Text(
-                    'Дата последней подачи показаний по водоснабжению: ' +
-                        snapshot.data!.info.lastbillelwater,
-                    style: CustomTheme.textStyle20_400,
-                  ) : Text(
-                    'Счетчики по водоснабжению не обнаружены',
-                    style: CustomTheme.textStyle20_400,
-                  ),
+                  child: snapshot.data!.info.lastbillelwater.isNotEmpty
+                      ? Text(
+                          'Дата последней подачи показаний по водоснабжению: ' +
+                              snapshot.data!.info.lastbillelwater,
+                          style: CustomTheme.textStyle20_400,
+                        )
+                      : Text(
+                          'Счетчики по водоснабжению не обнаружены',
+                          style: CustomTheme.textStyle20_400,
+                        ),
                 ),
               ),
               Align(
@@ -303,8 +307,9 @@ class _BillsPageState extends State<BillsPage> {
     final prefs = await SharedPreferences.getInstance();
     final url = prefs.getString('url');
     final bio = prefs.getString('bio');
+    final authCode = prefs.getString('auth_code');
     Map<String, String> requestHeaders = {
-      'Authorization': 'Basic 0JLQtdGC0LrQuNC90LA6'
+      'Authorization': 'Basic ' + authCode!
     };
 
     final response = await http.post(
@@ -320,7 +325,8 @@ class _BillsPageState extends State<BillsPage> {
     if (response.statusCode == 200) {
       return BillsInfo.fromJson(jsonDecode(response.body));
     } else {
-      print('Request failed with status: ${response.statusCode}. ' + response.body.toString());
+      print('Request failed with status: ${response.statusCode}. ' +
+          response.body.toString());
       throw Exception('Failed to load user info');
     }
   }

@@ -35,19 +35,22 @@ class UrlPage extends StatefulWidget {
 }
 
 class _UrlPageState extends State<UrlPage> {
+  FocusNode nodeOne = FocusNode();
+  FocusNode nodeTwo = FocusNode();
   String _url = "";
+  String _code = "";
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        // resizeToAvoidBottomInset: false,
         body: SingleChildScrollView(
           child: Column(
-            children: <Widget>[
+            children: [
               _buildTitle(context),
               _buildURLInput(context),
-              _buildURLOverlay(context),
+              _buildCodeInput(context),
+              _buildURLAndCodeOverlay(context),
               _buildSubmitButton(context),
             ],
           ),
@@ -90,6 +93,7 @@ class _UrlPageState extends State<UrlPage> {
           ),
           child: TextField(
             keyboardType: TextInputType.text,
+            focusNode: nodeOne,
             maxLines: 1,
             textAlign: TextAlign.center,
             style: CustomTheme.textStyle20_400,
@@ -98,9 +102,9 @@ class _UrlPageState extends State<UrlPage> {
               hintText: 'Введите URL сервера',
               hintStyle: CustomTheme.textStyle20_400,
             ),
-            scrollPadding: EdgeInsets.only(bottom: 40),
             onSubmitted: (text) {
               _url = text.trim();
+              FocusScope.of(context).requestFocus(nodeTwo);
             },
           ),
         ),
@@ -108,17 +112,52 @@ class _UrlPageState extends State<UrlPage> {
     );
   }
 
-  Widget _buildURLOverlay(BuildContext context) {
+  Widget _buildCodeInput(BuildContext context) {
+    return Container(
+      alignment: Alignment.center,
+      margin: EdgeInsets.only(
+        top: MediaQuery.of(context).size.height * 0.02,
+        bottom: MediaQuery.of(context).size.height * 0.01,
+      ),
+      child: Container(
+        width: MediaQuery.of(context).size.width * 0.8,
+        decoration: CustomTheme.inputFieldsDecoration,
+        child: Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: MediaQuery.of(context).size.width * 0.01,
+            vertical: MediaQuery.of(context).size.height * 0.01,
+          ),
+          child: TextField(
+            keyboardType: TextInputType.text,
+            focusNode: nodeTwo,
+            maxLines: 1,
+            textAlign: TextAlign.center,
+            style: CustomTheme.textStyle20_400,
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              hintText: 'Введите код авторизации',
+              hintStyle: CustomTheme.textStyle20_400,
+            ),
+            onSubmitted: (text) {
+              _code = text.trim();
+            },
+            scrollPadding: const EdgeInsets.only(bottom: 40),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildURLAndCodeOverlay(BuildContext context) {
     return Container(
       alignment: Alignment.center,
       child: GestureDetector(
-        // onTap: _showOverlay(),
         child: Container(
           margin: EdgeInsets.only(
             bottom: MediaQuery.of(context).size.height * 0.01,
           ),
           child: Text(
-            "Что такое URL?",
+            "Что такое URL и код авторизации?",
             textAlign: TextAlign.center,
             style: CustomTheme.textStyle14_400U,
           ),
@@ -152,26 +191,23 @@ class _UrlPageState extends State<UrlPage> {
     final prefs = await SharedPreferences.getInstance();
     bool auth = false;
 
-    Map<String, String> requestHeaders = {
-      'Authorization': 'Basic 0JLQtdGC0LrQuNC90LA6'
-    };
+    Map<String, String> requestHeaders = {'Authorization': 'Basic ' + _code};
     if (_url.isNotEmpty) {
       var response = await http.get(Uri.parse(_url + "/hs/diploma/check/url"),
           headers: requestHeaders);
       if (response.statusCode == 200) {
         prefs.setString('url', _url);
+        prefs.setString('auth_code', _code);
 
         if (prefs.containsKey('auth')) {
           auth = prefs.getBool('auth')!;
         }
 
         if (auth) {
-          Navigator.push(
-              context,
+          Navigator.push(context,
               MaterialPageRoute(builder: (context) => const MainPage()));
         } else {
-          Navigator.push(
-              context,
+          Navigator.push(context,
               MaterialPageRoute(builder: (context) => const AuthPage()));
         }
       } else {

@@ -125,35 +125,32 @@ class _SettingsPageState extends State<SettingsPage> {
                 color: Colors.black,
               ),
               Align(
-                alignment: Alignment.topCenter,
-                child: Row(
-                  children: [
-                    Container(
-                      alignment: Alignment.center,
-                      margin: EdgeInsets.only(
-                        top: MediaQuery.of(context).size.height * 0.02,
-                      ),
-                      width: MediaQuery.of(context).size.width * 0.5,
-                      decoration: CustomTheme.buttonsDecoration,
-                      child: TextButton.icon(
-                        onPressed: () {
-                          _logout();
-                        },
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all<Color>(const Color(0xFFFFED4D)),
-                        ),
-                        icon: const Icon(
-                          Icons.logout,
-                          size: 20,
-                        ),
-                        label: Text(
-                          "Выйти",
-                          textAlign: TextAlign.center,
-                          style: CustomTheme.textStyle20_400,
-                        ),
-                      ),
+                alignment: Alignment.center,
+                child: Container(
+                  alignment: Alignment.center,
+                  margin: EdgeInsets.only(
+                    top: MediaQuery.of(context).size.height * 0.02,
+                  ),
+                  width: MediaQuery.of(context).size.width * 0.5,
+                  decoration: CustomTheme.buttonsDecoration,
+                  child: TextButton.icon(
+                    onPressed: () {
+                      _logout();
+                    },
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all<Color>(
+                          const Color(0xFFFFED4D)),
                     ),
-                  ],
+                    icon: const Icon(
+                      Icons.logout,
+                      size: 20,
+                    ),
+                    label: Text(
+                      "Выйти",
+                      textAlign: TextAlign.center,
+                      style: CustomTheme.textStyle20_400,
+                    ),
+                  ),
                 ),
               ),
             ],

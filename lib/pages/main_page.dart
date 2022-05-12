@@ -422,8 +422,9 @@ class _MainPageState extends State<MainPage> {
     final prefs = await SharedPreferences.getInstance();
     final url = prefs.getString('url');
     final bio = prefs.getString('bio');
+    final authCode = prefs.getString('auth_code');
     Map<String, String> requestHeaders = {
-      'Authorization': 'Basic 0JLQtdGC0LrQuNC90LA6'
+      'Authorization': 'Basic ' + authCode!
     };
 
     final response = await http.post(
