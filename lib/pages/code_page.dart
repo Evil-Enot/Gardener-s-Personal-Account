@@ -1,6 +1,7 @@
 import 'package:diploma/pages/main_page.dart';
 import 'package:diploma/theme/custom_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CodePage extends StatefulWidget {
   const CodePage({Key? key}) : super(key: key);
@@ -10,6 +11,8 @@ class CodePage extends StatefulWidget {
 }
 
 class _CodePageState extends State<CodePage> {
+  String _code = "";
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -71,6 +74,10 @@ class _CodePageState extends State<CodePage> {
               hintText: 'Код из смс',
               hintStyle: CustomTheme.textStyle20_400,
             ),
+            onSubmitted: (text) {
+              print(text);
+              _code = text.trim();
+            },
           ),
         ),
       ),
@@ -125,23 +132,20 @@ class _CodePageState extends State<CodePage> {
   }
 
   _checkAuth() async {
-    // final prefs = await SharedPreferences.getInstance();
-    // final url = prefs.getString('url');
-    // print(url);
-    // Map<String, String> requestHeaders = {
-    //   // 'Content-type': 'application/json',
-    //   // 'Accept': 'application/json',
-    //   'Authorization': 'Basic 0JLQtdGC0LrQuNC90LA6'
-    // };
-    // if (_bio.isNotEmpty && _number.isNotEmpty) {
-    //   var response = await http.get(Uri.parse(url! + "/hs/diploma/check/number/info?bio="+_bio+"&number="+_number),
-    //       headers: requestHeaders);
-    //   if (response.statusCode == 200) {
+    final prefs = await SharedPreferences.getInstance();
+
+    if (prefs.containsKey("code")) {
+      final code = prefs.getInt("code").toString();
+
+      if (_code == code) {
+        prefs.setBool("auth", true);
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => const MainPage()));
-    //   } else {
-    //     print('Request failed with status: ${response.statusCode}.');
-    //   }
-    // }
+      } else {
+        print("different codes");
+      }
+    } else {
+      print("code not saved");
+    }
   }
 }
