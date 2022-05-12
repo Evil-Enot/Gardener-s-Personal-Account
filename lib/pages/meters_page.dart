@@ -7,7 +7,7 @@ import 'package:diploma/theme/custom_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:http/http.dart' as http;
-import  'package:intl/intl.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MetersPage extends StatefulWidget {
@@ -343,7 +343,8 @@ class _MetersPageState extends State<MetersPage> {
     return _printMetersData(snapshot, "Электроэнергия");
   }
 
-  RenderObjectWidget _printMetersData(AsyncSnapshot<MetersInfo> snapshot, String servicebymeter) {
+  RenderObjectWidget _printMetersData(
+      AsyncSnapshot<MetersInfo> snapshot, String servicebymeter) {
     List meters = snapshot.data!.info.meters;
     bool t1 = false, t2 = false, t3 = false;
     for (var i = 0; i < meters.length; i++) {
@@ -470,7 +471,8 @@ class _MetersPageState extends State<MetersPage> {
     return _inputDataFields(snapshot, "Электроэнергия");
   }
 
-  Widget _inputDataFields(AsyncSnapshot<MetersInfo> snapshot, String servicebymeter) {
+  Widget _inputDataFields(
+      AsyncSnapshot<MetersInfo> snapshot, String servicebymeter) {
     List meters = snapshot.data!.info.meters;
     bool t1 = false, t2 = false, t3 = false;
     for (var i = 0; i < meters.length; i++) {
@@ -728,8 +730,9 @@ class _MetersPageState extends State<MetersPage> {
     final prefs = await SharedPreferences.getInstance();
     final url = prefs.getString('url');
     final bio = prefs.getString('bio');
+    final authCode = prefs.getString('auth_code');
     Map<String, String> requestHeaders = {
-      'Authorization': 'Basic 0JLQtdGC0LrQuNC90LA6'
+      'Authorization': 'Basic ' + authCode!
     };
 
     final response = await http.post(
@@ -750,12 +753,13 @@ class _MetersPageState extends State<MetersPage> {
     }
   }
 
-  void _submitData(String servicebymeter) async{
+  void _submitData(String servicebymeter) async {
     final prefs = await SharedPreferences.getInstance();
     final url = prefs.getString('url');
     final bio = prefs.getString('bio');
+    final authCode = prefs.getString('auth_code');
     Map<String, String> requestHeaders = {
-      'Authorization': 'Basic 0JLQtdGC0LrQuNC90LA6'
+      'Authorization': 'Basic ' + authCode!
     };
 
     String datetime = DateFormat("d.MM.yyy HH:mm:ss").format(DateTime.now());
@@ -763,7 +767,6 @@ class _MetersPageState extends State<MetersPage> {
     print(_datat1);
     print(_datat2);
     print(_datat3);
-
 
     final response = await http.post(
       Uri.parse(url! + "/hs/diploma/put/meters"),
@@ -785,9 +788,7 @@ class _MetersPageState extends State<MetersPage> {
       _datat1 = "0";
       _datat2 = "0";
       _datat3 = "0";
-      setState(() {
-
-      });
+      setState(() {});
     } else {
       throw Exception('Failed to update meters data: ${response.statusCode}. ' +
           response.body.toString());

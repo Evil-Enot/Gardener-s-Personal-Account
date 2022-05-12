@@ -24,18 +24,12 @@ class _AuthPageState extends State<AuthPage> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: Center(
+        body: SingleChildScrollView(
           child: Column(
             children: [
               _buildTitle(context),
-              ListView(
-                shrinkWrap: true,
-                children: <Widget>[
-                  _buildBioInput(context),
-                  _buildNumberInput(context),
-                ],
-              ),
+              _buildBioInput(context),
+              _buildNumberInput(context),
               _buildSubmitButton(context),
             ],
           ),
@@ -89,7 +83,6 @@ class _AuthPageState extends State<AuthPage> {
               hintStyle: CustomTheme.textStyle20_400,
             ),
             onSubmitted: (text) {
-              print(text);
               _bio = text.trim();
               FocusScope.of(context).requestFocus(nodeTwo);
             },
@@ -126,10 +119,9 @@ class _AuthPageState extends State<AuthPage> {
               hintStyle: CustomTheme.textStyle20_400,
             ),
             onSubmitted: (text) {
-              print(text);
               _number = text.trim();
             },
-            scrollPadding: EdgeInsets.only(bottom: 40),
+            scrollPadding: const EdgeInsets.only(bottom: 40),
           ),
         ),
       ),
@@ -160,8 +152,9 @@ class _AuthPageState extends State<AuthPage> {
   _checkAuth() async {
     final prefs = await SharedPreferences.getInstance();
     final url = prefs.getString('url');
+    final authCode = prefs.getString('auth_code');
     Map<String, String> requestHeaders = {
-      'Authorization': 'Basic 0JLQtdGC0LrQuNC90LA6'
+      'Authorization': 'Basic ' + authCode!
     };
     if (_bio.isNotEmpty && _number.isNotEmpty) {
       var response = await http.post(
@@ -175,7 +168,8 @@ class _AuthPageState extends State<AuthPage> {
         ),
       );
       if (response.statusCode == 200) {
-        AuthResponse responseAuth = AuthResponse.fromJson(jsonDecode(response.body));
+        AuthResponse responseAuth =
+            AuthResponse.fromJson(jsonDecode(response.body));
         prefs.setString("bio", _bio);
         prefs.setInt("code", responseAuth.code);
         Navigator.push(
