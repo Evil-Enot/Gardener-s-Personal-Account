@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:diploma/pages/auth_page.dart';
 import 'package:diploma/pages/bills_page.dart';
 import 'package:diploma/pages/info_page.dart';
 import 'package:diploma/pages/meters_page.dart';
@@ -437,10 +438,52 @@ class _MainPageState extends State<MainPage> {
 
     if (response.statusCode == 200) {
       return UserInfo.fromJson(jsonDecode(response.body));
-    } else {
-      print('Request failed with status: ${response.statusCode}. ' +
-          response.body.toString());
-      throw Exception('Failed to load user info');
+    } else if (response.statusCode == 404) {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text(
+              'Пользователь с таким ФИО не обнаружен. Перезайдите в приложение',
+              style: CustomTheme.textStyle20_400,
+              textAlign: TextAlign.center,
+            ),
+            actions: <Widget>[
+              Align(
+                alignment: Alignment.center,
+                child: Container(
+                  margin: EdgeInsets.only(
+                    top: MediaQuery.of(context).size.height * 0.01,
+                  ),
+                  child: SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.08,
+                    width: MediaQuery.of(context).size.width * 0.3,
+                    child: ElevatedButton(
+                      style: CustomTheme.elevatedButtonStyle,
+                      onPressed: () {
+                        prefs.setBool('auth', false);
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                            builder: (BuildContext context) => const AuthPage(),
+                          ),
+                          (route) => false,
+                        );
+                        Navigator.of(context).pop();
+                      },
+                      child: Text(
+                        'Выйти',
+                        style: CustomTheme.textStyle24_400,
+                      ),
+                    ),
+                  ),
+                ),
+              )
+            ],
+          );
+        },
+      );
     }
+    throw Exception('Failed to load user info');
   }
 }

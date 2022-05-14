@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:diploma/models/meters_info_response.dart';
+import 'package:diploma/pages/alert_dialog.dart';
 import 'package:diploma/pages/bills_page.dart';
 import 'package:diploma/pages/main_page.dart';
 import 'package:diploma/theme/custom_theme.dart';
@@ -462,16 +463,18 @@ class _MetersPageState extends State<MetersPage> {
     );
   }
 
-  Widget _inputWaterDataFields(BuildContext context, AsyncSnapshot<MetersInfo> snapshot) {
+  Widget _inputWaterDataFields(
+      BuildContext context, AsyncSnapshot<MetersInfo> snapshot) {
     return _inputDataFields(context, snapshot, "Вода");
   }
 
-  Widget _inputElectroDataFields(BuildContext context, AsyncSnapshot<MetersInfo> snapshot) {
+  Widget _inputElectroDataFields(
+      BuildContext context, AsyncSnapshot<MetersInfo> snapshot) {
     return _inputDataFields(context, snapshot, "Электроэнергия");
   }
 
-  Widget _inputDataFields(
-      BuildContext context, AsyncSnapshot<MetersInfo> snapshot, String servicebymeter) {
+  Widget _inputDataFields(BuildContext context,
+      AsyncSnapshot<MetersInfo> snapshot, String servicebymeter) {
     List meters = snapshot.data!.info.meters;
     bool t1 = false, t2 = false, t3 = false;
     for (var i = 0; i < meters.length; i++) {
@@ -751,30 +754,106 @@ class _MetersPageState extends State<MetersPage> {
 
     String datetime = DateFormat("d.MM.yyy HH:mm:ss").format(DateTime.now());
 
-    final response = await http.post(
-      Uri.parse(url! + "/hs/diploma/put/meters"),
-      headers: requestHeaders,
-      body: jsonEncode(
-        <String, String>{
-          'bio': bio!,
-          'type': servicebymeter,
-          'valuet1': _datat1,
-          'valuet2': _datat2,
-          'valuet3': _datat3,
-          'date': datetime,
-        },
-      ),
-    );
-
-    if (response.statusCode == 200) {
-      metersInfo = fetchMetersInfo();
-      _datat1 = "0";
-      _datat2 = "0";
-      _datat3 = "0";
-      setState(() {});
+    if (_datat1 != "0" && _datat2 != "0" && _datat3 != "0" || _datat1 != "0" && _datat2 != "0" || _datat1 != "0") {
+      final response = await http.post(
+        Uri.parse(url! + "/hs/diploma/put/meters"),
+        headers: requestHeaders,
+        body: jsonEncode(
+          <String, String>{
+            'bio': bio!,
+            'type': servicebymeter,
+            'valuet1': _datat1,
+            'valuet2': _datat2,
+            'valuet3': _datat3,
+            'date': datetime,
+          },
+        ),
+      );
+      if (response.statusCode == 200) {
+        metersInfo = fetchMetersInfo();
+        _datat1 = "0";
+        _datat2 = "0";
+        _datat3 = "0";
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text(
+                'Показания переданы',
+                style: CustomTheme.textStyle20_400,
+                textAlign: TextAlign.center,
+              ),
+              actions: <Widget>[
+                Align(
+                  alignment: Alignment.center,
+                  child: Container(
+                    margin: EdgeInsets.only(
+                      top: MediaQuery.of(context).size.height * 0.01,
+                    ),
+                    child: SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.08,
+                      width: MediaQuery.of(context).size.width * 0.3,
+                      child: ElevatedButton(
+                        style: CustomTheme.elevatedButtonStyle,
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          setState(() {});
+                        },
+                        child: Text(
+                          'Закрыть',
+                          style: CustomTheme.textStyle24_400,
+                        ),
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            );
+          },
+        );
+      } else {
+        if (response.statusCode == 404) {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialogBuilder().printAlertDialog(
+                  context, 'Пользователь не обнаружен, авторизируйтесь заново');
+            },
+          );
+        } else if (response.statusCode == 403) {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialogBuilder().printAlertDialog(context,
+                  'Введенные показания меньше сохраненных, проверьте корректность введенных данных');
+            },
+          );
+        } else if (response.statusCode == 402) {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialogBuilder().printAlertDialog(context,
+                  'Ошибка 402. Обратитесь к администратору для устранения неисправности');
+            },
+          );
+        } else if (response.statusCode == 400) {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialogBuilder().printAlertDialog(context,
+                  'Неверный тип счетчика. Обратитесь к администратору для устранения неисправности');
+            },
+          );
+        }
+      }
     } else {
-      throw Exception('Failed to update meters data: ${response.statusCode}. ' +
-          response.body.toString());
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialogBuilder().printAlertDialog(context,
+              'Поля показаний счетчика пустые');
+        },
+      );
     }
   }
 }

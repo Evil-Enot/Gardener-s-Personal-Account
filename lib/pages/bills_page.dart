@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:diploma/models/bills_info_response.dart';
+import 'package:diploma/pages/alert_dialog.dart';
 import 'package:diploma/pages/main_page.dart';
 import 'package:diploma/pages/meters_page.dart';
 import 'package:diploma/theme/custom_theme.dart';
@@ -410,9 +411,13 @@ class _BillsPageState extends State<BillsPage> {
         },
       );
     } else {
-      print('Request failed with status: ${response.statusCode}. ' +
-          response.body.toString());
-      throw Exception('Failed to load user info');
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialogBuilder().printAlertDialog(context,
+              'Не удалось сформировать квитанцию. Обратитесь к администратору');
+        },
+      );
     }
   }
 }

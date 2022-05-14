@@ -1,3 +1,4 @@
+import 'package:diploma/pages/alert_dialog.dart';
 import 'package:diploma/pages/auth_page.dart';
 import 'package:diploma/pages/main_page.dart';
 import 'package:diploma/theme/custom_theme.dart';
@@ -144,11 +145,16 @@ class _UrlPageState extends State<UrlPage> {
     return Container(
       alignment: Alignment.center,
       child: GestureDetector(
-        child: Container(
-          margin: EdgeInsets.only(
-            top: MediaQuery.of(context).size.height * 0.01,
-            bottom: MediaQuery.of(context).size.height * 0.01,
-          ),
+        child: TextButton(
+          onPressed: () {
+            showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialogBuilder().printAlertDialog(context,
+                    'URL - адрес, по которому происходит связь с сервером 1С.\nURL можно получить, обратившись к председателю  вашего садоводства.');
+              },
+            );
+          },
           child: Text(
             "Что такое URL и код авторизации?",
             textAlign: TextAlign.center,
@@ -208,8 +214,32 @@ class _UrlPageState extends State<UrlPage> {
               MaterialPageRoute(builder: (context) => const AuthPage()));
         }
       } else {
-        print('Request failed with status: ${response.statusCode}.');
+        if (response.statusCode == 401) {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialogBuilder()
+                  .printAlertDialog(context, 'Неверный код авторизации');
+            },
+          );
+        } else if (response.statusCode == 404) {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialogBuilder()
+                  .printAlertDialog(context, 'Неверный url');
+            },
+          );
+        }
       }
+    } else {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialogBuilder().printAlertDialog(context,
+              'Обязательные поля "URL" и "Код авторизации" не заполнены');
+        },
+      );
     }
   }
 }
