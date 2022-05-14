@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:diploma/models/auth_response.dart';
+import 'package:diploma/pages/alert_dialog.dart';
 import 'package:diploma/pages/code_page.dart';
 import 'package:diploma/theme/custom_theme.dart';
 import 'package:flutter/material.dart';
@@ -172,8 +173,40 @@ class _AuthPageState extends State<AuthPage> {
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => const CodePage()));
       } else {
-        print('Request failed with status: ${response.statusCode}.');
+        if (response.statusCode == 404) {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialogBuilder().printAlertDialog(
+                  context, 'Пользователь с таким ФИО не обнаружен');
+            },
+          );
+        } else if (response.statusCode == 403) {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialogBuilder().printAlertDialog(context,
+                  'Введенный номер телефона не совпадает с номером телефона в базе данных');
+            },
+          );
+        } else if (response.statusCode == 400) {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialogBuilder().printAlertDialog(context,
+                  'Не удалось отправить код для авторизации на указаный номер телефона. Обратитесь к администратору для устранения неисправности');
+            },
+          );
+        }
       }
+    } else {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialogBuilder().printAlertDialog(context,
+              'Обязательные поля "ФИО" и "Номер телефона" не заполнены');
+        },
+      );
     }
   }
 }

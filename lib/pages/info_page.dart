@@ -325,8 +325,51 @@ class _InfoPageState extends State<InfoPage> {
     if (response.statusCode == 200) {
       return GardeningInfo.fromJson(jsonDecode(response.body));
     } else {
-      print('Request failed with status: ${response.statusCode}.');
-      throw Exception('Failed to load gardening info');
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text(
+              'Не удалось загрузить данные. Попробуйте позже',
+              style: CustomTheme.textStyle20_400,
+              textAlign: TextAlign.center,
+            ),
+            actions: <Widget>[
+              Align(
+                alignment: Alignment.center,
+                child: Container(
+                  margin: EdgeInsets.only(
+                    top: MediaQuery.of(context).size.height * 0.01,
+                  ),
+                  child: SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.08,
+                    width: MediaQuery.of(context).size.width * 0.3,
+                    child: ElevatedButton(
+                      style: CustomTheme.elevatedButtonStyle,
+                      onPressed: () {
+                        prefs.setBool('auth', false);
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                            builder: (BuildContext context) => const MainPage(),
+                          ),
+                              (route) => false,
+                        );
+                        Navigator.of(context).pop();
+                      },
+                      child: Text(
+                        'Выйти',
+                        style: CustomTheme.textStyle24_400,
+                      ),
+                    ),
+                  ),
+                ),
+              )
+            ],
+          );
+        },
+      );
+      return GardeningInfo.fromJson(jsonDecode(response.body)); // BUG
     }
   }
 }

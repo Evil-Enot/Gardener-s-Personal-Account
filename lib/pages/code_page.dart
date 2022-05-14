@@ -1,6 +1,11 @@
+import 'dart:convert';
+
+import 'package:diploma/models/auth_response.dart';
+import 'package:diploma/pages/alert_dialog.dart';
 import 'package:diploma/pages/main_page.dart';
 import 'package:diploma/theme/custom_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CodePage extends StatefulWidget {
@@ -84,16 +89,28 @@ class _CodePageState extends State<CodePage> {
     return Container(
       alignment: Alignment.center,
       child: GestureDetector(
-        child: RichText(
-          text: TextSpan(
-            text: 'Не пришел код? ',
-            style: CustomTheme.textStyle14_400U,
-            children: [
-              TextSpan(
-                text: 'Отправить еще раз',
-                style: CustomTheme.textStyle14_700U,
-              )
-            ],
+        child: TextButton(
+          onPressed: () {
+            _sendCode();
+            showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialogBuilder()
+                    .printAlertDialog(context, 'Код отправлен заново');
+              },
+            );
+          },
+          child: RichText(
+            text: TextSpan(
+              text: 'Не пришел код? ',
+              style: CustomTheme.textStyle14_400U,
+              children: [
+                TextSpan(
+                  text: 'Отправить еще раз',
+                  style: CustomTheme.textStyle14_700U,
+                )
+              ],
+            ),
           ),
         ),
       ),
@@ -135,10 +152,57 @@ class _CodePageState extends State<CodePage> {
           (route) => false,
         );
       } else {
-        print("different codes");
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialogBuilder()
+                .printAlertDialog(context, 'Неверный код авторизации');
+          },
+        );
       }
     } else {
-      print("code not saved");
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialogBuilder().printAlertDialog(
+              context, 'Проблема с авторизацией, перезапустите приложение');
+        },
+      );
+    }
+  }
+
+  Future<void> _sendCode() async {
+    final prefs = await SharedPreferences.getInstance();
+    final url = prefs.getString('url');
+    final bio = prefs.getString('bio');
+    final authCode = prefs.getString('auth_code');
+    Map<String, String> requestHeaders = {
+      'Authorization': 'Basic ' + authCode!
+    };
+
+    var response = await http.post(
+      Uri.parse(url! + "/hs/diploma/get/code"),
+      headers: requestHeaders,
+      body: jsonEncode(
+        <String, String>{
+          'bio': bio!,
+        },
+      ),
+    );
+    if (response.statusCode == 200) {
+      AuthResponse responseAuth =
+          AuthResponse.fromJson(jsonDecode(response.body));
+      prefs.setInt("code", responseAuth.code);
+    } else {
+      if (response.statusCode == 400) {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialogBuilder().printAlertDialog(context,
+                'Не удалось отправить код для авторизации на указаный номер телефона. Обратитесь к администратору для устранения неисправности');
+          },
+        );
+      }
     }
   }
 }
