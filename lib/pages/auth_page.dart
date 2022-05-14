@@ -80,8 +80,10 @@ class _AuthPageState extends State<AuthPage> {
             hintText: 'Введите ФИО',
             hintStyle: CustomTheme.textStyle20_400,
           ),
-          onSubmitted: (text) {
+          onChanged: (text) {
             _bio = text.trim();
+          },
+          onSubmitted: (text) {
             FocusScope.of(context).requestFocus(nodeTwo);
           },
         ),
@@ -106,10 +108,15 @@ class _AuthPageState extends State<AuthPage> {
           style: CustomTheme.textStyle20_400,
           decoration: InputDecoration(
             border: InputBorder.none,
-            hintText: 'Введите номер телефона (через +7)',
+            hintText: 'Введите номер телефона',
             hintStyle: CustomTheme.textStyle20_400,
           ),
           onSubmitted: (text) {
+            if (text[0] == '8') {
+              text = "+7" + text.substring(1, text.length);
+            } else if (text[0] == '7') {
+              text = "+" + text;
+            }
             _number = text.trim();
           },
           scrollPadding: const EdgeInsets.only(bottom: 40),

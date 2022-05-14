@@ -100,8 +100,10 @@ class _UrlPageState extends State<UrlPage> {
             hintText: 'Введите URL сервера',
             hintStyle: CustomTheme.textStyle20_400,
           ),
-          onSubmitted: (text) {
+          onChanged: (text) {
             _url = text.trim();
+          },
+          onSubmitted: (text) {
             FocusScope.of(context).requestFocus(nodeTwo);
           },
         ),
@@ -129,7 +131,7 @@ class _UrlPageState extends State<UrlPage> {
             hintText: 'Введите код авторизации',
             hintStyle: CustomTheme.textStyle20_400,
           ),
-          onSubmitted: (text) {
+          onChanged: (text) {
             _code = text.trim();
           },
           scrollPadding: const EdgeInsets.only(bottom: 40),

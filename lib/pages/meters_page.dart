@@ -513,8 +513,10 @@ class _MetersPageState extends State<MetersPage> {
                       hintText: 'Введите показания T1',
                       hintStyle: CustomTheme.textStyle20_400,
                     ),
-                    onSubmitted: (text) {
+                    onChanged: (text) {
                       _datat1 = text.trim();
+                    },
+                    onSubmitted: (text) {
                       FocusScope.of(context).requestFocus(nodeTwo);
                     },
                   ),
@@ -544,8 +546,10 @@ class _MetersPageState extends State<MetersPage> {
                       hintText: 'Введите показания T2',
                       hintStyle: CustomTheme.textStyle20_400,
                     ),
-                    onSubmitted: (text) {
+                    onChanged: (text) {
                       _datat2 = text.trim();
+                    },
+                    onSubmitted: (text) {
                       FocusScope.of(context).requestFocus(nodeThree);
                     },
                   ),
@@ -575,7 +579,7 @@ class _MetersPageState extends State<MetersPage> {
                       hintText: 'Введите показания T3',
                       hintStyle: CustomTheme.textStyle20_400,
                     ),
-                    onSubmitted: (text) {
+                    onChanged: (text) {
                       _datat3 = text.trim();
                     },
                   ),
@@ -610,8 +614,10 @@ class _MetersPageState extends State<MetersPage> {
                       hintText: 'Введите показания T1',
                       hintStyle: CustomTheme.textStyle20_400,
                     ),
-                    onSubmitted: (text) {
+                    onChanged: (text) {
                       _datat1 = text.trim();
+                    },
+                    onSubmitted: (text) {
                       FocusScope.of(context).requestFocus(nodeTwo);
                     },
                   ),
@@ -641,7 +647,7 @@ class _MetersPageState extends State<MetersPage> {
                       hintText: 'Введите показания T2',
                       hintStyle: CustomTheme.textStyle20_400,
                     ),
-                    onSubmitted: (text) {
+                    onChanged: (text) {
                       _datat2 = text.trim();
                     },
                   ),
@@ -673,7 +679,7 @@ class _MetersPageState extends State<MetersPage> {
                   hintText: 'Введите показания',
                   hintStyle: CustomTheme.textStyle20_400,
                 ),
-                onSubmitted: (text) {
+                onChanged: (text) {
                   _datat1 = text.trim();
                 },
               ),
@@ -744,10 +750,6 @@ class _MetersPageState extends State<MetersPage> {
     };
 
     String datetime = DateFormat("d.MM.yyy HH:mm:ss").format(DateTime.now());
-    print(datetime);
-    print(_datat1);
-    print(_datat2);
-    print(_datat3);
 
     final response = await http.post(
       Uri.parse(url! + "/hs/diploma/put/meters"),
