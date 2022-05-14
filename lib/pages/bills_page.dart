@@ -208,6 +208,28 @@ class _BillsPageState extends State<BillsPage> {
                   ),
                   child: SizedBox(
                     height: MediaQuery.of(context).size.height * 0.08,
+                    width: MediaQuery.of(context).size.width * 0.6,
+                    child: ElevatedButton(
+                      style: CustomTheme.elevatedButtonStyle,
+                      onPressed: () {
+                        _getReceipt(context);
+                      },
+                      child: Text(
+                        'Получить квитанцию',
+                        style: CustomTheme.textStyle24_400,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Align(
+                alignment: Alignment.center,
+                child: Container(
+                  margin: EdgeInsets.only(
+                    top: MediaQuery.of(context).size.height * 0.01,
+                  ),
+                  child: SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.08,
                     width: MediaQuery.of(context).size.width * 0.3,
                     child: ElevatedButton(
                       style: CustomTheme.elevatedButtonStyle,
@@ -324,6 +346,69 @@ class _BillsPageState extends State<BillsPage> {
 
     if (response.statusCode == 200) {
       return BillsInfo.fromJson(jsonDecode(response.body));
+    } else {
+      print('Request failed with status: ${response.statusCode}. ' +
+          response.body.toString());
+      throw Exception('Failed to load user info');
+    }
+  }
+
+  void _getReceipt(context) async {
+    final prefs = await SharedPreferences.getInstance();
+    final url = prefs.getString('url');
+    final bio = prefs.getString('bio');
+    final authCode = prefs.getString('auth_code');
+
+    Map<String, String> requestHeaders = {
+      'Authorization': 'Basic ' + authCode!
+    };
+
+    final response = await http.post(
+      Uri.parse(url! + "/hs/diploma/get/receipt"),
+      headers: requestHeaders,
+      body: jsonEncode(
+        <String, String>{
+          'bio': bio!,
+        },
+      ),
+    );
+
+    if (response.statusCode == 200) {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text(
+              'Квитанция сформирована и отправлена на почту',
+              style: CustomTheme.textStyle20_400,
+            ),
+            actions: <Widget>[
+              Align(
+                alignment: Alignment.center,
+                child: Container(
+                  margin: EdgeInsets.only(
+                    top: MediaQuery.of(context).size.height * 0.01,
+                  ),
+                  child: SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.08,
+                    width: MediaQuery.of(context).size.width * 0.3,
+                    child: ElevatedButton(
+                      style: CustomTheme.elevatedButtonStyle,
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text(
+                        'Закрыть',
+                        style: CustomTheme.textStyle24_400,
+                      ),
+                    ),
+                  ),
+                ),
+              )
+            ],
+          );
+        },
+      );
     } else {
       print('Request failed with status: ${response.statusCode}. ' +
           response.body.toString());
