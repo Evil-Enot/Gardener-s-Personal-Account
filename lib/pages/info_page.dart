@@ -64,46 +64,54 @@ class _InfoPageState extends State<InfoPage> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          IconButton(
-            icon: Icon(
-              Icons.home,
-              size: MediaQuery.of(context).size.width * 0.08,
-              color: Colors.black,
+          Container(
+            alignment: Alignment.center,
+            height: MediaQuery.of(context).size.height * 0.1,
+            width: MediaQuery.of(context).size.width * 0.2,
+            child: IconButton(
+              icon: Icon(
+                Icons.home,
+                size: MediaQuery.of(context).size.width * 0.08,
+                color: Colors.black,
+              ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const MainPage(),
+                  ),
+                );
+              },
             ),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const MainPage(),
-                ),
-              );
-            },
           ),
           Container(
             alignment: Alignment.center,
-            margin: EdgeInsets.only(
-              left: MediaQuery.of(context).size.width * 0.2,
-              right: MediaQuery.of(context).size.width * 0.2,
-            ),
+            height: MediaQuery.of(context).size.height * 0.1,
+            width: MediaQuery.of(context).size.width * 0.5,
             child: Text(
               'Информация',
               style: CustomTheme.textStyle22_700,
             ),
           ),
-          IconButton(
-            icon: Icon(
-              Icons.settings,
-              size: MediaQuery.of(context).size.width * 0.08,
-              color: Colors.black,
+          Container(
+            alignment: Alignment.center,
+            height: MediaQuery.of(context).size.height * 0.1,
+            width: MediaQuery.of(context).size.width * 0.2,
+            child: IconButton(
+              icon: Icon(
+                Icons.settings,
+                size: MediaQuery.of(context).size.width * 0.08,
+                color: Colors.black,
+              ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const SettingsPage(),
+                  ),
+                );
+              },
             ),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const SettingsPage(),
-                ),
-              );
-            },
           ),
         ],
       ),
