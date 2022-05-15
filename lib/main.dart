@@ -99,7 +99,7 @@ class _UrlPageState extends State<UrlPage> {
           decoration: InputDecoration(
             border: InputBorder.none,
             hintText: 'Введите URL сервера',
-            hintStyle: CustomTheme.textStyle20_400,
+            hintStyle: CustomTheme.textStyleHint20_400,
           ),
           onChanged: (text) {
             _url = text.trim();
@@ -130,7 +130,7 @@ class _UrlPageState extends State<UrlPage> {
           decoration: InputDecoration(
             border: InputBorder.none,
             hintText: 'Введите код авторизации',
-            hintStyle: CustomTheme.textStyle20_400,
+            hintStyle: CustomTheme.textStyleHint20_400,
           ),
           onChanged: (text) {
             _code = text.trim();

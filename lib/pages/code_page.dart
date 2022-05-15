@@ -5,6 +5,7 @@ import 'package:diploma/pages/alert_dialog.dart';
 import 'package:diploma/pages/main_page.dart';
 import 'package:diploma/theme/custom_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -68,14 +69,18 @@ class _CodePageState extends State<CodePage> {
           vertical: MediaQuery.of(context).size.height * 0.01,
         ),
         child: TextField(
-          keyboardType: TextInputType.text,
+          keyboardType: TextInputType.number,
           maxLines: 1,
+          // maxLength: 6,
           textAlign: TextAlign.center,
           style: CustomTheme.textStyle20_400,
+          inputFormatters: <TextInputFormatter>[
+            FilteringTextInputFormatter.digitsOnly,
+          ],
           decoration: InputDecoration(
             border: InputBorder.none,
             hintText: 'Код из смс',
-            hintStyle: CustomTheme.textStyle20_400,
+            hintStyle: CustomTheme.textStyleHint20_400,
           ),
           onSubmitted: (text) {
             _code = text.trim();

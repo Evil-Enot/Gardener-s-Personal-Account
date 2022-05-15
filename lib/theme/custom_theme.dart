@@ -87,6 +87,15 @@ class CustomTheme {
     );
   }
 
+  static TextStyle get textStyleHint20_400 {
+    return const TextStyle(
+      color: Color(0xFF8D8C8C),
+      fontSize: 20,
+      fontWeight: FontWeight.w400,
+      fontFamily: 'Montserrat',
+    );
+  }
+
   static TextStyle get textStyle22_700 {
     return const TextStyle(
       color: Color(0xFF373737),

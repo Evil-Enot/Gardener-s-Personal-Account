@@ -79,7 +79,7 @@ class _AuthPageState extends State<AuthPage> {
           decoration: InputDecoration(
             border: InputBorder.none,
             hintText: 'Введите ФИО',
-            hintStyle: CustomTheme.textStyle20_400,
+            hintStyle: CustomTheme.textStyleHint20_400,
           ),
           onChanged: (text) {
             _bio = text.trim();
@@ -105,18 +105,34 @@ class _AuthPageState extends State<AuthPage> {
           keyboardType: TextInputType.phone,
           focusNode: nodeTwo,
           maxLines: 1,
+          // maxLength: 12,
           textAlign: TextAlign.center,
           style: CustomTheme.textStyle20_400,
+          // inputFormatters: <TextInputFormatter>[
+          //   FilteringTextInputFormatter.allow(RegExp(r'[+78]*[0-9]+')),
+          // ],
           decoration: InputDecoration(
             border: InputBorder.none,
             hintText: 'Введите номер телефона',
-            hintStyle: CustomTheme.textStyle20_400,
+            hintStyle: CustomTheme.textStyleHint20_400,
           ),
           onSubmitted: (text) {
             if (text[0] == '8') {
               text = "+7" + text.substring(1, text.length);
             } else if (text[0] == '7') {
               text = "+" + text;
+            } else if (text.length == 10) {
+              text = "+7" + text;
+            } else if (text.length < 10 ||
+                (text[0] == '+' && text.length > 12) ||
+                ((text[0] == '7' || text[0] == '8') && text.length > 11)) {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialogBuilder().printAlertDialog(context,
+                      'Неверно указан номер телефона. Проверьте введенные данные');
+                },
+              );
             }
             _number = text.trim();
           },

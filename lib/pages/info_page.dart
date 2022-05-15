@@ -4,6 +4,7 @@ import 'package:diploma/models/gardening_info_response.dart';
 import 'package:diploma/pages/bills_page.dart';
 import 'package:diploma/pages/main_page.dart';
 import 'package:diploma/pages/meters_page.dart';
+import 'package:diploma/pages/settings_page.dart';
 import 'package:diploma/theme/custom_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -54,8 +55,6 @@ class _InfoPageState extends State<InfoPage> {
     );
   }
 
-  //FIX
-  //TODO()
   Widget _buildToolbarInfo(BuildContext context) {
     return Container(
       alignment: Alignment.center,
@@ -66,9 +65,11 @@ class _InfoPageState extends State<InfoPage> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           IconButton(
-            icon: SvgPicture.asset("assets/images/home.svg"),
-            color: Colors.black,
-            iconSize: MediaQuery.of(context).size.width * 0.05,
+            icon: Icon(
+              Icons.home,
+              size: MediaQuery.of(context).size.width * 0.08,
+              color: Colors.black,
+            ),
             onPressed: () {
               Navigator.push(
                 context,
@@ -90,10 +91,19 @@ class _InfoPageState extends State<InfoPage> {
             ),
           ),
           IconButton(
-            icon: const Icon(Icons.access_time_filled_outlined),
-            color: Color(0xFFFFF9C0), //Fix!!!
-            iconSize: MediaQuery.of(context).size.width * 0.05,
-            onPressed: () {},
+            icon: Icon(
+              Icons.settings,
+              size: MediaQuery.of(context).size.width * 0.08,
+              color: Colors.black,
+            ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const SettingsPage(),
+                ),
+              );
+            },
           ),
         ],
       ),
@@ -353,7 +363,7 @@ class _InfoPageState extends State<InfoPage> {
                           MaterialPageRoute(
                             builder: (BuildContext context) => const MainPage(),
                           ),
-                              (route) => false,
+                          (route) => false,
                         );
                         Navigator.of(context).pop();
                       },
@@ -369,7 +379,7 @@ class _InfoPageState extends State<InfoPage> {
           );
         },
       );
-      return GardeningInfo.fromJson(jsonDecode(response.body)); // BUG
+      throw Exception('Failed to load gardening info');
     }
   }
 }

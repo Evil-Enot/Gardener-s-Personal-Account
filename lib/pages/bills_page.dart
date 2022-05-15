@@ -4,6 +4,7 @@ import 'package:diploma/models/bills_info_response.dart';
 import 'package:diploma/pages/alert_dialog.dart';
 import 'package:diploma/pages/main_page.dart';
 import 'package:diploma/pages/meters_page.dart';
+import 'package:diploma/pages/settings_page.dart';
 import 'package:diploma/theme/custom_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -53,8 +54,6 @@ class _BillsPageState extends State<BillsPage> {
     );
   }
 
-  //FIX
-  //TODO()
   Widget _buildToolbarBills(BuildContext context) {
     return Container(
       alignment: Alignment.center,
@@ -65,9 +64,11 @@ class _BillsPageState extends State<BillsPage> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           IconButton(
-            icon: SvgPicture.asset("assets/images/home.svg"),
-            color: Colors.black,
-            iconSize: MediaQuery.of(context).size.width * 0.05,
+            icon: Icon(
+              Icons.home,
+              size: MediaQuery.of(context).size.width * 0.08,
+              color: Colors.black,
+            ),
             onPressed: () {
               Navigator.push(
                 context,
@@ -89,10 +90,19 @@ class _BillsPageState extends State<BillsPage> {
             ),
           ),
           IconButton(
-            icon: const Icon(Icons.access_time_filled_outlined),
-            color: Color(0xFFFFF9C0), //Fix!!!
-            iconSize: MediaQuery.of(context).size.width * 0.05,
-            onPressed: () {},
+            icon: Icon(
+              Icons.settings,
+              size: MediaQuery.of(context).size.width * 0.08,
+              color: Colors.black,
+            ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const SettingsPage(),
+                ),
+              );
+            },
           ),
         ],
       ),
@@ -123,7 +133,8 @@ class _BillsPageState extends State<BillsPage> {
                             style: CustomTheme.textStyle20_400,
                             children: [
                               TextSpan(
-                                text: snapshot.data!.info.billduty.toString(),
+                                text: snapshot.data!.info.billduty.toString() +
+                                    ' рублей',
                                 style: const TextStyle(
                                   color: Colors.red,
                                   fontSize: 18,
@@ -140,7 +151,8 @@ class _BillsPageState extends State<BillsPage> {
                                 children: [
                                   TextSpan(
                                     text: snapshot.data!.info.billoverpayment
-                                        .toString(),
+                                            .toString() +
+                                        ' рублей',
                                     style: const TextStyle(
                                       color: Colors.green,
                                       fontSize: 18,
@@ -348,9 +360,50 @@ class _BillsPageState extends State<BillsPage> {
     if (response.statusCode == 200) {
       return BillsInfo.fromJson(jsonDecode(response.body));
     } else {
-      print('Request failed with status: ${response.statusCode}. ' +
-          response.body.toString());
-      throw Exception('Failed to load user info');
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text(
+              'Произошла ошибка при получении данных с сервера, попробуйте еще раз позже',
+              style: CustomTheme.textStyle20_400,
+              textAlign: TextAlign.center,
+            ),
+            actions: <Widget>[
+              Align(
+                alignment: Alignment.center,
+                child: Container(
+                  margin: EdgeInsets.only(
+                    top: MediaQuery.of(context).size.height * 0.01,
+                  ),
+                  child: SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.08,
+                    width: MediaQuery.of(context).size.width * 0.3,
+                    child: ElevatedButton(
+                      style: CustomTheme.elevatedButtonStyle,
+                      onPressed: () {
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                            builder: (BuildContext context) => const MainPage(),
+                          ),
+                          (route) => false,
+                        );
+                        Navigator.of(context).pop();
+                      },
+                      child: Text(
+                        'Выйти',
+                        style: CustomTheme.textStyle24_400,
+                      ),
+                    ),
+                  ),
+                ),
+              )
+            ],
+          );
+        },
+      );
+      throw Exception('Failed to load bills info');
     }
   }
 
