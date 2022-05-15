@@ -4,6 +4,7 @@ import 'package:diploma/models/meters_info_response.dart';
 import 'package:diploma/pages/alert_dialog.dart';
 import 'package:diploma/pages/bills_page.dart';
 import 'package:diploma/pages/main_page.dart';
+import 'package:diploma/pages/settings_page.dart';
 import 'package:diploma/theme/custom_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -62,8 +63,6 @@ class _MetersPageState extends State<MetersPage> {
     );
   }
 
-  //FIX
-//TODO()
   Widget _buildToolbarMeters(BuildContext context) {
     return Container(
       alignment: Alignment.center,
@@ -74,9 +73,11 @@ class _MetersPageState extends State<MetersPage> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           IconButton(
-            icon: SvgPicture.asset("assets/images/home.svg"),
-            color: Colors.black,
-            iconSize: MediaQuery.of(context).size.width * 0.05,
+            icon: Icon(
+              Icons.home,
+              size: MediaQuery.of(context).size.width * 0.08,
+              color: Colors.black,
+            ),
             onPressed: () {
               Navigator.push(
                 context,
@@ -98,10 +99,19 @@ class _MetersPageState extends State<MetersPage> {
             ),
           ),
           IconButton(
-            icon: const Icon(Icons.access_time_filled_outlined),
-            color: Color(0xFFFFF9C0), //Fix!!!
-            iconSize: MediaQuery.of(context).size.width * 0.05,
-            onPressed: () {},
+            icon: Icon(
+              Icons.settings,
+              size: MediaQuery.of(context).size.width * 0.08,
+              color: Colors.black,
+            ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const SettingsPage(),
+                ),
+              );
+            },
           ),
         ],
       ),
@@ -514,7 +524,7 @@ class _MetersPageState extends State<MetersPage> {
                     decoration: InputDecoration(
                       border: InputBorder.none,
                       hintText: 'Введите показания T1',
-                      hintStyle: CustomTheme.textStyle20_400,
+                      hintStyle: CustomTheme.textStyleHint20_400,
                     ),
                     onChanged: (text) {
                       _datat1 = text.trim();
@@ -547,7 +557,7 @@ class _MetersPageState extends State<MetersPage> {
                     decoration: InputDecoration(
                       border: InputBorder.none,
                       hintText: 'Введите показания T2',
-                      hintStyle: CustomTheme.textStyle20_400,
+                      hintStyle: CustomTheme.textStyleHint20_400,
                     ),
                     onChanged: (text) {
                       _datat2 = text.trim();
@@ -580,7 +590,7 @@ class _MetersPageState extends State<MetersPage> {
                     decoration: InputDecoration(
                       border: InputBorder.none,
                       hintText: 'Введите показания T3',
-                      hintStyle: CustomTheme.textStyle20_400,
+                      hintStyle: CustomTheme.textStyleHint20_400,
                     ),
                     onChanged: (text) {
                       _datat3 = text.trim();
@@ -615,7 +625,7 @@ class _MetersPageState extends State<MetersPage> {
                     decoration: InputDecoration(
                       border: InputBorder.none,
                       hintText: 'Введите показания T1',
-                      hintStyle: CustomTheme.textStyle20_400,
+                      hintStyle: CustomTheme.textStyleHint20_400,
                     ),
                     onChanged: (text) {
                       _datat1 = text.trim();
@@ -648,7 +658,7 @@ class _MetersPageState extends State<MetersPage> {
                     decoration: InputDecoration(
                       border: InputBorder.none,
                       hintText: 'Введите показания T2',
-                      hintStyle: CustomTheme.textStyle20_400,
+                      hintStyle: CustomTheme.textStyleHint20_400,
                     ),
                     onChanged: (text) {
                       _datat2 = text.trim();
@@ -680,7 +690,7 @@ class _MetersPageState extends State<MetersPage> {
                 decoration: InputDecoration(
                   border: InputBorder.none,
                   hintText: 'Введите показания',
-                  hintStyle: CustomTheme.textStyle20_400,
+                  hintStyle: CustomTheme.textStyleHint20_400,
                 ),
                 onChanged: (text) {
                   _datat1 = text.trim();
@@ -754,7 +764,9 @@ class _MetersPageState extends State<MetersPage> {
 
     String datetime = DateFormat("d.MM.yyy HH:mm:ss").format(DateTime.now());
 
-    if (_datat1 != "0" && _datat2 != "0" && _datat3 != "0" || _datat1 != "0" && _datat2 != "0" || _datat1 != "0") {
+    if (_datat1 != "0" && _datat2 != "0" && _datat3 != "0" ||
+        _datat1 != "0" && _datat2 != "0" ||
+        _datat1 != "0") {
       final response = await http.post(
         Uri.parse(url! + "/hs/diploma/put/meters"),
         headers: requestHeaders,
@@ -774,6 +786,7 @@ class _MetersPageState extends State<MetersPage> {
         _datat1 = "0";
         _datat2 = "0";
         _datat3 = "0";
+        setState(() {});
         showDialog(
           context: context,
           builder: (context) {
@@ -797,7 +810,6 @@ class _MetersPageState extends State<MetersPage> {
                         style: CustomTheme.elevatedButtonStyle,
                         onPressed: () {
                           Navigator.of(context).pop();
-                          setState(() {});
                         },
                         child: Text(
                           'Закрыть',
@@ -850,8 +862,8 @@ class _MetersPageState extends State<MetersPage> {
       showDialog(
         context: context,
         builder: (context) {
-          return AlertDialogBuilder().printAlertDialog(context,
-              'Поля показаний счетчика пустые');
+          return AlertDialogBuilder()
+              .printAlertDialog(context, 'Поля показаний счетчика пустые');
         },
       );
     }

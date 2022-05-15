@@ -34,8 +34,6 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  //FIX
-  //TODO()
   Widget _buildToolbarSettings(BuildContext context) {
     return Container(
       alignment: Alignment.center,
@@ -46,9 +44,11 @@ class _SettingsPageState extends State<SettingsPage> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           IconButton(
-            icon: SvgPicture.asset("assets/images/home.svg"),
-            color: Colors.black,
-            iconSize: MediaQuery.of(context).size.width * 0.05,
+            icon: Icon(
+              Icons.home,
+              size: MediaQuery.of(context).size.width * 0.08,
+              color: Colors.black,
+            ),
             onPressed: () {
               Navigator.push(
                 context,
@@ -70,9 +70,11 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
           ),
           IconButton(
-            icon: const Icon(Icons.access_time_filled_outlined),
-            color: Color(0xFFFFF9C0), //Fix!!!
-            iconSize: MediaQuery.of(context).size.width * 0.05,
+            icon: Icon(
+              Icons.settings,
+              size: MediaQuery.of(context).size.width * 0.05,
+              color: const Color(0xFFFFF9C0),
+            ),
             onPressed: () {},
           ),
         ],
@@ -247,7 +249,7 @@ class _SettingsPageState extends State<SettingsPage> {
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(
-        builder: (BuildContext context) => AuthPage(),
+        builder: (BuildContext context) => const AuthPage(),
       ),
       (route) => false,
     );

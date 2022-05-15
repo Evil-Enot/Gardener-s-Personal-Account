@@ -67,9 +67,11 @@ class _MainPageState extends State<MainPage> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           IconButton(
-            icon: SvgPicture.asset("assets/images/info.svg"),
-            color: Colors.black,
-            iconSize: MediaQuery.of(context).size.width * 0.05,
+            icon: Icon(
+              Icons.info,
+              size: MediaQuery.of(context).size.width * 0.08,
+              color: Colors.black,
+            ),
             onPressed: () {
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => const InfoPage()));
@@ -87,9 +89,11 @@ class _MainPageState extends State<MainPage> {
             ),
           ),
           IconButton(
-            icon: SvgPicture.asset("assets/images/settings.svg"),
-            color: Colors.black,
-            iconSize: MediaQuery.of(context).size.width * 0.05,
+            icon: Icon(
+              Icons.settings,
+              size: MediaQuery.of(context).size.width * 0.08,
+              color: Colors.black,
+            ),
             onPressed: () {
               Navigator.push(
                 context,
@@ -254,7 +258,8 @@ class _MainPageState extends State<MainPage> {
                             style: CustomTheme.textStyle20_400,
                             children: [
                               TextSpan(
-                                text: snapshot.data!.info.billduty.toString(),
+                                text: snapshot.data!.info.billduty.toString() +
+                                    ' рублей',
                                 style: const TextStyle(
                                   color: Colors.red,
                                   fontSize: 18,
@@ -271,7 +276,8 @@ class _MainPageState extends State<MainPage> {
                                 children: [
                                   TextSpan(
                                     text: snapshot.data!.info.billoverpayment
-                                        .toString(),
+                                            .toString() +
+                                        ' рублей',
                                     style: const TextStyle(
                                       color: Colors.green,
                                       fontSize: 18,
