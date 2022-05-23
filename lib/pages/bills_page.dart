@@ -9,6 +9,7 @@ import 'package:diploma/theme/custom_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class BillsPage extends StatefulWidget {
@@ -19,6 +20,7 @@ class BillsPage extends StatefulWidget {
 }
 
 class _BillsPageState extends State<BillsPage> {
+  String _data = "0";
   late Future<BillsInfo> billsInfo;
 
   @override
@@ -170,16 +172,26 @@ class _BillsPageState extends State<BillsPage> {
                                   ),
                                 ],
                               )
-                            : const TextSpan(
-                                text:
-                                    'Ошибка на сервере, обраитесь к администратору',
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w400,
-                                  fontFamily: 'Montserrat',
-                                ),
-                              ),
+                            : snapshot.data!.info.billoverpayment == 0
+                                ? const TextSpan(
+                                    text: 'Задолженности не найдены',
+                                    style: TextStyle(
+                                      color: Colors.green,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w400,
+                                      fontFamily: 'Montserrat',
+                                    ),
+                                  )
+                                : const TextSpan(
+                                    text:
+                                        'Ошибка на сервере, обраитесь к администратору',
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w400,
+                                      fontFamily: 'Montserrat',
+                                    ),
+                                  ),
                   ),
                 ),
               ),
@@ -254,7 +266,9 @@ class _BillsPageState extends State<BillsPage> {
                     width: MediaQuery.of(context).size.width * 0.3,
                     child: ElevatedButton(
                       style: CustomTheme.elevatedButtonStyle,
-                      onPressed: () {},
+                      onPressed: () {
+                        _payment();
+                      },
                       child: Text(
                         'Оплатить',
                         style: CustomTheme.textStyle24_400,
@@ -291,7 +305,14 @@ class _BillsPageState extends State<BillsPage> {
                   width: MediaQuery.of(context).size.width * 0.3,
                   decoration: CustomTheme.menuButtonDecoration,
                   child: InkWell(
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const BillsPage()),
+                        (route) => false,
+                      );
+                    },
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
@@ -366,7 +387,9 @@ class _BillsPageState extends State<BillsPage> {
     );
 
     if (response.statusCode == 200) {
-      return BillsInfo.fromJson(jsonDecode(response.body));
+      BillsInfo data = BillsInfo.fromJson(jsonDecode(response.body));
+      _data = data.info.billduty.toString();
+      return data;
     } else {
       showDialog(
         context: context,
@@ -477,6 +500,55 @@ class _BillsPageState extends State<BillsPage> {
         builder: (context) {
           return AlertDialogBuilder().printAlertDialog(context,
               'Не удалось сформировать квитанцию. Обратитесь к администратору');
+        },
+      );
+    }
+  }
+
+  void _payment() async {
+    final prefs = await SharedPreferences.getInstance();
+    final url = prefs.getString('url');
+    final bio = prefs.getString('bio');
+    final authCode = prefs.getString('auth_code');
+    Map<String, String> requestHeaders = {
+      'Authorization': 'Basic ' + authCode!
+    };
+
+    String datetime = DateFormat("d.MM.yyy HH:mm:ss").format(DateTime.now());
+
+    if (_data != "0") {
+      final response = await http.post(
+        Uri.parse(url! + "/hs/diploma/put/payment"),
+        headers: requestHeaders,
+        body: jsonEncode(
+          <String, String>{'bio': bio!, 'date': datetime, 'sum': _data},
+        ),
+      );
+      if (response.statusCode == 200) {
+        billsInfo = _fetchBillsInfo();
+        setState(() {});
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialogBuilder()
+                .printAlertDialog(context, 'Оплата прошла успешно');
+          },
+        );
+      } else if (response.statusCode == 400) {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialogBuilder().printAlertDialog(context,
+                'Произошла ошибка при обработке оплаты. Обратитесь к администратору');
+          },
+        );
+      }
+    } else {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialogBuilder()
+              .printAlertDialog(context, 'Неоплаченные долги не обнаружены');
         },
       );
     }
