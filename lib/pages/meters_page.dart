@@ -33,7 +33,7 @@ class _MetersPageState extends State<MetersPage> {
   @override
   void initState() {
     super.initState();
-    metersInfo = fetchMetersInfo();
+    metersInfo = _fetchMetersInfo();
   }
 
   @override
@@ -331,7 +331,13 @@ class _MetersPageState extends State<MetersPage> {
                   width: MediaQuery.of(context).size.width * 0.3,
                   decoration: CustomTheme.menuButtonDecoration,
                   child: InkWell(
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(builder: (context) => const MetersPage()),
+                            (route) => false,
+                      );
+                    },
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
@@ -734,7 +740,7 @@ class _MetersPageState extends State<MetersPage> {
     );
   }
 
-  Future<MetersInfo> fetchMetersInfo() async {
+  Future<MetersInfo> _fetchMetersInfo() async {
     final prefs = await SharedPreferences.getInstance();
     final url = prefs.getString('url');
     final bio = prefs.getString('bio');
@@ -790,7 +796,7 @@ class _MetersPageState extends State<MetersPage> {
         ),
       );
       if (response.statusCode == 200) {
-        metersInfo = fetchMetersInfo();
+        metersInfo = _fetchMetersInfo();
         _datat1 = "0";
         _datat2 = "0";
         _datat3 = "0";
@@ -798,37 +804,8 @@ class _MetersPageState extends State<MetersPage> {
         showDialog(
           context: context,
           builder: (context) {
-            return AlertDialog(
-              title: Text(
-                'Показания переданы',
-                style: CustomTheme.textStyle20_400,
-                textAlign: TextAlign.center,
-              ),
-              actions: <Widget>[
-                Align(
-                  alignment: Alignment.center,
-                  child: Container(
-                    margin: EdgeInsets.only(
-                      top: MediaQuery.of(context).size.height * 0.01,
-                    ),
-                    child: SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.08,
-                      width: MediaQuery.of(context).size.width * 0.3,
-                      child: ElevatedButton(
-                        style: CustomTheme.elevatedButtonStyle,
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: Text(
-                          'Закрыть',
-                          style: CustomTheme.textStyle24_400,
-                        ),
-                      ),
-                    ),
-                  ),
-                )
-              ],
-            );
+            return AlertDialogBuilder().printAlertDialog(
+                context, 'Показания переданы');
           },
         );
       } else {

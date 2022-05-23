@@ -299,16 +299,26 @@ class _MainPageState extends State<MainPage> {
                                   ),
                                 ],
                               )
-                            : const TextSpan(
-                                text:
-                                    'Ошибка на сервере, обраитесь к администратору',
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w400,
-                                  fontFamily: 'Montserrat',
-                                ),
-                              ),
+                            : snapshot.data!.info.billoverpayment == 0
+                                ? const TextSpan(
+                                    text: 'Задолженности не найдены',
+                                    style: TextStyle(
+                                      color: Colors.green,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w400,
+                                      fontFamily: 'Montserrat',
+                                    ),
+                                  )
+                                : const TextSpan(
+                                    text:
+                                        'Ошибка на сервере, обраитесь к администратору',
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w400,
+                                      fontFamily: 'Montserrat',
+                                    ),
+                                  ),
                   ),
                 ),
               ),

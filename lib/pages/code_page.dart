@@ -132,7 +132,7 @@ class _CodePageState extends State<CodePage> {
       decoration: CustomTheme.buttonsDecoration,
       child: TextButton(
         onPressed: () {
-          _checkAuth();
+          _checkCode();
         },
         child: Text(
           "Продолжить",
@@ -143,7 +143,7 @@ class _CodePageState extends State<CodePage> {
     );
   }
 
-  _checkAuth() async {
+  _checkCode() async {
     final prefs = await SharedPreferences.getInstance();
 
     if (prefs.containsKey("code")) {
