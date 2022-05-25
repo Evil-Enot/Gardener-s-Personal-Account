@@ -143,22 +143,28 @@ class _AuthPageState extends State<AuthPage> {
   }
 
   Widget _buildSubmitButton(BuildContext context) {
-    return Container(
-      alignment: Alignment.center,
-      margin: EdgeInsets.only(
-        top: MediaQuery.of(context).size.height * 0.05,
-      ),
-      width: MediaQuery.of(context).size.width * 0.5,
-      decoration: CustomTheme.buttonsDecoration,
-      child: TextButton(
-        onPressed: () {
-          _checkAuth();
-        },
-        child: Text(
-          "Продолжить",
-          textAlign: TextAlign.center,
-          style: CustomTheme.textStyle20_400,
+    return TextButton(
+      style: TextButton.styleFrom(
+        backgroundColor: const Color(0xFFFFED4D),
+        shape: const StadiumBorder(),
+        padding: EdgeInsets.only(
+          top: MediaQuery.of(context).size.height * 0.02,
+          bottom: MediaQuery.of(context).size.height * 0.02,
+          left: MediaQuery.of(context).size.width * 0.08,
+          right: MediaQuery.of(context).size.width * 0.08,
         ),
+        side: const BorderSide(
+          color: Colors.black,
+          width: 2.0,
+        ),
+      ),
+      onPressed: () {
+        _checkAuth();
+      },
+      child: Text(
+        "Продолжить",
+        textAlign: TextAlign.center,
+        style: CustomTheme.textStyle20_400,
       ),
     );
   }
