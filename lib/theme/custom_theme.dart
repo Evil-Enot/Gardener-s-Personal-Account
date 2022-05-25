@@ -114,6 +114,16 @@ class CustomTheme {
     );
   }
 
+  static TextStyle get textStyle18_400U {
+    return const TextStyle(
+      color: Color(0xFF373737),
+      fontSize: 18,
+      fontWeight: FontWeight.w400,
+      fontFamily: 'Montserrat',
+      decoration: TextDecoration.underline,
+    );
+  }
+
   static ButtonStyle get elevatedButtonStyle {
     return ElevatedButton.styleFrom(
       primary: const Color(0xFFFFED4D),

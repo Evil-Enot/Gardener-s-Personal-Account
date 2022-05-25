@@ -299,7 +299,7 @@ class _MainPageState extends State<MainPage> {
                                   ),
                                 ],
                               )
-                            : snapshot.data!.info.billoverpayment == 0
+                            : snapshot.data!.info.billduty == 0
                                 ? const TextSpan(
                                     text: 'Задолженности не найдены',
                                     style: TextStyle(

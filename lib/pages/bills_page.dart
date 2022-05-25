@@ -4,6 +4,7 @@ import 'package:diploma/models/bills_info_response.dart';
 import 'package:diploma/pages/alert_dialog.dart';
 import 'package:diploma/pages/main_page.dart';
 import 'package:diploma/pages/meters_page.dart';
+import 'package:diploma/pages/payment_page.dart';
 import 'package:diploma/pages/settings_page.dart';
 import 'package:diploma/theme/custom_theme.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +21,7 @@ class BillsPage extends StatefulWidget {
 }
 
 class _BillsPageState extends State<BillsPage> {
-  String _data = "0";
+  String _data = "0.0";
   late Future<BillsInfo> billsInfo;
 
   @override
@@ -172,7 +173,7 @@ class _BillsPageState extends State<BillsPage> {
                                   ),
                                 ],
                               )
-                            : snapshot.data!.info.billoverpayment == 0
+                            : snapshot.data!.info.billduty == 0
                                 ? const TextSpan(
                                     text: 'Задолженности не найдены',
                                     style: TextStyle(
@@ -267,7 +268,12 @@ class _BillsPageState extends State<BillsPage> {
                     child: ElevatedButton(
                       style: CustomTheme.elevatedButtonStyle,
                       onPressed: () {
-                        _payment();
+                        // _payment();
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const PaymentPage()),
+                        );
                       },
                       child: Text(
                         'Оплатить',
@@ -516,7 +522,7 @@ class _BillsPageState extends State<BillsPage> {
 
     String datetime = DateFormat("d.MM.yyy HH:mm:ss").format(DateTime.now());
 
-    if (_data != "0") {
+    if (_data != "0.0") {
       final response = await http.post(
         Uri.parse(url! + "/hs/diploma/put/payment"),
         headers: requestHeaders,
@@ -526,6 +532,7 @@ class _BillsPageState extends State<BillsPage> {
       );
       if (response.statusCode == 200) {
         billsInfo = _fetchBillsInfo();
+        _data = "0.0";
         setState(() {});
         showDialog(
           context: context,
@@ -548,7 +555,7 @@ class _BillsPageState extends State<BillsPage> {
         context: context,
         builder: (context) {
           return AlertDialogBuilder()
-              .printAlertDialog(context, 'Неоплаченные долги не обнаружены');
+              .printAlertDialog(context, 'Неоплаченные счета не обнаружены');
         },
       );
     }
