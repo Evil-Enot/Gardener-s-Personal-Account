@@ -236,23 +236,28 @@ class _BillsPageState extends State<BillsPage> {
               ),
               Align(
                 alignment: Alignment.center,
-                child: Container(
-                  margin: EdgeInsets.only(
-                    top: MediaQuery.of(context).size.height * 0.01,
-                  ),
-                  child: SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.08,
-                    width: MediaQuery.of(context).size.width * 0.6,
-                    child: ElevatedButton(
-                      style: CustomTheme.elevatedButtonStyle,
-                      onPressed: () {
-                        _getReceipt(context);
-                      },
-                      child: Text(
-                        'Получить квитанцию',
-                        style: CustomTheme.textStyle24_400,
-                      ),
+                child: TextButton(
+                  style: TextButton.styleFrom(
+                    backgroundColor: const Color(0xFFFFED4D),
+                    shape: const StadiumBorder(),
+                    padding: EdgeInsets.only(
+                      top: MediaQuery.of(context).size.height * 0.02,
+                      bottom: MediaQuery.of(context).size.height * 0.02,
+                      left: MediaQuery.of(context).size.width * 0.08,
+                      right: MediaQuery.of(context).size.width * 0.08,
                     ),
+                    side: const BorderSide(
+                      color: Colors.black,
+                      width: 2.0,
+                    ),
+                  ),
+                  onPressed: () {
+                    _getReceipt(context);
+                  },
+                  child: Text(
+                    'Получить квитанцию',
+                    textAlign: TextAlign.center,
+                    style: CustomTheme.textStyle20_400,
                   ),
                 ),
               ),
@@ -262,23 +267,33 @@ class _BillsPageState extends State<BillsPage> {
                   margin: EdgeInsets.only(
                     top: MediaQuery.of(context).size.height * 0.01,
                   ),
-                  child: SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.08,
-                    width: MediaQuery.of(context).size.width * 0.3,
-                    child: ElevatedButton(
-                      style: CustomTheme.elevatedButtonStyle,
-                      onPressed: () {
-                        // _payment();
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const PaymentPage()),
-                        );
-                      },
-                      child: Text(
-                        'Оплатить',
-                        style: CustomTheme.textStyle24_400,
+                  child: TextButton(
+                    style: TextButton.styleFrom(
+                      backgroundColor: const Color(0xFFFFED4D),
+                      shape: const StadiumBorder(),
+                      padding: EdgeInsets.only(
+                        top: MediaQuery.of(context).size.height * 0.02,
+                        bottom: MediaQuery.of(context).size.height * 0.02,
+                        left: MediaQuery.of(context).size.width * 0.08,
+                        right: MediaQuery.of(context).size.width * 0.08,
                       ),
+                      side: const BorderSide(
+                        color: Colors.black,
+                        width: 2.0,
+                      ),
+                    ),
+                    onPressed: () {
+                      // _payment();
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const PaymentPage()),
+                      );
+                    },
+                    child: Text(
+                      'Оплатить',
+                      textAlign: TextAlign.center,
+                      style: CustomTheme.textStyle20_400,
                     ),
                   ),
                 ),
