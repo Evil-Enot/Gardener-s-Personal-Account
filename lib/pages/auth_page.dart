@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:diploma/models/auth_response.dart';
 import 'package:diploma/pages/alert_dialog.dart';
 import 'package:diploma/pages/code_page.dart';
+import 'package:diploma/pages/internet_connection_error_page.dart';
 import 'package:diploma/theme/custom_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -177,58 +178,68 @@ class _AuthPageState extends State<AuthPage> {
       'Authorization': 'Basic ' + authCode!
     };
     if (_bio.isNotEmpty && _number.isNotEmpty) {
-      var response = await http.post(
-        Uri.parse(url! + "/hs/diploma/check/number"),
-        headers: requestHeaders,
-        body: jsonEncode(
-          <String, String>{
-            'bio': _bio,
-            'number': _number,
-          },
-        ),
-      );
-      if (response.statusCode == 200) {
-        AuthResponse responseAuth =
-            AuthResponse.fromJson(jsonDecode(response.body));
-        prefs.setString("bio", _bio);
-        prefs.setInt("code", responseAuth.code);
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => const CodePage()));
-      } else {
-        if (response.statusCode == 404) {
-          showDialog(
-            context: context,
-            builder: (context) {
-              return AlertDialogBuilder().printAlertDialog(
-                  context, 'Пользователь с таким ФИО не обнаружен');
+      try {
+        var response = await http.post(
+          Uri.parse(url! + "/hs/diploma/check/number"),
+          headers: requestHeaders,
+          body: jsonEncode(
+            <String, String>{
+              'bio': _bio,
+              'number': _number,
             },
-          );
-        } else if (response.statusCode == 403) {
-          showDialog(
-            context: context,
-            builder: (context) {
-              return AlertDialogBuilder().printAlertDialog(context,
-                  'Введенный номер телефона не совпадает с номером телефона в базе данных');
-            },
-          );
-        } else if (response.statusCode == 400) {
-          showDialog(
-            context: context,
-            builder: (context) {
-              return AlertDialogBuilder().printAlertDialog(context,
-                  'Не удалось отправить код для авторизации на указаный номер телефона. Обратитесь к администратору для устранения неисправности');
-            },
-          );
+          ),
+        );
+
+        if (response.statusCode == 200) {
+          AuthResponse responseAuth =
+              AuthResponse.fromJson(jsonDecode(response.body));
+          prefs.setString("bio", _bio);
+          prefs.setInt("code", responseAuth.code);
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const CodePage()));
+        } else {
+          if (response.statusCode == 404) {
+            showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialogBuilder().printAlertDialog(
+                    context, 'Пользователь с таким ФИО не обнаружен');
+              },
+            );
+          } else if (response.statusCode == 403) {
+            showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialogBuilder().printAlertDialog(context,
+                    'Введенный номер телефона не совпадает с номером телефона в базе данных');
+              },
+            );
+          } else if (response.statusCode == 400) {
+            showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialogBuilder().printAlertDialog(context,
+                    'Не удалось отправить код для авторизации на указаный номер телефона. Обратитесь к администратору для устранения неисправности');
+              },
+            );
+          } else {
+            showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialogBuilder().printAlertDialog(context,
+                    'Обязательные поля "ФИО" и "Номер телефона" не заполнены');
+              },
+            );
+          }
         }
+      } catch (e) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (BuildContext context) => const InternetConnectionError(),
+          ),
+        );
       }
-    } else {
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialogBuilder().printAlertDialog(context,
-              'Обязательные поля "ФИО" и "Номер телефона" не заполнены');
-        },
-      );
     }
   }
 }

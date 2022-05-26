@@ -1,5 +1,6 @@
 import 'package:diploma/pages/alert_dialog.dart';
 import 'package:diploma/pages/auth_page.dart';
+import 'package:diploma/pages/internet_connection_error_page.dart';
 import 'package:diploma/pages/main_page.dart';
 import 'package:diploma/theme/custom_theme.dart';
 import 'package:flutter/material.dart';
@@ -199,44 +200,54 @@ class _UrlPageState extends State<UrlPage> {
     if (_url.isNotEmpty && _code.isNotEmpty) {
       Map<String, String> requestHeaders = {'Authorization': 'Basic ' + _code};
 
-      var response = await http.get(Uri.parse(_url + "/hs/diploma/check/url"),
-          headers: requestHeaders);
-      if (response.statusCode == 200) {
-        prefs.setString('url', _url);
-        prefs.setString('auth_code', _code);
+      try {
+        var response = await http.get(Uri.parse(_url + "/hs/diploma/check/url"),
+            headers: requestHeaders);
 
-        if (prefs.containsKey('auth')) {
-          auth = prefs.getBool('auth')!;
-        }
+        if (response.statusCode == 200) {
+          prefs.setString('url', _url);
+          prefs.setString('auth_code', _code);
 
-        if (auth) {
-          Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(builder: (context) => const MainPage()),
-            (route) => false,
-          );
+          if (prefs.containsKey('auth')) {
+            auth = prefs.getBool('auth')!;
+          }
+
+          if (auth) {
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => const MainPage()),
+              (route) => false,
+            );
+          } else {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => const AuthPage()));
+          }
         } else {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => const AuthPage()));
+          if (response.statusCode == 401) {
+            showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialogBuilder()
+                    .printAlertDialog(context, 'Неверный код авторизации');
+              },
+            );
+          } else if (response.statusCode == 404) {
+            showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialogBuilder()
+                    .printAlertDialog(context, 'Неверный url');
+              },
+            );
+          }
         }
-      } else {
-        if (response.statusCode == 401) {
-          showDialog(
-            context: context,
-            builder: (context) {
-              return AlertDialogBuilder()
-                  .printAlertDialog(context, 'Неверный код авторизации');
-            },
-          );
-        } else if (response.statusCode == 404) {
-          showDialog(
-            context: context,
-            builder: (context) {
-              return AlertDialogBuilder()
-                  .printAlertDialog(context, 'Неверный url');
-            },
-          );
-        }
+      } catch (e) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (BuildContext context) => const InternetConnectionError(),
+          ),
+        );
       }
     } else {
       showDialog(

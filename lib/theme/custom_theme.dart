@@ -49,6 +49,15 @@ class CustomTheme {
     );
   }
 
+  static TextStyle get textStyle36_400 {
+    return const TextStyle(
+      color: Color(0xFF373737),
+      fontSize: 36,
+      fontWeight: FontWeight.w400,
+      fontFamily: 'Montserrat',
+    );
+  }
+
   static TextStyle get textStyle50_400 {
     return const TextStyle(
       color: Color(0xFF373737),

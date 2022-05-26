@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:diploma/models/bills_info_response.dart';
 import 'package:diploma/pages/alert_dialog.dart';
+import 'package:diploma/pages/internet_connection_error_page.dart';
 import 'package:diploma/pages/main_page.dart';
 import 'package:diploma/pages/meters_page.dart';
 import 'package:diploma/pages/payment_page.dart';
@@ -397,6 +398,7 @@ class _BillsPageState extends State<BillsPage> {
       'Authorization': 'Basic ' + authCode!
     };
 
+    try {
     final response = await http.post(
       Uri.parse(url! + "/hs/diploma/get/bills"),
       headers: requestHeaders,
@@ -457,6 +459,15 @@ class _BillsPageState extends State<BillsPage> {
       );
       throw Exception('Failed to load bills info');
     }
+    } catch (e) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (BuildContext context) => const InternetConnectionError(),
+        ),
+      );
+      throw Exception('Failed to load bills info: Internet connection error');
+    }
   }
 
   void _getReceipt(context) async {
@@ -469,59 +480,68 @@ class _BillsPageState extends State<BillsPage> {
       'Authorization': 'Basic ' + authCode!
     };
 
-    final response = await http.post(
-      Uri.parse(url! + "/hs/diploma/get/receipt"),
-      headers: requestHeaders,
-      body: jsonEncode(
-        <String, String>{
-          'bio': bio!,
-        },
-      ),
-    );
+    try {
+      final response = await http.post(
+        Uri.parse(url! + "/hs/diploma/get/receipt"),
+        headers: requestHeaders,
+        body: jsonEncode(
+          <String, String>{
+            'bio': bio!,
+          },
+        ),
+      );
 
-    if (response.statusCode == 200) {
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text(
-              'Квитанция сформирована и отправлена на почту',
-              style: CustomTheme.textStyle20_400,
-            ),
-            actions: <Widget>[
-              Align(
-                alignment: Alignment.center,
-                child: Container(
-                  margin: EdgeInsets.only(
-                    top: MediaQuery.of(context).size.height * 0.01,
-                  ),
-                  child: SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.08,
-                    width: MediaQuery.of(context).size.width * 0.3,
-                    child: ElevatedButton(
-                      style: CustomTheme.elevatedButtonStyle,
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: Text(
-                        'Закрыть',
-                        style: CustomTheme.textStyle24_400,
+      if (response.statusCode == 200) {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text(
+                'Квитанция сформирована и отправлена на почту',
+                style: CustomTheme.textStyle20_400,
+              ),
+              actions: <Widget>[
+                Align(
+                  alignment: Alignment.center,
+                  child: Container(
+                    margin: EdgeInsets.only(
+                      top: MediaQuery.of(context).size.height * 0.01,
+                    ),
+                    child: SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.08,
+                      width: MediaQuery.of(context).size.width * 0.3,
+                      child: ElevatedButton(
+                        style: CustomTheme.elevatedButtonStyle,
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: Text(
+                          'Закрыть',
+                          style: CustomTheme.textStyle24_400,
+                        ),
                       ),
                     ),
                   ),
-                ),
-              )
-            ],
-          );
-        },
-      );
-    } else {
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialogBuilder().printAlertDialog(context,
-              'Не удалось сформировать квитанцию. Обратитесь к администратору');
-        },
+                )
+              ],
+            );
+          },
+        );
+      } else {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialogBuilder().printAlertDialog(context,
+                'Не удалось сформировать квитанцию. Обратитесь к администратору');
+          },
+        );
+      }
+    } catch (e) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (BuildContext context) => const InternetConnectionError(),
+        ),
       );
     }
   }

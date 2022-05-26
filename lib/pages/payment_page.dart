@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:diploma/models/payment_info_response.dart';
+import 'package:diploma/pages/internet_connection_error_page.dart';
 import 'package:diploma/pages/main_page.dart';
 import 'package:diploma/pages/meters_page.dart';
 import 'package:diploma/pages/settings_page.dart';
@@ -259,70 +260,80 @@ class _PaymentPageState extends State<PaymentPage> {
       'Authorization': 'Basic ' + authCode!
     };
 
-    final response = await http.post(
-      Uri.parse(url! + "/hs/diploma/get/payment"),
-      headers: requestHeaders,
-      body: jsonEncode(
-        <String, String>{
-          'bio': bio!,
-        },
-      ),
-    );
+    try {
+      final response = await http.post(
+        Uri.parse(url! + "/hs/diploma/get/payment"),
+        headers: requestHeaders,
+        body: jsonEncode(
+          <String, String>{
+            'bio': bio!,
+          },
+        ),
+      );
 
-    if (response.statusCode == 200) {
-      Info info = PaymentInfo.fromJson(jsonDecode(response.body)).info;
-      _recipient = info.recipient;
-      _inn = info.inn;
-      _kpp = info.kpp;
-      _bik = info.bank.split(" ").first;
-      _number = info.bill;
-      _numberLK = info.numberLK;
-      _purpose = info.purpose;
-      _duty = info.duty;
-    } else {
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text(
-              'Не удалось загрузить данные. Попробуйте позже',
-              style: CustomTheme.textStyle20_400,
-              textAlign: TextAlign.center,
-            ),
-            actions: <Widget>[
-              Align(
-                alignment: Alignment.center,
-                child: Container(
-                  margin: EdgeInsets.only(
-                    top: MediaQuery.of(context).size.height * 0.01,
-                  ),
-                  child: SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.08,
-                    width: MediaQuery.of(context).size.width * 0.3,
-                    child: ElevatedButton(
-                      style: CustomTheme.elevatedButtonStyle,
-                      onPressed: () {
-                        prefs.setBool('auth', false);
-                        Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(
-                            builder: (BuildContext context) => const MainPage(),
-                          ),
-                          (route) => false,
-                        );
-                        Navigator.of(context).pop();
-                      },
-                      child: Text(
-                        'Выйти',
-                        style: CustomTheme.textStyle24_400,
+      if (response.statusCode == 200) {
+        Info info = PaymentInfo.fromJson(jsonDecode(response.body)).info;
+        _recipient = info.recipient;
+        _inn = info.inn;
+        _kpp = info.kpp;
+        _bik = info.bank.split(" ").first;
+        _number = info.bill;
+        _numberLK = info.numberLK;
+        _purpose = info.purpose;
+        _duty = info.duty;
+      } else {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text(
+                'Не удалось загрузить данные. Попробуйте позже',
+                style: CustomTheme.textStyle20_400,
+                textAlign: TextAlign.center,
+              ),
+              actions: <Widget>[
+                Align(
+                  alignment: Alignment.center,
+                  child: Container(
+                    margin: EdgeInsets.only(
+                      top: MediaQuery.of(context).size.height * 0.01,
+                    ),
+                    child: SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.08,
+                      width: MediaQuery.of(context).size.width * 0.3,
+                      child: ElevatedButton(
+                        style: CustomTheme.elevatedButtonStyle,
+                        onPressed: () {
+                          prefs.setBool('auth', false);
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                              builder: (BuildContext context) =>
+                                  const MainPage(),
+                            ),
+                            (route) => false,
+                          );
+                          Navigator.of(context).pop();
+                        },
+                        child: Text(
+                          'Выйти',
+                          style: CustomTheme.textStyle24_400,
+                        ),
                       ),
                     ),
                   ),
-                ),
-              )
-            ],
-          );
-        },
+                )
+              ],
+            );
+          },
+        );
+      }
+    } catch (e) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (BuildContext context) => const InternetConnectionError(),
+        ),
       );
     }
   }
