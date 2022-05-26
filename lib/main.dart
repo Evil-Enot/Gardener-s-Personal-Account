@@ -1,3 +1,4 @@
+import 'package:diploma/notifications/notification_service.dart';
 import 'package:diploma/pages/alert_dialog.dart';
 import 'package:diploma/pages/auth_page.dart';
 import 'package:diploma/pages/internet_connection_error_page.dart';
@@ -13,7 +14,7 @@ void main() async {
   SystemChrome.setEnabledSystemUIMode(
     SystemUiMode.immersiveSticky,
   );
-
+  NotificationService().init();
   runApp(const DiplomaApp());
 }
 
