@@ -1,3 +1,4 @@
+import 'package:diploma/notifications/notification_service.dart';
 import 'package:diploma/pages/auth_page.dart';
 import 'package:diploma/pages/bills_page.dart';
 import 'package:diploma/pages/main_page.dart';
@@ -5,6 +6,7 @@ import 'package:diploma/pages/meters_page.dart';
 import 'package:diploma/theme/custom_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -15,7 +17,19 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  bool value = false;
+  final NotificationService _notificationService = NotificationService();
+  late bool _value = false;
+  final switchData = GetStorage();
+
+  @override
+  void initState() {
+    super.initState();
+    if (switchData.read('isSwitched') != null) {
+      setState(() {
+        _value = switchData.read('isSwitched');
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -115,9 +129,17 @@ class _SettingsPageState extends State<SettingsPage> {
                         style: CustomTheme.textStyle20_400,
                       ),
                       Switch(
-                        value: value,
-                        onChanged: (bool value) {
-                          setState(() => this.value = value);
+                        value: _value,
+                        onChanged: (value) {
+                          if (value) {
+                            _notificationService.scheduleNotifications();
+                          } else {
+                            _notificationService.cancelAllNotifications();
+                          }
+                          setState(() {
+                            _value = value;
+                            switchData.write('isSwitched', value);
+                          });
                         },
                         activeTrackColor: const Color(0xFFFFF9C0),
                         activeColor: const Color(0xFFFFED4D),
