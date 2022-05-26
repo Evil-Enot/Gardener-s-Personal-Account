@@ -1,8 +1,10 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:diploma/pages/auth_page.dart';
 import 'package:diploma/pages/bills_page.dart';
 import 'package:diploma/pages/info_page.dart';
+import 'package:diploma/pages/internet_connection_error_page.dart';
 import 'package:diploma/pages/meters_page.dart';
 import 'package:diploma/pages/settings_page.dart';
 import 'package:diploma/theme/custom_theme.dart';
@@ -454,64 +456,75 @@ class _MainPageState extends State<MainPage> {
       'Authorization': 'Basic ' + authCode!
     };
 
-    final response = await http.post(
-      Uri.parse(url! + "/hs/diploma/get/profile"),
-      headers: requestHeaders,
-      body: jsonEncode(
-        <String, String>{
-          'bio': bio!,
-        },
-      ),
-    );
+    try {
+      final response = await http.post(
+        Uri.parse(url! + "/hs/diploma/get/profile"),
+        headers: requestHeaders,
+        body: jsonEncode(
+          <String, String>{
+            'bio': bio!,
+          },
+        ),
+      );
 
-    if (response.statusCode == 200) {
-      return UserInfo.fromJson(jsonDecode(response.body));
-    } else if (response.statusCode == 404) {
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text(
-              'Пользователь с таким ФИО не обнаружен. Перезайдите в приложение',
-              style: CustomTheme.textStyle20_400,
-              textAlign: TextAlign.center,
-            ),
-            actions: <Widget>[
-              Align(
-                alignment: Alignment.center,
-                child: Container(
-                  margin: EdgeInsets.only(
-                    top: MediaQuery.of(context).size.height * 0.01,
-                  ),
-                  child: SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.08,
-                    width: MediaQuery.of(context).size.width * 0.3,
-                    child: ElevatedButton(
-                      style: CustomTheme.elevatedButtonStyle,
-                      onPressed: () {
-                        prefs.setBool('auth', false);
-                        Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(
-                            builder: (BuildContext context) => const AuthPage(),
-                          ),
-                          (route) => false,
-                        );
-                        Navigator.of(context).pop();
-                      },
-                      child: Text(
-                        'Выйти',
-                        style: CustomTheme.textStyle24_400,
+      if (response.statusCode == 200) {
+        return UserInfo.fromJson(jsonDecode(response.body));
+      } else if (response.statusCode == 404) {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text(
+                'Пользователь с таким ФИО не обнаружен. Перезайдите в приложение',
+                style: CustomTheme.textStyle20_400,
+                textAlign: TextAlign.center,
+              ),
+              actions: <Widget>[
+                Align(
+                  alignment: Alignment.center,
+                  child: Container(
+                    margin: EdgeInsets.only(
+                      top: MediaQuery.of(context).size.height * 0.01,
+                    ),
+                    child: SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.08,
+                      width: MediaQuery.of(context).size.width * 0.3,
+                      child: ElevatedButton(
+                        style: CustomTheme.elevatedButtonStyle,
+                        onPressed: () {
+                          prefs.setBool('auth', false);
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                              builder: (BuildContext context) =>
+                                  const AuthPage(),
+                            ),
+                            (route) => false,
+                          );
+                          Navigator.of(context).pop();
+                        },
+                        child: Text(
+                          'Выйти',
+                          style: CustomTheme.textStyle24_400,
+                        ),
                       ),
                     ),
                   ),
-                ),
-              )
-            ],
-          );
-        },
+                )
+              ],
+            );
+          },
+        );
+      }
+      throw Exception('Failed to load user info');
+    } catch (e) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (BuildContext context) => const InternetConnectionError(),
+        ),
       );
     }
-    throw Exception('Failed to load user info');
+    throw Exception('Failed to load user info: Internet connection Error');
   }
 }

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:diploma/models/meters_info_response.dart';
 import 'package:diploma/pages/alert_dialog.dart';
 import 'package:diploma/pages/bills_page.dart';
+import 'package:diploma/pages/internet_connection_error_page.dart';
 import 'package:diploma/pages/main_page.dart';
 import 'package:diploma/pages/settings_page.dart';
 import 'package:diploma/theme/custom_theme.dart';
@@ -334,8 +335,9 @@ class _MetersPageState extends State<MetersPage> {
                     onTap: () {
                       Navigator.pushAndRemoveUntil(
                         context,
-                        MaterialPageRoute(builder: (context) => const MetersPage()),
-                            (route) => false,
+                        MaterialPageRoute(
+                            builder: (context) => const MetersPage()),
+                        (route) => false,
                       );
                     },
                     child: Column(
@@ -749,21 +751,31 @@ class _MetersPageState extends State<MetersPage> {
       'Authorization': 'Basic ' + authCode!
     };
 
-    final response = await http.post(
-      Uri.parse(url! + "/hs/diploma/get/meters"),
-      headers: requestHeaders,
-      body: jsonEncode(
-        <String, String>{
-          'bio': bio!,
-        },
-      ),
-    );
+    try {
+      final response = await http.post(
+        Uri.parse(url! + "/hs/diploma/get/meters"),
+        headers: requestHeaders,
+        body: jsonEncode(
+          <String, String>{
+            'bio': bio!,
+          },
+        ),
+      );
 
-    if (response.statusCode == 200) {
-      return MetersInfo.fromJson(jsonDecode(response.body));
-    } else {
-      throw Exception('Failed to load user info: ${response.statusCode}. ' +
-          response.body.toString());
+      if (response.statusCode == 200) {
+        return MetersInfo.fromJson(jsonDecode(response.body));
+      } else {
+        throw Exception('Failed to load user info: ${response.statusCode}. ' +
+            response.body.toString());
+      }
+    } catch (e) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (BuildContext context) => const InternetConnectionError(),
+        ),
+      );
+      throw Exception('Failed to load bills info: Internet connection error');
     }
   }
 
@@ -781,76 +793,86 @@ class _MetersPageState extends State<MetersPage> {
     if (_datat1 != "0" && _datat2 != "0" && _datat3 != "0" ||
         _datat1 != "0" && _datat2 != "0" ||
         _datat1 != "0") {
-      final response = await http.post(
-        Uri.parse(url! + "/hs/diploma/put/meters"),
-        headers: requestHeaders,
-        body: jsonEncode(
-          <String, String>{
-            'bio': bio!,
-            'type': servicebymeter,
-            'valuet1': _datat1,
-            'valuet2': _datat2,
-            'valuet3': _datat3,
-            'date': datetime,
-          },
-        ),
-      );
-      if (response.statusCode == 200) {
-        metersInfo = _fetchMetersInfo();
-        _datat1 = "0";
-        _datat2 = "0";
-        _datat3 = "0";
-        setState(() {});
-        showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialogBuilder().printAlertDialog(
-                context, 'Показания переданы');
-          },
+      try {
+        final response = await http.post(
+          Uri.parse(url! + "/hs/diploma/put/meters"),
+          headers: requestHeaders,
+          body: jsonEncode(
+            <String, String>{
+              'bio': bio!,
+              'type': servicebymeter,
+              'valuet1': _datat1,
+              'valuet2': _datat2,
+              'valuet3': _datat3,
+              'date': datetime,
+            },
+          ),
         );
-      } else {
-        if (response.statusCode == 404) {
+        if (response.statusCode == 200) {
+          metersInfo = _fetchMetersInfo();
+          _datat1 = "0";
+          _datat2 = "0";
+          _datat3 = "0";
+          setState(() {});
           showDialog(
             context: context,
             builder: (context) {
-              return AlertDialogBuilder().printAlertDialog(
-                  context, 'Пользователь не обнаружен, авторизируйтесь заново');
+              return AlertDialogBuilder()
+                  .printAlertDialog(context, 'Показания переданы');
             },
           );
-        } else if (response.statusCode == 403) {
-          showDialog(
-            context: context,
-            builder: (context) {
-              return AlertDialogBuilder().printAlertDialog(context,
-                  'Введенные показания меньше сохраненных, проверьте корректность введенных данных');
-            },
-          );
-        } else if (response.statusCode == 402) {
-          showDialog(
-            context: context,
-            builder: (context) {
-              return AlertDialogBuilder().printAlertDialog(context,
-                  'Ошибка 402. Обратитесь к администратору для устранения неисправности');
-            },
-          );
-        } else if (response.statusCode == 400) {
-          showDialog(
-            context: context,
-            builder: (context) {
-              return AlertDialogBuilder().printAlertDialog(context,
-                  'Неверный тип счетчика. Обратитесь к администратору для устранения неисправности');
-            },
-          );
+        } else {
+          if (response.statusCode == 404) {
+            showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialogBuilder().printAlertDialog(context,
+                    'Пользователь не обнаружен, авторизируйтесь заново');
+              },
+            );
+          } else if (response.statusCode == 403) {
+            showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialogBuilder().printAlertDialog(context,
+                    'Введенные показания меньше сохраненных, проверьте корректность введенных данных');
+              },
+            );
+          } else if (response.statusCode == 402) {
+            showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialogBuilder().printAlertDialog(context,
+                    'Ошибка 402. Обратитесь к администратору для устранения неисправности');
+              },
+            );
+          } else if (response.statusCode == 400) {
+            showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialogBuilder().printAlertDialog(context,
+                    'Неверный тип счетчика. Обратитесь к администратору для устранения неисправности');
+              },
+            );
+          } else {
+            showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialogBuilder().printAlertDialog(
+                    context, 'Поля показаний счетчика пустые');
+              },
+            );
+          }
         }
+      } catch (e) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (BuildContext context) => const InternetConnectionError(),
+          ),
+        );
+        throw Exception('Failed to load bills info: Internet connection error');
       }
-    } else {
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialogBuilder()
-              .printAlertDialog(context, 'Поля показаний счетчика пустые');
-        },
-      );
     }
   }
 }

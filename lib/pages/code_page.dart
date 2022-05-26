@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:diploma/models/auth_response.dart';
 import 'package:diploma/pages/alert_dialog.dart';
+import 'package:diploma/pages/internet_connection_error_page.dart';
 import 'package:diploma/pages/main_page.dart';
 import 'package:diploma/theme/custom_theme.dart';
 import 'package:flutter/material.dart';
@@ -187,33 +188,43 @@ class _CodePageState extends State<CodePage> {
     final url = prefs.getString('url');
     final bio = prefs.getString('bio');
     final authCode = prefs.getString('auth_code');
+
     Map<String, String> requestHeaders = {
       'Authorization': 'Basic ' + authCode!
     };
 
-    var response = await http.post(
-      Uri.parse(url! + "/hs/diploma/get/code"),
-      headers: requestHeaders,
-      body: jsonEncode(
-        <String, String>{
-          'bio': bio!,
-        },
-      ),
-    );
-    if (response.statusCode == 200) {
-      AuthResponse responseAuth =
-          AuthResponse.fromJson(jsonDecode(response.body));
-      prefs.setInt("code", responseAuth.code);
-    } else {
-      if (response.statusCode == 400) {
-        showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialogBuilder().printAlertDialog(context,
-                'Не удалось отправить код для авторизации на указаный номер телефона. Обратитесь к администратору для устранения неисправности');
+    try {
+      var response = await http.post(
+        Uri.parse(url! + "/hs/diploma/get/code"),
+        headers: requestHeaders,
+        body: jsonEncode(
+          <String, String>{
+            'bio': bio!,
           },
-        );
+        ),
+      );
+      if (response.statusCode == 200) {
+        AuthResponse responseAuth =
+            AuthResponse.fromJson(jsonDecode(response.body));
+        prefs.setInt("code", responseAuth.code);
+      } else {
+        if (response.statusCode == 400) {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialogBuilder().printAlertDialog(context,
+                  'Не удалось отправить код для авторизации на указаный номер телефона. Обратитесь к администратору для устранения неисправности');
+            },
+          );
+        }
       }
+    } catch (e) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (BuildContext context) => const InternetConnectionError(),
+        ),
+      );
     }
   }
 }

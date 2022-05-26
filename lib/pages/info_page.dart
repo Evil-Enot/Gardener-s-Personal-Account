@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:diploma/models/gardening_info_response.dart';
 import 'package:diploma/pages/bills_page.dart';
+import 'package:diploma/pages/internet_connection_error_page.dart';
 import 'package:diploma/pages/main_page.dart';
 import 'package:diploma/pages/meters_page.dart';
 import 'package:diploma/pages/settings_page.dart';
@@ -336,58 +337,69 @@ class _InfoPageState extends State<InfoPage> {
       'Authorization': 'Basic ' + authCode!
     };
 
-    final response = await http.get(
-        Uri.parse(url! + "/hs/diploma/get/gardening"),
-        headers: requestHeaders);
+    try {
+      final response = await http.get(
+          Uri.parse(url! + "/hs/diploma/get/gardening"),
+          headers: requestHeaders);
 
-    if (response.statusCode == 200) {
-      return GardeningInfo.fromJson(jsonDecode(response.body));
-    } else {
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text(
-              'Не удалось загрузить данные. Попробуйте позже',
-              style: CustomTheme.textStyle20_400,
-              textAlign: TextAlign.center,
-            ),
-            actions: <Widget>[
-              Align(
-                alignment: Alignment.center,
-                child: Container(
-                  margin: EdgeInsets.only(
-                    top: MediaQuery.of(context).size.height * 0.01,
-                  ),
-                  child: SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.08,
-                    width: MediaQuery.of(context).size.width * 0.3,
-                    child: ElevatedButton(
-                      style: CustomTheme.elevatedButtonStyle,
-                      onPressed: () {
-                        prefs.setBool('auth', false);
-                        Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(
-                            builder: (BuildContext context) => const MainPage(),
-                          ),
-                          (route) => false,
-                        );
-                        Navigator.of(context).pop();
-                      },
-                      child: Text(
-                        'Выйти',
-                        style: CustomTheme.textStyle24_400,
+      if (response.statusCode == 200) {
+        return GardeningInfo.fromJson(jsonDecode(response.body));
+      } else {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text(
+                'Не удалось загрузить данные. Попробуйте позже',
+                style: CustomTheme.textStyle20_400,
+                textAlign: TextAlign.center,
+              ),
+              actions: <Widget>[
+                Align(
+                  alignment: Alignment.center,
+                  child: Container(
+                    margin: EdgeInsets.only(
+                      top: MediaQuery.of(context).size.height * 0.01,
+                    ),
+                    child: SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.08,
+                      width: MediaQuery.of(context).size.width * 0.3,
+                      child: ElevatedButton(
+                        style: CustomTheme.elevatedButtonStyle,
+                        onPressed: () {
+                          prefs.setBool('auth', false);
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                              builder: (BuildContext context) =>
+                                  const MainPage(),
+                            ),
+                            (route) => false,
+                          );
+                          Navigator.of(context).pop();
+                        },
+                        child: Text(
+                          'Выйти',
+                          style: CustomTheme.textStyle24_400,
+                        ),
                       ),
                     ),
                   ),
-                ),
-              )
-            ],
-          );
-        },
+                )
+              ],
+            );
+          },
+        );
+        throw Exception('Failed to load gardening info');
+      }
+    } catch (e) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (BuildContext context) => const InternetConnectionError(),
+        ),
       );
-      throw Exception('Failed to load gardening info');
+      throw Exception('Failed to load gardening info: Internet connection error');
     }
   }
 }
