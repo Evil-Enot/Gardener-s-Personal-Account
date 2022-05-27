@@ -1,12 +1,18 @@
+import 'package:diploma/alert/alert_dialog.dart';
 import 'package:diploma/notifications/notification_service.dart';
-import 'package:diploma/pages/alert_dialog.dart';
 import 'package:diploma/pages/auth_page.dart';
+import 'package:diploma/pages/bills_page.dart';
+import 'package:diploma/pages/info_page.dart';
 import 'package:diploma/pages/internet_connection_error_page.dart';
 import 'package:diploma/pages/main_page.dart';
+import 'package:diploma/pages/meters_page.dart';
+import 'package:diploma/pages/payment_page.dart';
+import 'package:diploma/pages/settings_page.dart';
 import 'package:diploma/theme/custom_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
@@ -15,19 +21,22 @@ void main() async {
     SystemUiMode.immersiveSticky,
   );
   NotificationService().init();
-  runApp(const DiplomaApp());
-}
-
-class DiplomaApp extends StatelessWidget {
-  const DiplomaApp({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
+  runApp(
+    MaterialApp(
+      initialRoute: '/',
+      routes: {
+        '/': (context) => const UrlPage(),
+        '/auth': (context) => const AuthPage(),
+        '/main': (context) => const MainPage(),
+        '/info': (context) => const InfoPage(),
+        '/bills': (context) => const BillsPage(),
+        '/meters': (context) => const MetersPage(),
+        '/settings': (context) => const SettingsPage(),
+        '/payment': (context) => const PaymentPage(),
+      },
       title: "Кабинет садовода",
-      home: UrlPage(),
-    );
-  }
+    ),
+  );
 }
 
 class UrlPage extends StatefulWidget {
@@ -196,12 +205,14 @@ class _UrlPageState extends State<UrlPage> {
 
   _checkURL() async {
     final prefs = await SharedPreferences.getInstance();
+
     bool auth = false;
+    bool result = await InternetConnectionChecker().hasConnection;
 
     if (_url.isNotEmpty && _code.isNotEmpty) {
       Map<String, String> requestHeaders = {'Authorization': 'Basic ' + _code};
 
-      try {
+      if (result == true) {
         var response = await http.get(Uri.parse(_url + "/hs/diploma/check/url"),
             headers: requestHeaders);
 
@@ -242,7 +253,8 @@ class _UrlPageState extends State<UrlPage> {
             );
           }
         }
-      } catch (e) {
+      } else {
+        prefs.setString("last_page", "/");
         Navigator.push(
           context,
           MaterialPageRoute(

@@ -1,7 +1,7 @@
 import 'dart:convert';
 
+import 'package:diploma/alert/alert_dialog.dart';
 import 'package:diploma/models/meters_info_response.dart';
-import 'package:diploma/pages/alert_dialog.dart';
 import 'package:diploma/pages/bills_page.dart';
 import 'package:diploma/pages/internet_connection_error_page.dart';
 import 'package:diploma/pages/main_page.dart';
@@ -10,6 +10,7 @@ import 'package:diploma/theme/custom_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:http/http.dart' as http;
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -747,11 +748,14 @@ class _MetersPageState extends State<MetersPage> {
     final url = prefs.getString('url');
     final bio = prefs.getString('bio');
     final authCode = prefs.getString('auth_code');
+
     Map<String, String> requestHeaders = {
       'Authorization': 'Basic ' + authCode!
     };
 
-    try {
+    bool result = await InternetConnectionChecker().hasConnection;
+
+    if (result == true) {
       final response = await http.post(
         Uri.parse(url! + "/hs/diploma/get/meters"),
         headers: requestHeaders,
@@ -768,7 +772,8 @@ class _MetersPageState extends State<MetersPage> {
         throw Exception('Failed to load user info: ${response.statusCode}. ' +
             response.body.toString());
       }
-    } catch (e) {
+    } else {
+      prefs.setString("last_page", "/meters");
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -784,16 +789,19 @@ class _MetersPageState extends State<MetersPage> {
     final url = prefs.getString('url');
     final bio = prefs.getString('bio');
     final authCode = prefs.getString('auth_code');
+
     Map<String, String> requestHeaders = {
       'Authorization': 'Basic ' + authCode!
     };
+
+    bool result = await InternetConnectionChecker().hasConnection;
 
     String datetime = DateFormat("d.MM.yyy HH:mm:ss").format(DateTime.now());
 
     if (_datat1 != "0" && _datat2 != "0" && _datat3 != "0" ||
         _datat1 != "0" && _datat2 != "0" ||
         _datat1 != "0") {
-      try {
+      if (result == true) {
         final response = await http.post(
           Uri.parse(url! + "/hs/diploma/put/meters"),
           headers: requestHeaders,
@@ -854,17 +862,10 @@ class _MetersPageState extends State<MetersPage> {
                     'Неверный тип счетчика. Обратитесь к администратору для устранения неисправности');
               },
             );
-          } else {
-            showDialog(
-              context: context,
-              builder: (context) {
-                return AlertDialogBuilder().printAlertDialog(
-                    context, 'Поля показаний счетчика пустые');
-              },
-            );
           }
         }
-      } catch (e) {
+      } else {
+        prefs.setString("last_page", "/meters");
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -873,6 +874,14 @@ class _MetersPageState extends State<MetersPage> {
         );
         throw Exception('Failed to load bills info: Internet connection error');
       }
+    } else {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialogBuilder().printAlertDialog(
+              context, 'Поля показаний счетчика пустые');
+        },
+      );
     }
   }
 }
