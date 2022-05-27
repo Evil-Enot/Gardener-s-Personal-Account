@@ -11,8 +11,6 @@ class NotificationService {
 
   NotificationService._internal();
 
-  static const channelId = '123';
-
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 

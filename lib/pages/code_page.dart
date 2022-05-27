@@ -1,13 +1,14 @@
 import 'dart:convert';
 
+import 'package:diploma/alert/alert_dialog.dart';
 import 'package:diploma/models/auth_response.dart';
-import 'package:diploma/pages/alert_dialog.dart';
 import 'package:diploma/pages/internet_connection_error_page.dart';
 import 'package:diploma/pages/main_page.dart';
 import 'package:diploma/theme/custom_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CodePage extends StatefulWidget {
@@ -193,7 +194,9 @@ class _CodePageState extends State<CodePage> {
       'Authorization': 'Basic ' + authCode!
     };
 
-    try {
+    bool result = await InternetConnectionChecker().hasConnection;
+
+    if (result == true) {
       var response = await http.post(
         Uri.parse(url! + "/hs/diploma/get/code"),
         headers: requestHeaders,
@@ -218,7 +221,7 @@ class _CodePageState extends State<CodePage> {
           );
         }
       }
-    } catch (e) {
+    } else {
       Navigator.push(
         context,
         MaterialPageRoute(

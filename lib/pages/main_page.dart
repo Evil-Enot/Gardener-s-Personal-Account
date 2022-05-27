@@ -11,6 +11,7 @@ import 'package:diploma/theme/custom_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:http/http.dart' as http;
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/user_info_response.dart';
@@ -28,6 +29,12 @@ class _MainPageState extends State<MainPage> {
   @override
   void initState() {
     super.initState();
+    userInfo = _fetchUserInfo();
+  }
+
+  @override
+  void activate() {
+    super.activate();
     userInfo = _fetchUserInfo();
   }
 
@@ -456,7 +463,9 @@ class _MainPageState extends State<MainPage> {
       'Authorization': 'Basic ' + authCode!
     };
 
-    try {
+    bool result = await InternetConnectionChecker().hasConnection;
+
+    if (result == true) {
       final response = await http.post(
         Uri.parse(url! + "/hs/diploma/get/profile"),
         headers: requestHeaders,
@@ -517,7 +526,8 @@ class _MainPageState extends State<MainPage> {
         );
       }
       throw Exception('Failed to load user info');
-    } catch (e) {
+    } else {
+      prefs.setString("last_page", "/main");
       Navigator.push(
         context,
         MaterialPageRoute(

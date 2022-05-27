@@ -1,12 +1,13 @@
 import 'dart:convert';
 
+import 'package:diploma/alert/alert_dialog.dart';
 import 'package:diploma/models/auth_response.dart';
-import 'package:diploma/pages/alert_dialog.dart';
 import 'package:diploma/pages/code_page.dart';
 import 'package:diploma/pages/internet_connection_error_page.dart';
 import 'package:diploma/theme/custom_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthPage extends StatefulWidget {
@@ -174,11 +175,15 @@ class _AuthPageState extends State<AuthPage> {
     final prefs = await SharedPreferences.getInstance();
     final url = prefs.getString('url');
     final authCode = prefs.getString('auth_code');
+
     Map<String, String> requestHeaders = {
       'Authorization': 'Basic ' + authCode!
     };
+
+    bool result = await InternetConnectionChecker().hasConnection;
+
     if (_bio.isNotEmpty && _number.isNotEmpty) {
-      try {
+      if (result == true) {
         var response = await http.post(
           Uri.parse(url! + "/hs/diploma/check/number"),
           headers: requestHeaders,
@@ -232,7 +237,8 @@ class _AuthPageState extends State<AuthPage> {
             );
           }
         }
-      } catch (e) {
+      } else {
+        prefs.setString("last_page", "/auth");
         Navigator.push(
           context,
           MaterialPageRoute(

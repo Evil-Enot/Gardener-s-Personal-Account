@@ -1,7 +1,7 @@
 import 'dart:convert';
 
+import 'package:diploma/alert/alert_dialog.dart';
 import 'package:diploma/models/bills_info_response.dart';
-import 'package:diploma/pages/alert_dialog.dart';
 import 'package:diploma/pages/internet_connection_error_page.dart';
 import 'package:diploma/pages/main_page.dart';
 import 'package:diploma/pages/meters_page.dart';
@@ -11,6 +11,7 @@ import 'package:diploma/theme/custom_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:http/http.dart' as http;
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -398,68 +399,72 @@ class _BillsPageState extends State<BillsPage> {
       'Authorization': 'Basic ' + authCode!
     };
 
-    try {
-    final response = await http.post(
-      Uri.parse(url! + "/hs/diploma/get/bills"),
-      headers: requestHeaders,
-      body: jsonEncode(
-        <String, String>{
-          'bio': bio!,
-        },
-      ),
-    );
+    bool result = await InternetConnectionChecker().hasConnection;
 
-    if (response.statusCode == 200) {
-      BillsInfo data = BillsInfo.fromJson(jsonDecode(response.body));
-      _data = data.info.billduty.toString();
-      return data;
-    } else {
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text(
-              'Произошла ошибка при получении данных с сервера, попробуйте еще раз позже',
-              style: CustomTheme.textStyle20_400,
-              textAlign: TextAlign.center,
-            ),
-            actions: <Widget>[
-              Align(
-                alignment: Alignment.center,
-                child: Container(
-                  margin: EdgeInsets.only(
-                    top: MediaQuery.of(context).size.height * 0.01,
-                  ),
-                  child: SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.08,
-                    width: MediaQuery.of(context).size.width * 0.3,
-                    child: ElevatedButton(
-                      style: CustomTheme.elevatedButtonStyle,
-                      onPressed: () {
-                        Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(
-                            builder: (BuildContext context) => const MainPage(),
-                          ),
-                          (route) => false,
-                        );
-                        Navigator.of(context).pop();
-                      },
-                      child: Text(
-                        'Выйти',
-                        style: CustomTheme.textStyle24_400,
+    if (result == true) {
+      final response = await http.post(
+        Uri.parse(url! + "/hs/diploma/get/bills"),
+        headers: requestHeaders,
+        body: jsonEncode(
+          <String, String>{
+            'bio': bio!,
+          },
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        BillsInfo data = BillsInfo.fromJson(jsonDecode(response.body));
+        _data = data.info.billduty.toString();
+        return data;
+      } else {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text(
+                'Произошла ошибка при получении данных с сервера, попробуйте еще раз позже',
+                style: CustomTheme.textStyle20_400,
+                textAlign: TextAlign.center,
+              ),
+              actions: <Widget>[
+                Align(
+                  alignment: Alignment.center,
+                  child: Container(
+                    margin: EdgeInsets.only(
+                      top: MediaQuery.of(context).size.height * 0.01,
+                    ),
+                    child: SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.08,
+                      width: MediaQuery.of(context).size.width * 0.3,
+                      child: ElevatedButton(
+                        style: CustomTheme.elevatedButtonStyle,
+                        onPressed: () {
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                              builder: (BuildContext context) =>
+                                  const MainPage(),
+                            ),
+                            (route) => false,
+                          );
+                          Navigator.of(context).pop();
+                        },
+                        child: Text(
+                          'Выйти',
+                          style: CustomTheme.textStyle24_400,
+                        ),
                       ),
                     ),
                   ),
-                ),
-              )
-            ],
-          );
-        },
-      );
-      throw Exception('Failed to load bills info');
-    }
-    } catch (e) {
+                )
+              ],
+            );
+          },
+        );
+        throw Exception('Failed to load bills info');
+      }
+    } else {
+      prefs.setString("last_page", "/bills");
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -480,7 +485,9 @@ class _BillsPageState extends State<BillsPage> {
       'Authorization': 'Basic ' + authCode!
     };
 
-    try {
+    bool result = await InternetConnectionChecker().hasConnection;
+
+    if (result == true) {
       final response = await http.post(
         Uri.parse(url! + "/hs/diploma/get/receipt"),
         headers: requestHeaders,
@@ -536,7 +543,8 @@ class _BillsPageState extends State<BillsPage> {
           },
         );
       }
-    } catch (e) {
+    } else {
+      prefs.setString("last_page", "/bills");
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -551,41 +559,54 @@ class _BillsPageState extends State<BillsPage> {
     final url = prefs.getString('url');
     final bio = prefs.getString('bio');
     final authCode = prefs.getString('auth_code');
+
     Map<String, String> requestHeaders = {
       'Authorization': 'Basic ' + authCode!
     };
 
+    bool result = await InternetConnectionChecker().hasConnection;
+
     String datetime = DateFormat("d.MM.yyy HH:mm:ss").format(DateTime.now());
 
     if (_data != "0.0") {
-      final response = await http.post(
-        Uri.parse(url! + "/hs/diploma/put/payment"),
-        headers: requestHeaders,
-        body: jsonEncode(
-          <String, String>{'bio': bio!, 'date': datetime, 'sum': _data},
-        ),
-      );
-      if (response.statusCode == 200) {
-        billsInfo = _fetchBillsInfo();
-        _data = "0.0";
-        setState(() {});
-        showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialogBuilder()
-                .printAlertDialog(context, 'Оплата прошла успешно');
-          },
+      if (result == true) {
+        final response = await http.post(
+          Uri.parse(url! + "/hs/diploma/put/payment"),
+          headers: requestHeaders,
+          body: jsonEncode(
+            <String, String>{'bio': bio!, 'date': datetime, 'sum': _data},
+          ),
         );
-      } else if (response.statusCode == 400) {
-        showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialogBuilder().printAlertDialog(context,
-                'Произошла ошибка при обработке оплаты. Обратитесь к администратору');
-          },
+        if (response.statusCode == 200) {
+          billsInfo = _fetchBillsInfo();
+          _data = "0.0";
+          setState(() {});
+          showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialogBuilder()
+                  .printAlertDialog(context, 'Оплата прошла успешно');
+            },
+          );
+        } else if (response.statusCode == 400) {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialogBuilder().printAlertDialog(context,
+                  'Произошла ошибка при обработке оплаты. Обратитесь к администратору');
+            },
+          );
+        }
+      } else {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (BuildContext context) => const InternetConnectionError(),
+          ),
         );
       }
     } else {
+      prefs.setString("last_page", "/bills");
       showDialog(
         context: context,
         builder: (context) {

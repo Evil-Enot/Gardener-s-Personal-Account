@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:http/http.dart' as http;
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'bills_page.dart';
@@ -256,11 +257,14 @@ class _PaymentPageState extends State<PaymentPage> {
     final url = prefs.getString('url');
     final authCode = prefs.getString('auth_code');
     final bio = prefs.getString('bio');
+
     Map<String, String> requestHeaders = {
       'Authorization': 'Basic ' + authCode!
     };
 
-    try {
+    bool result = await InternetConnectionChecker().hasConnection;
+
+    if (result == true) {
       final response = await http.post(
         Uri.parse(url! + "/hs/diploma/get/payment"),
         headers: requestHeaders,
@@ -328,7 +332,8 @@ class _PaymentPageState extends State<PaymentPage> {
           },
         );
       }
-    } catch (e) {
+    } else {
+      prefs.setString("last_page", "/payment");
       Navigator.push(
         context,
         MaterialPageRoute(

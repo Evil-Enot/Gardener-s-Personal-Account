@@ -10,6 +10,7 @@ import 'package:diploma/theme/custom_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:http/http.dart' as http;
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class InfoPage extends StatefulWidget {
@@ -25,7 +26,7 @@ class _InfoPageState extends State<InfoPage> {
   @override
   void initState() {
     super.initState();
-    gardeningInfo = fetchGardeningInfo();
+    gardeningInfo = _fetchGardeningInfo();
   }
 
   @override
@@ -329,15 +330,18 @@ class _InfoPageState extends State<InfoPage> {
     );
   }
 
-  Future<GardeningInfo> fetchGardeningInfo() async {
+  Future<GardeningInfo> _fetchGardeningInfo() async {
     final prefs = await SharedPreferences.getInstance();
     final url = prefs.getString('url');
     final authCode = prefs.getString('auth_code');
+
     Map<String, String> requestHeaders = {
       'Authorization': 'Basic ' + authCode!
     };
 
-    try {
+    bool result = await InternetConnectionChecker().hasConnection;
+
+    if (result == true) {
       final response = await http.get(
           Uri.parse(url! + "/hs/diploma/get/gardening"),
           headers: requestHeaders);
@@ -392,14 +396,16 @@ class _InfoPageState extends State<InfoPage> {
         );
         throw Exception('Failed to load gardening info');
       }
-    } catch (e) {
+    } else {
+      prefs.setString("last_page", "/info");
       Navigator.push(
         context,
         MaterialPageRoute(
           builder: (BuildContext context) => const InternetConnectionError(),
         ),
       );
-      throw Exception('Failed to load gardening info: Internet connection error');
+      throw Exception(
+          'Failed to load gardening info: Internet connection error');
     }
   }
 }
