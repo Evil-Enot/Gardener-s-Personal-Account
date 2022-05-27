@@ -19,7 +19,7 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage> {
   final NotificationService _notificationService = NotificationService();
   late bool _value = false;
-  final switchData = GetStorage();
+  final switchData = GetStorage('Storage');
 
   @override
   void initState() {

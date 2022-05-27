@@ -145,28 +145,31 @@ class _AuthPageState extends State<AuthPage> {
   }
 
   Widget _buildSubmitButton(BuildContext context) {
-    return TextButton(
-      style: TextButton.styleFrom(
-        backgroundColor: const Color(0xFFFFED4D),
-        shape: const StadiumBorder(),
-        padding: EdgeInsets.only(
-          top: MediaQuery.of(context).size.height * 0.02,
-          bottom: MediaQuery.of(context).size.height * 0.02,
-          left: MediaQuery.of(context).size.width * 0.08,
-          right: MediaQuery.of(context).size.width * 0.08,
+    return Container(
+      margin: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.01),
+      child: TextButton(
+        style: TextButton.styleFrom(
+          backgroundColor: const Color(0xFFFFED4D),
+          shape: const StadiumBorder(),
+          padding: EdgeInsets.only(
+            top: MediaQuery.of(context).size.height * 0.02,
+            bottom: MediaQuery.of(context).size.height * 0.02,
+            left: MediaQuery.of(context).size.width * 0.08,
+            right: MediaQuery.of(context).size.width * 0.08,
+          ),
+          side: const BorderSide(
+            color: Colors.black,
+            width: 2.0,
+          ),
         ),
-        side: const BorderSide(
-          color: Colors.black,
-          width: 2.0,
+        onPressed: () {
+          _checkAuth();
+        },
+        child: Text(
+          "Продолжить",
+          textAlign: TextAlign.center,
+          style: CustomTheme.textStyle20_400,
         ),
-      ),
-      onPressed: () {
-        _checkAuth();
-      },
-      child: Text(
-        "Продолжить",
-        textAlign: TextAlign.center,
-        style: CustomTheme.textStyle20_400,
       ),
     );
   }
@@ -227,14 +230,6 @@ class _AuthPageState extends State<AuthPage> {
                     'Не удалось отправить код для авторизации на указаный номер телефона. Обратитесь к администратору для устранения неисправности');
               },
             );
-          } else {
-            showDialog(
-              context: context,
-              builder: (context) {
-                return AlertDialogBuilder().printAlertDialog(context,
-                    'Обязательные поля "ФИО" и "Номер телефона" не заполнены');
-              },
-            );
           }
         }
       } else {
@@ -246,6 +241,14 @@ class _AuthPageState extends State<AuthPage> {
           ),
         );
       }
+    } else {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialogBuilder().printAlertDialog(context,
+              'Обязательные поля "ФИО" и "Номер телефона" не заполнены');
+        },
+      );
     }
   }
 }

@@ -11,6 +11,7 @@ import 'package:diploma/pages/settings_page.dart';
 import 'package:diploma/theme/custom_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -21,6 +22,7 @@ void main() async {
     SystemUiMode.immersiveSticky,
   );
   NotificationService().init();
+  await GetStorage.init('Storage');
   runApp(
     MaterialApp(
       initialRoute: '/',
