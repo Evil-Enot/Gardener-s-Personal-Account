@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:diploma/alert/alert_dialog.dart';
 import 'package:diploma/models/bills_info_response.dart';
@@ -13,6 +14,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:http/http.dart' as http;
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:intl/intl.dart';
+import 'package:open_file/open_file.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class BillsPage extends StatefulWidget {
@@ -257,9 +260,41 @@ class _BillsPageState extends State<BillsPage> {
                     _getReceipt(context);
                   },
                   child: Text(
-                    'Получить квитанцию',
+                    'Посмотреть квитанцию',
                     textAlign: TextAlign.center,
                     style: CustomTheme.textStyle20_400,
+                  ),
+                ),
+              ),
+              Align(
+                alignment: Alignment.center,
+                child: Container(
+                  margin: EdgeInsets.only(
+                    top: MediaQuery.of(context).size.height * 0.01,
+                  ),
+                  child: TextButton(
+                    style: TextButton.styleFrom(
+                      backgroundColor: const Color(0xFFFFED4D),
+                      shape: const StadiumBorder(),
+                      padding: EdgeInsets.only(
+                        top: MediaQuery.of(context).size.height * 0.02,
+                        bottom: MediaQuery.of(context).size.height * 0.02,
+                        left: MediaQuery.of(context).size.width * 0.08,
+                        right: MediaQuery.of(context).size.width * 0.08,
+                      ),
+                      side: const BorderSide(
+                        color: Colors.black,
+                        width: 2.0,
+                      ),
+                    ),
+                    onPressed: () {
+                      _sendReceipt(context);
+                    },
+                    child: Text(
+                      'Получить квитанцию на почту',
+                      textAlign: TextAlign.center,
+                      style: CustomTheme.textStyle20_400,
+                    ),
                   ),
                 ),
               ),
@@ -475,7 +510,7 @@ class _BillsPageState extends State<BillsPage> {
     }
   }
 
-  void _getReceipt(context) async {
+  void _sendReceipt(context) async {
     final prefs = await SharedPreferences.getInstance();
     final url = prefs.getString('url');
     final bio = prefs.getString('bio');
@@ -494,6 +529,7 @@ class _BillsPageState extends State<BillsPage> {
         body: jsonEncode(
           <String, String>{
             'bio': bio!,
+            "action": "send",
           },
         ),
       );
@@ -534,6 +570,104 @@ class _BillsPageState extends State<BillsPage> {
             );
           },
         );
+      } else {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialogBuilder().printAlertDialog(context,
+                'Не удалось сформировать квитанцию. Обратитесь к администратору');
+          },
+        );
+      }
+    } else {
+      prefs.setString("last_page", "/bills");
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (BuildContext context) => const InternetConnectionError(),
+        ),
+      );
+    }
+  }
+
+  void _getReceipt(context) async {
+    final prefs = await SharedPreferences.getInstance();
+    final url = prefs.getString('url');
+    final bio = prefs.getString('bio');
+    final authCode = prefs.getString('auth_code');
+
+    Map<String, String> requestHeaders = {
+      'Authorization': 'Basic ' + authCode!
+    };
+
+    bool result = await InternetConnectionChecker().hasConnection;
+
+    if (result == true) {
+      final response = await http.post(
+        Uri.parse(url! + "/hs/diploma/get/receipt"),
+        headers: requestHeaders,
+        body: jsonEncode(
+          <String, String>{
+            'bio': bio!,
+            "action": "get",
+          },
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        final Directory? appDir = Platform.isAndroid
+            ? await getExternalStorageDirectory()
+            : await getApplicationDocumentsDirectory();
+        String tempPath = appDir!.path;
+        String line = response.headers.values.elementAt(1);
+        String fileName = line.substring(22, line.length - 1);
+        File file = File('$tempPath/$fileName');
+        if (!await file.exists()) {
+          await file.create();
+        }
+        await file.writeAsBytes(response.bodyBytes);
+        String url = file.path.toString();
+        final OpenResult result = await OpenFile.open(url);
+        switch (result.type) {
+          case ResultType.error:
+            showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialogBuilder()
+                    .printAlertDialog(context, 'Не удалось открыть квитанцию');
+              },
+            );
+            return;
+          case ResultType.fileNotFound:
+            showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialogBuilder().printAlertDialog(
+                    context, 'Не удалось открыть квитанцию. Файл не найден');
+              },
+            );
+            return;
+          case ResultType.noAppToOpen:
+            showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialogBuilder().printAlertDialog(context,
+                    'Не удалось открыть квитанцию. Нет приложения для открытия');
+              },
+            );
+            return;
+          case ResultType.permissionDenied:
+            showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialogBuilder().printAlertDialog(context,
+                    'Не удалось открыть квитанцию. Нет нужных разрешений');
+              },
+            );
+            return;
+          default:
+            return null;
+        }
       } else {
         showDialog(
           context: context,
