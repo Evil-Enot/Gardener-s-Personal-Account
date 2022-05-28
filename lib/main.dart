@@ -25,6 +25,7 @@ void main() async {
   await GetStorage.init('Storage');
   runApp(
     MaterialApp(
+      debugShowCheckedModeBanner: false,
       initialRoute: '/',
       routes: {
         '/': (context) => const UrlPage(),
