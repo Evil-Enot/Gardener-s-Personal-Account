@@ -15,6 +15,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.8.2"
+  base58check:
+    dependency: transitive
+    description:
+      name: base58check
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.0"
+  bech32:
+    dependency: transitive
+    description:
+      name: bech32
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.1"
   boolean_selector:
     dependency: transitive
     description:
@@ -174,6 +188,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "5.0.0"
+  flutter_multi_formatter:
+    dependency: "direct main"
+    description:
+      name: flutter_multi_formatter
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.5.7"
+  flutter_plugin_android_lifecycle:
+    dependency: transitive
+    description:
+      name: flutter_plugin_android_lifecycle
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.6"
   flutter_svg:
     dependency: "direct main"
     description:
@@ -247,6 +275,41 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.1"
+  local_auth:
+    dependency: "direct main"
+    description:
+      name: local_auth
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.1.0"
+  local_auth_android:
+    dependency: transitive
+    description:
+      name: local_auth_android
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.4"
+  local_auth_ios:
+    dependency: transitive
+    description:
+      name: local_auth_ios
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.6"
+  local_auth_platform_interface:
+    dependency: transitive
+    description:
+      name: local_auth_platform_interface
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.3"
+  local_auth_windows:
+    dependency: transitive
+    description:
+      name: local_auth_windows
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.0"
   matcher:
     dependency: transitive
     description:

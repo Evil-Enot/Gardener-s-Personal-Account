@@ -1,28 +1,24 @@
-import 'dart:convert';
-
 import 'package:diploma/alert/alert_dialog.dart';
-import 'package:diploma/models/auth_response.dart';
-import 'package:diploma/pages/code_page.dart';
+import 'package:diploma/pages/auth_page.dart';
 import 'package:diploma/pages/internet_connection_error_page.dart';
 import 'package:diploma/theme/custom_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_multi_formatter/formatters/phone_input_formatter.dart';
 import 'package:http/http.dart' as http;
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class AuthPage extends StatefulWidget {
-  const AuthPage({Key? key}) : super(key: key);
+class UrlPage extends StatefulWidget {
+  const UrlPage({Key? key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _AuthPageState();
+  _UrlPageState createState() => _UrlPageState();
 }
 
-class _AuthPageState extends State<AuthPage> {
+class _UrlPageState extends State<UrlPage> {
   FocusNode nodeOne = FocusNode();
   FocusNode nodeTwo = FocusNode();
-  String _bio = "";
-  String _number = "";
+  String _url = "";
+  String _code = "";
 
   @override
   Widget build(BuildContext context) {
@@ -32,8 +28,9 @@ class _AuthPageState extends State<AuthPage> {
           child: Column(
             children: [
               _buildTitle(context),
-              _buildBioInput(context),
-              _buildNumberInput(context),
+              _buildURLInput(context),
+              _buildCodeInput(context),
+              _buildURLAndCodeOverlay(context),
               _buildSubmitButton(context),
             ],
           ),
@@ -59,7 +56,7 @@ class _AuthPageState extends State<AuthPage> {
     );
   }
 
-  Widget _buildBioInput(BuildContext context) {
+  Widget _buildURLInput(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width * 0.8,
       margin: EdgeInsets.only(
@@ -75,17 +72,16 @@ class _AuthPageState extends State<AuthPage> {
         child: TextField(
           keyboardType: TextInputType.text,
           focusNode: nodeOne,
-          textCapitalization: TextCapitalization.words,
           maxLines: 1,
           textAlign: TextAlign.center,
           style: CustomTheme.textStyle20_400,
           decoration: InputDecoration(
             border: InputBorder.none,
-            hintText: 'Введите ФИО',
+            hintText: 'Введите URL сервера',
             hintStyle: CustomTheme.textStyleHint20_400,
           ),
           onChanged: (text) {
-            _bio = text.trim();
+            _url = text.trim();
           },
           onSubmitted: (text) {
             FocusScope.of(context).requestFocus(nodeTwo);
@@ -95,7 +91,7 @@ class _AuthPageState extends State<AuthPage> {
     );
   }
 
-  Widget _buildNumberInput(BuildContext context) {
+  Widget _buildCodeInput(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width * 0.8,
       decoration: CustomTheme.inputFieldsDecoration,
@@ -105,19 +101,18 @@ class _AuthPageState extends State<AuthPage> {
           vertical: MediaQuery.of(context).size.height * 0.01,
         ),
         child: TextField(
-          keyboardType: TextInputType.phone,
+          keyboardType: TextInputType.text,
           focusNode: nodeTwo,
           maxLines: 1,
           textAlign: TextAlign.center,
           style: CustomTheme.textStyle20_400,
-          inputFormatters: [PhoneInputFormatter()],
           decoration: InputDecoration(
             border: InputBorder.none,
-            hintText: 'Введите номер телефона',
+            hintText: 'Введите код авторизации',
             hintStyle: CustomTheme.textStyleHint20_400,
           ),
-          onSubmitted: (text) {
-            _number = text.replaceAll(RegExp(r'[ +\(\)\-]'), "").trim();
+          onChanged: (text) {
+            _code = text.trim();
           },
           scrollPadding: const EdgeInsets.only(bottom: 40),
         ),
@@ -125,96 +120,98 @@ class _AuthPageState extends State<AuthPage> {
     );
   }
 
-  Widget _buildSubmitButton(BuildContext context) {
+  Widget _buildURLAndCodeOverlay(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.01),
-      child: TextButton(
-        style: TextButton.styleFrom(
-          backgroundColor: const Color(0xFFFFED4D),
-          shape: const StadiumBorder(),
-          padding: EdgeInsets.only(
-            top: MediaQuery.of(context).size.height * 0.02,
-            bottom: MediaQuery.of(context).size.height * 0.02,
-            left: MediaQuery.of(context).size.width * 0.08,
-            right: MediaQuery.of(context).size.width * 0.08,
+      alignment: Alignment.center,
+      child: GestureDetector(
+        child: TextButton(
+          onPressed: () {
+            showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialogBuilder().printAlertDialog(context,
+                    'URL - адрес, по которому происходит связь с сервером 1С.\nURL можно получить, обратившись к председателю  вашего садоводства.');
+              },
+            );
+          },
+          child: Text(
+            "Что такое URL и код авторизации?",
+            textAlign: TextAlign.center,
+            style: CustomTheme.textStyle14_400U,
           ),
-          side: const BorderSide(
-            color: Colors.black,
-            width: 2.0,
-          ),
-        ),
-        onPressed: () {
-          _checkAuth();
-        },
-        child: Text(
-          "Продолжить",
-          textAlign: TextAlign.center,
-          style: CustomTheme.textStyle20_400,
         ),
       ),
     );
   }
 
-  _checkAuth() async {
-    final prefs = await SharedPreferences.getInstance();
-    final url = prefs.getString('url');
-    final authCode = prefs.getString('auth_code');
+  Widget _buildSubmitButton(BuildContext context) {
+    return TextButton(
+      style: TextButton.styleFrom(
+        backgroundColor: const Color(0xFFFFED4D),
+        shape: const StadiumBorder(),
+        padding: EdgeInsets.only(
+          top: MediaQuery.of(context).size.height * 0.02,
+          bottom: MediaQuery.of(context).size.height * 0.02,
+          left: MediaQuery.of(context).size.width * 0.08,
+          right: MediaQuery.of(context).size.width * 0.08,
+        ),
+        side: const BorderSide(
+          color: Colors.black,
+          width: 2.0,
+        ),
+      ),
+      onPressed: () {
+        _checkURL();
+      },
+      child: Text(
+        "Продолжить",
+        textAlign: TextAlign.center,
+        style: CustomTheme.textStyle20_400,
+      ),
+    );
+  }
 
-    Map<String, String> requestHeaders = {
-      'Authorization': 'Basic ' + authCode!
-    };
+  _checkURL() async {
+    final prefs = await SharedPreferences.getInstance();
 
     bool result = await InternetConnectionChecker().hasConnection;
 
-    if (_bio.isNotEmpty && _number.isNotEmpty) {
+    if (_url.isNotEmpty && _code.isNotEmpty) {
       if (result == true) {
-        var response = await http.post(
-          Uri.parse(url! + "/hs/diploma/check/number"),
-          headers: requestHeaders,
-          body: jsonEncode(
-            <String, String>{
-              'bio': _bio,
-              'number': _number,
-            },
-          ),
-        );
+        Map<String, String> requestHeaders = {
+          'Authorization': 'Basic ' + _code
+        };
+
+        var response = await http.get(Uri.parse(_url + "/hs/diploma/check/url"),
+            headers: requestHeaders);
 
         if (response.statusCode == 200) {
-          AuthResponse responseAuth =
-              AuthResponse.fromJson(jsonDecode(response.body));
-          prefs.setString("bio", _bio);
-          prefs.setInt("code", responseAuth.code);
+          prefs.setString('url', _url);
+          prefs.setString('auth_code', _code);
+
           Navigator.push(context,
-              MaterialPageRoute(builder: (context) => const CodePage()));
+              MaterialPageRoute(builder: (context) => const AuthPage()));
         } else {
-          if (response.statusCode == 404) {
+          if (response.statusCode == 401) {
             showDialog(
               context: context,
               builder: (context) {
-                return AlertDialogBuilder().printAlertDialog(
-                    context, 'Пользователь с таким ФИО не обнаружен');
+                return AlertDialogBuilder()
+                    .printAlertDialog(context, 'Неверный код авторизации');
               },
             );
-          } else if (response.statusCode == 403) {
+          } else if (response.statusCode == 404) {
             showDialog(
               context: context,
               builder: (context) {
-                return AlertDialogBuilder().printAlertDialog(context,
-                    'Введенный номер телефона не совпадает с номером телефона в базе данных');
-              },
-            );
-          } else if (response.statusCode == 400) {
-            showDialog(
-              context: context,
-              builder: (context) {
-                return AlertDialogBuilder().printAlertDialog(context,
-                    'Не удалось отправить код для авторизации на указаный номер телефона. Обратитесь к администратору для устранения неисправности');
+                return AlertDialogBuilder()
+                    .printAlertDialog(context, 'Неверный url');
               },
             );
           }
         }
       } else {
-        prefs.setString("last_page", "/auth");
+        prefs.setString("last_page", "/url");
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -227,7 +224,7 @@ class _AuthPageState extends State<AuthPage> {
         context: context,
         builder: (context) {
           return AlertDialogBuilder().printAlertDialog(context,
-              'Обязательные поля "ФИО" и "Номер телефона" не заполнены');
+              'Обязательные поля "URL" и "Код авторизации" не заполнены');
         },
       );
     }
