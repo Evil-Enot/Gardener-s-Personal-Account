@@ -159,7 +159,7 @@ class _PaymentPageState extends State<PaymentPage> {
               },
               child: RichText(
                 text: TextSpan(
-                  text: 'Инструкция для оплаты по реквезитам',
+                  text: 'Инструкция для оплаты по реквизитам',
                   style: CustomTheme.textStyle14_400U,
                 ),
               ),
@@ -354,7 +354,7 @@ class _PaymentPageState extends State<PaymentPage> {
           Align(
             alignment: Alignment.topLeft,
             child: Text(
-              'Для оплаты по реквезитам необходимо открыть ваше банковское приложение, перейти в оплату по реквезитам и вставить необходимые данные:',
+              'Для оплаты по реквизитам необходимо открыть ваше банковское приложение, перейти в оплату по реквизитам и вставить необходимые данные:',
               style: CustomTheme.textStyle20_400,
             ),
           ),

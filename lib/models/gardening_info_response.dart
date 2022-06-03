@@ -20,6 +20,8 @@ class Info {
   String ogrn;
   String bank;
   String bill;
+  String number;
+  String post;
 
   Info(
       {required this.name,
@@ -28,7 +30,9 @@ class Info {
       required this.kpp,
       required this.ogrn,
       required this.bank,
-      required this.bill});
+      required this.bill,
+      required this.number,
+      required this.post});
 
   factory Info.fromJson(Map<String, dynamic> json) {
     return Info(
@@ -38,6 +42,8 @@ class Info {
         kpp: json['kpp'],
         ogrn: json['ogrn'],
         bank: json['bank'],
-        bill: json['bill']);
+        bill: json['bill'],
+        number: json['number'],
+        post: json['post']);
   }
 }
