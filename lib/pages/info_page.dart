@@ -8,10 +8,12 @@ import 'package:diploma/pages/meters_page.dart';
 import 'package:diploma/pages/settings_page.dart';
 import 'package:diploma/theme/custom_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:http/http.dart' as http;
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class InfoPage extends StatefulWidget {
   const InfoPage({Key? key}) : super(key: key);
@@ -243,6 +245,81 @@ class _InfoPageState extends State<InfoPage> {
               ),
             ],
           ),
+          Column(
+            children: [
+              Text(
+                'Контактная информация',
+                style: CustomTheme.textStyle22_700,
+              ),
+              Align(
+                alignment: Alignment.topLeft,
+                child: Container(
+                  padding: EdgeInsets.only(
+                    left: MediaQuery.of(context).size.width * 0.05,
+                  ),
+                  child: GestureDetector(
+                    child: TextButton(
+                      onPressed: () {
+                        _makePhoneCall(snapshot.data!.info.number);
+                      },
+                      style: TextButton.styleFrom(
+                        padding: EdgeInsets.zero,
+                      ),
+                      child: RichText(
+                        text: TextSpan(
+                          text: 'Телефон: ',
+                          style: CustomTheme.textStyle18_400,
+                          children: [
+                            TextSpan(
+                              text: snapshot.data!.info.number,
+                              style: CustomTheme.textStyle18_400U,
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Align(
+                alignment: Alignment.topLeft,
+                child: Container(
+                  padding: EdgeInsets.only(
+                    left: MediaQuery.of(context).size.width * 0.05,
+                  ),
+                  child: GestureDetector(
+                    child: TextButton(
+                      onPressed: () {
+                        _saveData(snapshot.data!.info.post, context);
+                      },
+                      style: TextButton.styleFrom(
+                        padding: EdgeInsets.zero,
+                      ),
+                      child: RichText(
+                        text: TextSpan(
+                          text: 'Почта: ',
+                          style: CustomTheme.textStyle18_400,
+                          children: [
+                            TextSpan(
+                              text: snapshot.data!.info.post,
+                              style: CustomTheme.textStyle18_400U,
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Divider(
+                height: 20,
+                thickness: 2,
+                indent: MediaQuery.of(context).size.width * 0.05,
+                endIndent: MediaQuery.of(context).size.width * 0.05,
+                color: Colors.black,
+              ),
+            ],
+          ),
         ],
       ),
     );
@@ -406,6 +483,26 @@ class _InfoPageState extends State<InfoPage> {
       );
       throw Exception(
           'Failed to load gardening info: Internet connection error');
+    }
+  }
+
+  _saveData(String text, BuildContext context) {
+    Clipboard.setData(ClipboardData(text: text));
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+      content: Text('Данные скопированы'),
+    ));
+  }
+
+  _makePhoneCall(String number) {
+    _makingPhoneCall(number);
+  }
+
+  _makingPhoneCall(String number) async {
+    String url = "tel:" + number;
+    if (await canLaunchUrlString(url)) {
+      await launchUrlString(url);
+    } else {
+      throw 'Could not launch $url';
     }
   }
 }

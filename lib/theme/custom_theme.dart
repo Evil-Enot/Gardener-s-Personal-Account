@@ -133,6 +133,15 @@ class CustomTheme {
     );
   }
 
+  static TextStyle get textStyle18_400 {
+    return const TextStyle(
+      color: Color(0xFF373737),
+      fontSize: 18,
+      fontWeight: FontWeight.w400,
+      fontFamily: 'Montserrat',
+    );
+  }
+
   static ButtonStyle get elevatedButtonStyle {
     return ElevatedButton.styleFrom(
       primary: const Color(0xFFFFED4D),
