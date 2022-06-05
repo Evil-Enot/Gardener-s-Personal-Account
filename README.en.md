@@ -44,7 +44,7 @@ face recognition.
 After successful authorization, the user gets to the main page, from where he can go to
 gardening information page, settings, invoices or counters page:
 
-![Application home page](/images/img1.jpg)
+<img src="/images/img1.jpg" alt="Application home page" width="250"/>
 
 When opening the gardening information page, the user is shown information about the
 gardening:
@@ -53,61 +53,63 @@ gardening:
 - Details of gardening;
 - Contact Information;
 
-![Information page](/images/img2.jpg)
+<img src="/images/img2.jpg" alt="Information page" width="250"/>
 
 When you click on the gardening number, the call application will open,
 from where you can immediately
 dial this number:
 
-![Select application to call after clicking on phone number](/images/img3.jpg)
+<img src="/images/img3.jpg" alt="Select application to call after clicking on phone number" width="250"/>
 
 When you click on the mail, this mail address will be copied to the clipboard:
 
-![Notify user about copying mail to clipboard](/images/img4.jpg)
+<img src="/images/img4.jpg" alt="Notify user about copying mail to clipboard" width="250"/>
 
 On the settings page, the user can enable notifications,
 for example, about the ropes to pass
 indications:
 
-![Receive notification](/images/img5.jpg)
+<img src="/images/img5.jpg" alt="Receive notification" width="250"/>
 
 Also on this page, the user can log out of the application.
 
-![Settings Page](/images/img6.jpg)
+<img src="/images/img6.jpg" alt="Settings Page" width="250"/>
 
 On the bills page, the user can view information about the current debt and the date of the last
 transmitted testimonies:
 
-![Bills page](/images/img7.jpg)
+<img src="/images/img7.jpg" alt="Bills page" width="250"/>
 
 When you click on the "View receipt" button, the generated receipt will open in the selected
 pdf viewer app
 
-![Opening pdf from application](/images/img8.jpg)
+<img src="/images/img8.jpg" alt="Opening pdf from application" width="250"/>
 
 When you click on the "Get a receipt by mail" button, to the user's mail, if it is specified in the database
 data, the generated receipt will come:
-![Message about the successful sending of the receipt to the mail](/images/img9.jpg)
 
-![Letter with receipt](/images/img10.jpg)
+<img src="/images/img9.jpg" alt="Message about the successful sending of the receipt to the mail" width="250"/>
+
+<img src="/images/img10.jpg" alt="Letter with receipt" width="250"/>
 
 Also, when you click on the "Pay" button, a page with instructions for paying for details will open,
 from where you can, by clicking on the details, copy the necessary values ​​\u200b\u200bfor filling in the banking application
-![Page with payment details](/images/img11.jpg)
+
+<img src="/images/img11.jpg" alt="Page with payment details" width="250"/>
 
 On the counters page, you can see detailed information about the counters at the sites:
 
 - Date of last transmission of meter readings
 - Last transferred values;
 
-![Page with counters](/images/img12.jpg)
+<img src="/images/img12.jpg" alt="Page with counters" width="250"/>
 
 You can also submit readings on this page by entering them in the appropriate fields.
 If you enter
 incorrect data, the user will be immediately informed about this:
 
-![Incorrect transmitted data alert](/images/img13.jpg)
+<img src="/images/img13.jpg" alt="Incorrect transmitted data alert" width="250"/>
 
 If the data is correct, then after writing it to the database, the corresponding message will be displayed to the user:
 
-![Data Transfer Successful](/images/img14.jpg)
+<img src="/images/img14.jpg" alt="Data Transfer Successful" width="250"/>
