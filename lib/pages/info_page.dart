@@ -260,7 +260,9 @@ class _InfoPageState extends State<InfoPage> {
                   child: GestureDetector(
                     child: TextButton(
                       onPressed: () {
-                        _makePhoneCall(snapshot.data!.info.number);
+                        if (snapshot.data!.info.number.isNotEmpty) {
+                          _makePhoneCall(snapshot.data!.info.number);
+                        }
                       },
                       style: TextButton.styleFrom(
                         padding: EdgeInsets.zero,
@@ -271,7 +273,9 @@ class _InfoPageState extends State<InfoPage> {
                           style: CustomTheme.textStyle18_400,
                           children: [
                             TextSpan(
-                              text: snapshot.data!.info.number,
+                              text: snapshot.data!.info.number.isNotEmpty
+                                  ? snapshot.data!.info.number
+                                  : "Отсутствует",
                               style: CustomTheme.textStyle18_400U,
                             )
                           ],
@@ -290,7 +294,9 @@ class _InfoPageState extends State<InfoPage> {
                   child: GestureDetector(
                     child: TextButton(
                       onPressed: () {
-                        _saveData(snapshot.data!.info.post, context);
+                        if (snapshot.data!.info.post.isNotEmpty) {
+                          _saveData(snapshot.data!.info.post, context);
+                        }
                       },
                       style: TextButton.styleFrom(
                         padding: EdgeInsets.zero,
@@ -301,7 +307,9 @@ class _InfoPageState extends State<InfoPage> {
                           style: CustomTheme.textStyle18_400,
                           children: [
                             TextSpan(
-                              text: snapshot.data!.info.post,
+                              text: snapshot.data!.info.post.isNotEmpty
+                                  ? snapshot.data!.info.post
+                                  : "Отсутствует",
                               style: CustomTheme.textStyle18_400U,
                             )
                           ],
