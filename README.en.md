@@ -21,12 +21,12 @@ extension [Gardener's Personal Account Server](https://github.com/Evil-Enot/Gard
 
 ## Application demo:
 
-After installing the application on the device and launching it, the user gets to the URL entry page and
-authorization code on the server. This information can be obtained from the chairman or administrator of your
-gardening.
+After installing the application on the device and launching it, the user gets to the URL entry page
+and authorization code on the server. This information can be obtained from the chairman or
+administrator of your gardening.
 
-After entering the correct data, the user enters the page for entering the full name and phone number, which
-necessary to identify the user in the system. If the user is found in the database,
+After entering the correct data, the user enters the page for entering the full name and phone
+number, which necessary to identify the user in the system. If the user is found in the database,
 The specified phone number receives a one-time code to confirm the entry.
 
 If the code is successfully entered, the user is considered authorized and gets to the main page
@@ -34,82 +34,108 @@ applications
 
 [comment]: <> (authorization demonstration)
 
-If the user has already been previously authorized in the application, then when the application starts
-a page for entering a one-time code will open, which can be sent via SMS, or, if the device
-supports authorization by biometric data, you can enter the application by fingerprint or
-face recognition.
+If the user has already been previously authorized in the application, then when the application
+starts a page for entering a one-time code will open, which can be sent via SMS, or, if the device
+supports authorization by biometric data, you can enter the application by fingerprint or face
+recognition.
 
 [comment]: <> (demonstration of logging into the application to a previously authorized user)
 
-After successful authorization, the user gets to the main page, from where he can go to
-gardening information page, settings, invoices or counters page:
+After successful authorization, the user gets to the main page, from where he can go to gardening
+information page, settings, invoices or counters page:
 
-<img src="/images/img1.jpg" alt="Application home page" width="250"/>
+<p align="center">
+  <img src="/images/img1.jpg" alt="Application home page" width="250"/>
+</p>
 
-When opening the gardening information page, the user is shown information about the
-gardening:
+When opening the gardening information page, the user is shown information about the gardening:
 
 - Name of gardening;
 - Details of gardening;
 - Contact Information;
 
-<img src="/images/img2.jpg" alt="Information page" width="250"/>
+<p align="center">
+  <img src="/images/img2.jpg" alt="Information page" width="250"/>
+</p>
 
-When you click on the gardening number, the call application will open,
-from where you can immediately
-dial this number:
+When you click on the gardening number, the call application will open, from where you can
+immediately dial this number:
 
-<img src="/images/img3.jpg" alt="Select application to call after clicking on phone number" width="250"/>
+<p align="center">
+  <img src="/images/img3.jpg" alt="Select application to call after clicking on phone number" width="250"/>
+</p>
 
 When you click on the mail, this mail address will be copied to the clipboard:
 
-<img src="/images/img4.jpg" alt="Notify user about copying mail to clipboard" width="250"/>
+<p align="center">
+  <img src="/images/img4.jpg" alt="Notify user about copying mail to clipboard" width="250"/>
+</p>
 
-On the settings page, the user can enable notifications,
-for example, about the ropes to pass
+On the settings page, the user can enable notifications, for example, about the ropes to pass
 indications:
 
-<img src="/images/img5.jpg" alt="Receive notification" width="250"/>
+<p align="center">
+  <img src="/images/img5.jpg" alt="Receive notification" width="250"/>
+</p>
 
 Also on this page, the user can log out of the application.
 
-<img src="/images/img6.jpg" alt="Settings Page" width="250"/>
+<p align="center">
+  <img src="/images/img6.jpg" alt="Settings Page" width="250"/>
+</p>
 
 On the bills page, the user can view information about the current debt and the date of the last
 transmitted testimonies:
 
-<img src="/images/img7.jpg" alt="Bills page" width="250"/>
+<p align="center">
+  <img src="/images/img7.jpg" alt="Bills page" width="250"/>
+</p>
 
-When you click on the "View receipt" button, the generated receipt will open in the selected
-pdf viewer app
+When you click on the "View receipt" button, the generated receipt will open in the selected pdf
+viewer app
 
-<img src="/images/img8.jpg" alt="Opening pdf from application" width="250"/>
+<p align="center">
+  <img src="/images/img8.jpg" alt="Opening pdf from application" width="250"/>
+</p>
 
-When you click on the "Get a receipt by mail" button, to the user's mail, if it is specified in the database
-data, the generated receipt will come:
+When you click on the "Get a receipt by mail" button, to the user's mail, if it is specified in the
+database data, the generated receipt will come:
 
-<img src="/images/img9.jpg" alt="Message about the successful sending of the receipt to the mail" width="250"/>
+<p align="center">
+  <img src="/images/img9.jpg" alt="Message about the successful sending of the receipt to the mail" width="250"/>
+</p>
 
-<img src="/images/img10.jpg" alt="Letter with receipt" width="250"/>
+<p align="center">
+  <img src="/images/img10.jpg" alt="Letter with receipt" width="250"/>
+</p>
 
 Also, when you click on the "Pay" button, a page with instructions for paying for details will open,
-from where you can, by clicking on the details, copy the necessary values ​​\u200b\u200bfor filling in the banking application
+from where you can, by clicking on the details, copy the necessary values ​​\u200b\u200bfor filling
+in the banking application
 
-<img src="/images/img11.jpg" alt="Page with payment details" width="250"/>
+<p align="center">
+  <img src="/images/img11.jpg" alt="Page with payment details" width="250"/>
+</p>
 
 On the counters page, you can see detailed information about the counters at the sites:
 
 - Date of last transmission of meter readings
 - Last transferred values;
 
-<img src="/images/img12.jpg" alt="Page with counters" width="250"/>
+<p align="center">
+  <img src="/images/img12.jpg" alt="Page with counters" width="250"/>
+</p>
 
-You can also submit readings on this page by entering them in the appropriate fields.
-If you enter
+You can also submit readings on this page by entering them in the appropriate fields. If you enter
 incorrect data, the user will be immediately informed about this:
 
-<img src="/images/img13.jpg" alt="Incorrect transmitted data alert" width="250"/>
+<p align="center">
+  <img src="/images/img13.jpg" alt="Incorrect transmitted data alert" width="250"/>
+</p>
 
-If the data is correct, then after writing it to the database, the corresponding message will be displayed to the user:
+If the data is correct, then after writing it to the database, the corresponding message will be
+displayed to the user:
 
-<img src="/images/img14.jpg" alt="Data Transfer Successful" width="250"/>
+<p align="center">
+  <img src="/images/img14.jpg" alt="Data Transfer Successful" width="250"/>
+</p>
