@@ -3,6 +3,7 @@
 Description of the project in another language: [Русский](README.md)
 
 [Latest version of app apk](/app/Gardener-LK.apk)
+
 [Latest version of app ipa](/app/Gardener-LK.ipa)
 
 The personal account allows the user (horticulture participant):
