@@ -33,14 +33,14 @@ The specified phone number receives a one-time code to confirm the entry.
 If the code is successfully entered, the user is considered authorized and gets to the main page
 applications
 
-[comment]: <> (authorization demonstration)
+https://user-images.githubusercontent.com/43118704/172132272-b906cd4a-74b6-4bdf-9f3c-8aa342a3a432.mp4
 
 If the user has already been previously authorized in the application, then when the application
 starts a page for entering a one-time code will open, which can be sent via SMS, or, if the device
 supports authorization by biometric data, you can enter the application by fingerprint or face
 recognition.
 
-[comment]: <> (demonstration of logging into the application to a previously authorized user)
+https://user-images.githubusercontent.com/43118704/172132297-3b9811d5-8619-40e7-b080-b98867311769.mp4
 
 After successful authorization, the user gets to the main page, from where he can go to gardening
 information page, settings, invoices or counters page:
