@@ -155,22 +155,15 @@ class _LoginPageState extends State<LoginPage> {
                   context: context,
                   builder: (context) {
                     return AlertDialogBuilder()
-                        .printAlertDialog(context, 'Код отправлен заново');
+                        .printAlertDialog(context, 'Код отправлен');
                   },
                 );
               },
               child: RichText(
-                text: TextSpan(
-                  text: 'Не пришел код? ',
-                  style: CustomTheme.textStyle14_400U,
-                  children: [
-                    TextSpan(
-                      text: 'Отправить еще раз',
-                      style: CustomTheme.textStyle14_700U,
-                    )
-                  ],
-                ),
-              ),
+                  text: TextSpan(
+                text: 'Отправить код для входа',
+                style: CustomTheme.textStyle14_700U,
+              )),
             ),
           ),
         ),
@@ -195,7 +188,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
             onPressed: () {
-              _sendCode();
+              _checkCode();
             },
             child: Text(
               "Продолжить",
@@ -233,22 +226,7 @@ class _LoginPageState extends State<LoginPage> {
       if (response.statusCode == 200) {
         AuthResponse responseAuth =
             AuthResponse.fromJson(jsonDecode(response.body));
-        if (_code == responseAuth.code.toString()) {
-          prefs.setBool("auth", true);
-          Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(builder: (context) => const MainPage()),
-            (route) => false,
-          );
-        } else {
-          showDialog(
-            context: context,
-            builder: (context) {
-              return AlertDialogBuilder()
-                  .printAlertDialog(context, 'Неверный код авторизации');
-            },
-          );
-        }
+        prefs.setInt("code", responseAuth.code);
       } else {
         if (response.statusCode == 400) {
           showDialog(
@@ -266,6 +244,39 @@ class _LoginPageState extends State<LoginPage> {
         MaterialPageRoute(
           builder: (BuildContext context) => const InternetConnectionError(),
         ),
+      );
+    }
+  }
+
+  void _checkCode() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    if (prefs.containsKey("code")) {
+      final code = prefs.getInt("code").toString();
+
+      if (_code == code) {
+        prefs.setBool("auth", true);
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => const MainPage()),
+          (route) => false,
+        );
+      } else {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialogBuilder()
+                .printAlertDialog(context, 'Неверный код авторизации');
+          },
+        );
+      }
+    } else {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialogBuilder().printAlertDialog(
+              context, 'Проблема с авторизацией, перезапустите приложение');
+        },
       );
     }
   }
